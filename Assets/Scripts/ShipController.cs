@@ -7,6 +7,8 @@ public class ShipController : Destructables {
 
 	public GameObject cannon;
 
+	public Engine[] engines;
+
 	private Vector2 velocity;
 
 	int a = 0;
@@ -46,20 +48,46 @@ public class ShipController : Destructables {
 
 		Camera.main.orthographicSize = Mathf.Lerp (45, 55, rigidbody2D.velocity.magnitude/150);
 
-		if (a > 5) {
-			rigidbody2D.AddTorque (-acceleration);
-		} else if (a < -5) {
-			rigidbody2D.AddTorque(acceleration);
+//		if (a > 5) {
+//			rigidbody2D.AddTorque (-acceleration);
+//		} else if (a < -5) {
+//			rigidbody2D.AddTorque(acceleration);
+//		}
+
+		if (Input.GetKey(KeyCode.A) && !Input.GetKey (KeyCode.D)) {
+			rigidbody2D.AddTorque (acceleration);
+		} else if (!Input.GetKey(KeyCode.A) && Input.GetKey (KeyCode.D)) {
+			rigidbody2D.AddTorque(-acceleration);
 		}
 
-		if (Input.GetKey (KeyCode.LeftShift)) {
+//		if (Input.GetKey (KeyCode.LeftShift)) {
+//			rigidbody2D.AddForce (rigidbody2D.velocity*-6);
+//		} else if (Input.GetKey (KeyCode.Space)) {
+//			rigidbody2D.AddForce (relPos * acceleration);
+//			particles.enableEmission = true;
+//		} else {
+//			particles.enableEmission = false;
+//		}
+
+
+		if (Input.GetKey (KeyCode.LeftShift)) 
 			rigidbody2D.AddForce (rigidbody2D.velocity*-6);
-		} else if (Input.GetKey (KeyCode.Space)) {
-			rigidbody2D.AddForce (relPos * acceleration);
-			particles.enableEmission = true;
-		} else {
-			particles.enableEmission = false;
-		}
+
+
+		if (Input.GetKey (KeyCode.W)) 
+			foreach (Engine e in engines)
+				e.Thrust();
+
+		if (Input.GetKeyDown (KeyCode.W))
+			foreach (Engine e in engines)
+				e.Start ();
+
+		if (Input.GetKeyUp (KeyCode.W))
+			foreach (Engine e in engines)
+				e.Stop ();
+
+
+
 		velocity = rigidbody2D.velocity;
 	}
 

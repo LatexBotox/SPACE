@@ -3,20 +3,23 @@ using System.Collections;
 
 public class BasicLaserShot : MonoBehaviour {
 
-	public float speed = 100f;
+	float speed = 100f;
+	public ParticleSystem impact;
 
 	Vector2 dir;
 
 	void Start() {
 		Destroy (gameObject, 10f);
 		dir = new Vector2 (Mathf.Cos ((rigidbody2D.rotation+90) * Mathf.Deg2Rad), Mathf.Sin ((rigidbody2D.rotation+90) * Mathf.Deg2Rad)).normalized;
-		rigidbody2D.AddForce (dir * speed);
+		rigidbody2D.velocity = dir.normalized*speed;
+		print (rigidbody2D.velocity);
 	}
 
-	void OnTriggerEnter2D(Collider2D other) {
-		if (other.gameObject.layer == 9 || other.gameObject.layer == 10) {
-			other.rigidbody2D.AddForce (dir*500);
-			Destroy (gameObject,0f);
-		}
+	void OnCollisionEnter2D(Collision2D other) {
+		print (transform.rotation);
+		ParticleSystem impactClone = (ParticleSystem)Instantiate (impact, other.contacts[other.contacts.Length-1].point,
+		                                                          Quaternion.LookRotation(other.contacts[other.contacts.Length-1].normal));
+		Destroy (impactClone.gameObject, impactClone.duration);
+		Destroy (gameObject,0f);
 	}
 }
