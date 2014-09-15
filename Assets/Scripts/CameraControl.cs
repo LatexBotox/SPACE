@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CameraControl : MonoBehaviour {
 
+	public GameObject follow;
+
 	// Use this for initialization
 	void Start () {
 	
@@ -11,7 +13,7 @@ public class CameraControl : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		Vector3 shipPos = GameObject.Find("Ship").rigidbody2D.position;
+		Vector3 shipPos = follow.transform.position;
 
 		mouse.z = shipPos.z = transform.position.z;
 
