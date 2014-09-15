@@ -14,11 +14,9 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	public void CalcColDamage(Collision2D col) {
-
+	public void Die(){
+		print ("Dead");
 	}
-
-	public abstract void Die();
 
 	public double Health {
 		get {

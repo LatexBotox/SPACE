@@ -17,10 +17,10 @@ public class MediumAsteroid : Destructables
 	}
 
 	
-	public override void Die() 
-	{
-		print ("lol imma die");
-	}
+//	public override void Die() 
+//	{
+//		print ("lol imma die");
+//	}
 
 
 }
