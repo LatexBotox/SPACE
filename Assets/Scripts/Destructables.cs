@@ -1,10 +1,21 @@
 using UnityEngine;
 using System.Collections;
 
+
 public abstract class Destructables : MonoBehaviour
 {
-	protected double health = 1;
-	protected double maxHealth = 1;
+	protected double health = 100;
+	protected double maxHealth = 100;
+	double col_dmg_scaler = 1;
+
+	public double Col_dmg_scaler {
+		get {
+			return col_dmg_scaler;
+		}
+		set {
+			col_dmg_scaler = value;
+		}
+	}
 
 	public void Damage(double d) {
 		health -= d;
@@ -14,9 +25,15 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	public void Die(){
-		print ("Dead");
+	public double CalcColDamage(Collision2D col) { 
+		double m = col.rigidbody.mass + rigidbody2D.mass; 
+		double v = col.relativeVelocity.magnitude; 
+		double e = 0.5*m*v*v; 
+		double dmg_frac = rigidbody2D.mass/m; 
+		return e*dmg_frac*col_dmg_scaler;
 	}
+
+	public abstract void Die();
 
 	public double Health {
 		get {

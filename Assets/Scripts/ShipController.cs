@@ -18,6 +18,7 @@ public class ShipController : Destructables {
 
 	void Start () {
 		health = maxHealth = 50;
+		Col_dmg_scaler = 0.1;
 		particles = GetComponentInChildren<ParticleSystem>();
 	}
 
@@ -68,7 +69,9 @@ public class ShipController : Destructables {
 	void OnCollisionEnter2D(Collision2D col) {
 		//double d = (rigidbody2D.velocity-velocity).sqrMagnitude*0.01;
 		double d = CalcColDamage(col);
-		Debug.Log (d);
 		Damage (d);
+	}
+
+	override public void Die() {
 	}
 }
