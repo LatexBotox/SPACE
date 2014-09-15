@@ -11,6 +11,8 @@ public class ShipController : Destructables {
 
 	private Vector2 velocity;
 
+	float thrust = 0;
+
 	int a = 0;
 	int rot;
 	ParticleSystem particles;
@@ -19,32 +21,49 @@ public class ShipController : Destructables {
 		health = maxHealth = 50;
 		particles = GetComponentInChildren<ParticleSystem>();
 	}
+
+	void StartEngines() {
+		foreach (Engine e in engines)
+			e.Begin ();
+	}
 	
-
-	int nfmod(int a,int b)
-	{
-		return (Mathf.Abs(a * b) + a) % b;
+	void StopEngines() {
+		foreach (Engine e in engines)
+			e.End ();
 	}
 
-	int fixangle(int a)
-	{
-		return nfmod (a + 180, 360) - 180;
-	}
+//
+//	int nfmod(int a,int b)
+//	{
+//		return (Mathf.Abs(a * b) + a) % b;
+//	}
+//
+//	int fixangle(int a)
+//	{
+//		return nfmod (a + 180, 360) - 180;
+//	}
 
 	// Update is called once per frame
-	void Update () {
-		Vector2 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-		Vector2 shipPos = rigidbody2D.position;
+	void FixedUpdate () {
+//		Vector2 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+//		Vector2 shipPos = rigidbody2D.position;
+//
+//		relPos = (mouse - shipPos);
+//		relPos.Normalize ();
+//
+//		rot = fixangle(Mathf.RoundToInt (rigidbody2D.rotation));
+//
+//		a = Mathf.RoundToInt(rot + Mathf.Atan2 (relPos.x, relPos.y) * Mathf.Rad2Deg);
+//		a += (a>180) ? -360 : (a<-180) ? 360 : 0;
 
-		relPos = (mouse - shipPos);
-		relPos.Normalize ();
-
-		rot = fixangle(Mathf.RoundToInt (rigidbody2D.rotation));
-
-		a = Mathf.RoundToInt(rot + Mathf.Atan2 (relPos.x, relPos.y) * Mathf.Rad2Deg);
-		a += (a>180) ? -360 : (a<-180) ? 360 : 0;
-
-
+		if (thrust != Input.GetAxis ("Thrust")) {
+			thrust = Input.GetAxis ("Thrust");
+			if(thrust>0) {
+				StartEngines ();
+			} else {
+				StopEngines ();
+			}
+		}
 
 		Camera.main.orthographicSize = Mathf.Lerp (45, 55, rigidbody2D.velocity.magnitude/150);
 
@@ -54,9 +73,10 @@ public class ShipController : Destructables {
 //			rigidbody2D.AddTorque(acceleration);
 //		}
 
-		if (Input.GetKey(KeyCode.A) && !Input.GetKey (KeyCode.D)) {
+
+		if (Input.GetAxis ("Rotation")<0) {
 			rigidbody2D.AddTorque (acceleration);
-		} else if (!Input.GetKey(KeyCode.A) && Input.GetKey (KeyCode.D)) {
+		} else if (Input.GetAxis ("Rotation")>0) {
 			rigidbody2D.AddTorque(-acceleration);
 		}
 
@@ -69,27 +89,17 @@ public class ShipController : Destructables {
 //			particles.enableEmission = false;
 //		}
 
-
-		if (Input.GetKey (KeyCode.LeftShift)) 
+		if (thrust < 0) 
 			rigidbody2D.AddForce (rigidbody2D.velocity*-6);
 
 
-		if (Input.GetKey (KeyCode.W)) 
+		if (thrust > 0) 
 			foreach (Engine e in engines)
 				e.Thrust();
 
-		if (Input.GetKeyDown (KeyCode.W))
-			foreach (Engine e in engines)
-				e.Start ();
-
-		if (Input.GetKeyUp (KeyCode.W))
-			foreach (Engine e in engines)
-				e.Stop ();
-
-
-
 		velocity = rigidbody2D.velocity;
 	}
+
 
 	void OnCollisionEnter2D(Collision2D col) {
 		double d = (rigidbody2D.velocity-velocity).sqrMagnitude*0.01;
