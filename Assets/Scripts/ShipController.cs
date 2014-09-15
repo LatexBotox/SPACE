@@ -66,8 +66,8 @@ public class ShipController : Destructables {
 
 
 	void OnCollisionEnter2D(Collision2D col) {
-		double d = (rigidbody2D.velocity-velocity).sqrMagnitude*0.01;
-
+		//double d = (rigidbody2D.velocity-velocity).sqrMagnitude*0.01;
+		double d = CalcColDamage(col);
 		Debug.Log (d);
 		Damage (d);
 	}
