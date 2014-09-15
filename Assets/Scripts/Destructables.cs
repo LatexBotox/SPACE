@@ -14,9 +14,11 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	protected void Die() {
-//		Destroy (gameObject, 0f);
+	public void CalcColDamage(Collision2D col) {
+
 	}
+
+	public abstract void Die();
 
 	public double Health {
 		get {
