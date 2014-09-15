@@ -18,6 +18,7 @@ public abstract class Destructables : MonoBehaviour
 	}
 
 	public void Damage(double d) {
+		print ("amam gawd dmg: " + d);
 		health -= d;
 		health = (double)Mathf.Max ((float)health, 0);
 		if (health <= 0) {
@@ -28,7 +29,7 @@ public abstract class Destructables : MonoBehaviour
 	public double CalcColDamage(Collision2D col) { 
 		double m = col.rigidbody.mass + rigidbody2D.mass; 
 		double v = col.relativeVelocity.magnitude; 
-		double e = 0.5*m*v*v; 
+		double e = 0.5*m*v*v;
 		double dmg_frac = rigidbody2D.mass/m; 
 		return e*dmg_frac*col_dmg_scaler;
 	}

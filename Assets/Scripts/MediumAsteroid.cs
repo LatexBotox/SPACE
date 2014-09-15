@@ -4,7 +4,6 @@ using System.Collections;
 public class MediumAsteroid : Destructables
 {
 	public GameObject smallAsteroid;
-	private bool dead = false;
 
 	// Use this for initialization
 	void Start ()	
@@ -17,11 +16,6 @@ public class MediumAsteroid : Destructables
 	// Update is called once per frame
 	void Update ()
 	{
-		if(dead) {
-			dead = false;
-			SpawnSmallAsteroid();
-			Destroy (gameObject, 0f);
-		}
 	}
 
 	private void SpawnSmallAsteroid() {
@@ -33,7 +27,10 @@ public class MediumAsteroid : Destructables
 
 	public override void Die()
 	{
-		dead = true;
+		//dead = true;
+		SpawnSmallAsteroid();
+		SpawnSmallAsteroid();
+		Destroy(gameObject);
 	}
 
 	void OnCollisionEnter2D(Collision2D col) {
