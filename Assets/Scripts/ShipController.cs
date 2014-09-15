@@ -18,7 +18,7 @@ public class ShipController : Destructables {
 
 	void Start () {
 		health = maxHealth = 50;
-		Col_dmg_scaler = 0.1;
+		Col_dmg_scaler = 0.1f;
 		particles = GetComponentInChildren<ParticleSystem>();
 	}
 
@@ -32,6 +32,10 @@ public class ShipController : Destructables {
 			e.End ();
 	}
 
+
+	void Update() {
+		oldVelocity = rigidbody2D.velocity;
+	}
 
 	void FixedUpdate () {
 
@@ -63,13 +67,6 @@ public class ShipController : Destructables {
 				e.Thrust();
 
 		velocity = rigidbody2D.velocity;
-	}
-
-
-	void OnCollisionEnter2D(Collision2D col) {
-		//double d = (rigidbody2D.velocity-velocity).sqrMagnitude*0.01;
-		double d = CalcColDamage(col);
-		Damage (d);
 	}
 
 	override public void Die() {

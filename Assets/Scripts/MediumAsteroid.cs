@@ -9,9 +9,9 @@ public class MediumAsteroid : Destructables
 	// Use this for initialization
 	void Start ()	
 	{
-		Col_dmg_scaler = 0.5;
-		health = 1000;
-		maxHealth = 1000;
+		Col_dmg_scaler = 0.5f;
+		health = 1000f;
+		maxHealth = 1000f;
 	}
 	
 	// Update is called once per frame
@@ -22,6 +22,8 @@ public class MediumAsteroid : Destructables
 			SpawnSmallAsteroid();
 			Destroy (gameObject, 0f);
 		}
+
+		oldVelocity = rigidbody2D.velocity;
 	}
 
 	private void SpawnSmallAsteroid() {
@@ -34,12 +36,6 @@ public class MediumAsteroid : Destructables
 	public override void Die()
 	{
 		dead = true;
-	}
-
-	void OnCollisionEnter2D(Collision2D col) {
-		double d = CalcColDamage(col);
-		print ("dmg: " + d);
-		Damage(d);
 	}
 }
 
