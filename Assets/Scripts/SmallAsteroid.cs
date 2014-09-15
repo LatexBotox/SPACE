@@ -7,7 +7,7 @@ public class SmallAsteroid : Destructables
 		// Use this for initialization
 	void Start ()	
 	{
-		Col_dmg_scaler = 0.5;
+		Col_dmg_scaler = 0.5f;
 		health = 100;
 		maxHealth = 100;
 	}
@@ -20,12 +20,6 @@ public class SmallAsteroid : Destructables
 	public override void Die()
 	{
 		Destroy(gameObject);
-	}
-
-	void OnCollisionEnter2D(Collision2D col) {
-		double d = CalcColDamage(col);
-		print ("dmg: " + d);
-		Damage(d);
 	}
 }
 

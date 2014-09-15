@@ -4,11 +4,13 @@ using System.Collections;
 
 public abstract class Destructables : MonoBehaviour
 {
-	protected double health = 100;
-	protected double maxHealth = 100;
-	double col_dmg_scaler = 1;
+	protected float health = 100;
+	protected float maxHealth = 100;
+	float col_dmg_scaler = 1;
 
-	public double Col_dmg_scaler {
+	protected Vector2 oldVelocity = new Vector2 (0, 0);
+
+	public float Col_dmg_scaler {
 		get {
 			return col_dmg_scaler;
 		}
@@ -17,38 +19,40 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	public void Damage(double d) {
-		print ("amam gawd dmg: " + d);
+	public void Damage(float d) {
+		print (gameObject.name+" damaged for: "+d);
 		health -= d;
-		health = (double)Mathf.Max ((float)health, 0);
+		health = (float)Mathf.Max ((float)health, 0);
 		if (health <= 0) {
 			Die ();
 		}
 	}
 
-	public double CalcColDamage(Collision2D col) { 
-		double m = col.rigidbody.mass + rigidbody2D.mass; 
-		double v = col.relativeVelocity.magnitude; 
-		double e = 0.5*m*v*v;
-		double dmg_frac = rigidbody2D.mass/m; 
-		return e*dmg_frac*col_dmg_scaler;
+	void OnCollisionEnter2D(Collision2D col) {
+		float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
+		
+		float m = col.rigidbody.mass + rigidbody2D.mass; 
+		
+		Damage (deltaV*(col.rigidbody.mass/m)*col_dmg_scaler);
+		col.gameObject.SendMessage ("Damage", (deltaV * (rigidbody2D.mass / m))*col_dmg_scaler);
+
 	}
 
 	public abstract void Die();
 
-	public double Health {
+	public float Health {
 		get {
 			return health;
 		}
 	}
 
-	public double MaxHealth {
+	public float MaxHealth {
 		get {
 			return maxHealth;
 		}
 	}
 
-	public double Fraction() {
+	public float Fraction() {
 		return health/maxHealth;
 	}
 }
