@@ -27,9 +27,7 @@ public class CannonScript : MonoBehaviour {
 
 		curCooldown -= Time.deltaTime;
 		if (Input.GetKey(KeyCode.Mouse0) && curCooldown <= 0) {
-			Vector3 spawnat = spawnpoint.transform.position;
-			spawnat.z = transform.position.z + 1;
-			Rigidbody2D projectileClone = (Rigidbody2D)Instantiate (projectile,spawnat, spawnpoint.transform.rotation);
+			Rigidbody2D projectileClone = (Rigidbody2D)Instantiate (projectile,spawnpoint.transform.position, spawnpoint.transform.rotation);
 			curCooldown = cooldown;
 		}
 	}
