@@ -4,7 +4,7 @@ using System.Collections;
 public class BasicLaserShot : MonoBehaviour {
 
 	float speed = 100f;
-	float damage = 100;
+	float damage = 1000;
 	public ParticleSystem impact;
 
 	Vector2 dir;
