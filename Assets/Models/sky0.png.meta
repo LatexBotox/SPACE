@@ -1,8 +1,8 @@
 fileFormatVersion: 2
-guid: cfd03b21891e56447a41421ca945d18f
+guid: f119e9fc198f678498f7ac235c1d7034
 TextureImporter:
   fileIDToRecycleName:
-    21300000: Sky3
+    21300000: sky0
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -26,9 +26,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
-    aniso: 1
+    aniso: -1
     mipBias: -1
-    wrapMode: 0
+    wrapMode: -1
   nPOTScale: 1
   lightmap: 0
   compressionQuality: 50
