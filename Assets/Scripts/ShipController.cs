@@ -7,6 +7,7 @@ public class ShipController : Destructables {
 
 	public GameObject cannon;
 
+	public Weapon[] weapons;
 	public Engine[] engines;
 
 	private Vector2 velocity;
@@ -65,6 +66,10 @@ public class ShipController : Destructables {
 		if (thrust > 0) 
 			foreach (Engine e in engines)
 				e.Thrust();
+
+		if (Input.GetAxis ("Fire1") > 0)
+			foreach (Weapon w in weapons)
+				w.Fire ();
 
 		velocity = rigidbody2D.velocity;
 	}

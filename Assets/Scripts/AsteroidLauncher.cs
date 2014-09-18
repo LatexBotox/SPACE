@@ -3,18 +3,12 @@ using System.Collections;
 
 public class AsteroidLauncher : Weapon
 {
+		
 	void Start() {
-		cooldown = 1.0f;
-		t_fired = 0.0f;
+		cooldown = 1.5f;
 	}
 
-	public override void Reset ()
-	{
-		cooldown = 1.0f;
-		t_fired = 0.0f;
-	}
-
-	public override void Fire (GameObject spawnpoint)
+	public override void Fire ()
 	{
 		print (t_fired + " " + Time.time);
 		if(Time.time > t_fired + cooldown) {
