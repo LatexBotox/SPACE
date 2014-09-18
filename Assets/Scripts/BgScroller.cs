@@ -14,12 +14,13 @@ public class BgScroller : MonoBehaviour {
 
 	void Update () {
 
-		float scroll_x = Mathf.Repeat(ship.position.x * scroll_speed, 1);
-		float scroll_y = Mathf.Repeat(ship.position.y * scroll_speed, 1);
+
+		float scroll_x = Mathf.Repeat(Camera.main.transform.position.x * scroll_speed, 1);
+		float scroll_y = Mathf.Repeat(Camera.main.transform.position.y * scroll_speed, 1);
 		renderer.sharedMaterial.SetTextureOffset("_MainTex", new Vector2(scroll_x, scroll_y));
 
-
-		Vector3 pos = new Vector3(ship.position.x, ship.position.y, transform.position.z);
+		
+		Vector3 pos = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, transform.position.z);
 		transform.position = pos;
 	}
 
