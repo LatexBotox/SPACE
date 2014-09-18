@@ -12,6 +12,9 @@ public class CameraControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		if(!follow.activeSelf)
+			return;
+
 		Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		Vector3 shipPos = follow.transform.position;
 

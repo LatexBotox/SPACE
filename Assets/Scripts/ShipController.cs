@@ -6,15 +6,12 @@ public class ShipController : Destructables {
 	public float acceleration = 100f;
 
 	public GameObject cannon;
-
 	public Engine[] engines;
-
 	private Vector2 velocity;
 
 	float thrust = 0;
 	
 	ParticleSystem particles;
-
 
 	void Start () {
 		health = maxHealth = 50;
@@ -32,7 +29,6 @@ public class ShipController : Destructables {
 			e.End ();
 	}
 
-
 	void Update() {
 		oldVelocity = rigidbody2D.velocity;
 	}
@@ -49,8 +45,6 @@ public class ShipController : Destructables {
 		}
 
 		Camera.main.orthographicSize = Mathf.Lerp (45, 55, rigidbody2D.velocity.magnitude/150);
-
-
 
 		if (Input.GetAxis ("Rotation")<0) {
 			rigidbody2D.AddTorque (acceleration);
