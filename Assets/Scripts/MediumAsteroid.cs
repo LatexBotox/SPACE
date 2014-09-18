@@ -23,7 +23,8 @@ public class MediumAsteroid : Destructables
 	private void SpawnSmallAsteroid(uint nr_asteroids) {
 		for(int i = 0; i < nr_asteroids; +++i) {
 			Vector2 r_dir = Random.insideUnitCircle;
-			GameObject clone = Instantiate(smallAsteroid, ((Vector2)transform.position) + r_dir*10f, transform.rotation) as GameObject;
+			GameObject clone = Instantiate(smallAsteroid, ((Vector3)(((Vector2)transform.position) + r_dir*10f)) + new Vector3(0,0,smallAsteroid.transform.position.z)
+			                               , transform.rotation) as GameObject;
 			Vector2 vel = rigidbody2D.velocity;
 			Vector2 n = new Vector2(vel.y, -vel.x) * (0.5f - Random.value);
 			float rand_dir_scale = 5f;
