@@ -4,6 +4,8 @@ using System.Collections;
 public class TutorialGui : MonoBehaviour
 {
 
+	public AudioSource a;
+
 	bool draw;
 	string displayText;
 	string speakerName;
@@ -19,20 +21,16 @@ public class TutorialGui : MonoBehaviour
 		speakerName = speaker;
 		end_t = Time.time + showtime;
 		callbackState = state;
-		draw = true;
-		gameObject.SetActive(draw);
-	}
-
-	void Update() {
-		if(!draw)
-			gameObject.SetActive(draw);
+		print(speaker);
+		a.volume = 1;
+		a.Play();
 	}
 
 
 	void OnGUI() {
+
 		if(Time.time > end_t) {
 			callbackState.GuiCallback();
-			draw = false;
 		}
 
 		GUI.TextArea(new Rect(10, Screen.height - 90 , 400, 80), speakerName + ":\n" + displayText);
