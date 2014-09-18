@@ -8,7 +8,9 @@ public class ShipController : Destructables {
 	public Weapon[] weapons;
 	public Engine[] engines;
 
-	float thrust = 0;
+	public CustomInput input;
+
+	bool thrust = false;
 
 	void Start () {
 		health = maxHealth = 50;
@@ -31,9 +33,9 @@ public class ShipController : Destructables {
 
 	void FixedUpdate () {
 
-		if (thrust != Input.GetAxis ("Thrust")) {
-			thrust = Input.GetAxis ("Thrust");
-			if(thrust>0) {
+		if (thrust != input.Thrust ()) {
+			thrust = input.Thrust ();
+			if(input.Thrust ()) {
 				StartEngines ();
 			} else {
 				StopEngines ();
@@ -42,21 +44,21 @@ public class ShipController : Destructables {
 
 		Camera.main.orthographicSize = Mathf.Lerp (45, 55, rigidbody2D.velocity.magnitude/150);
 
-		if (Input.GetAxis ("Rotation")<0) {
+		if (input.RotateL()) {
 			rigidbody2D.AddTorque (acceleration);
-		} else if (Input.GetAxis ("Rotation")>0) {
+		} else if (input.RotateR()) {
 			rigidbody2D.AddTorque(-acceleration);
 		}
 
-		if (thrust < 0) 
+		if (input.Dampen ()) 
 			rigidbody2D.AddForce (rigidbody2D.velocity*-6);
 
 
-		if (thrust > 0) 
+		if (input.Thrust ()) 
 			foreach (Engine e in engines)
 				e.Thrust();
 
-		if (Input.GetAxis ("Fire1") > 0)
+		if (input.Shoot ())
 			foreach (Weapon w in weapons)
 				w.Fire ();
 
