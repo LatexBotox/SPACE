@@ -18,12 +18,10 @@ public class Pickup1 : MonoBehaviour {
 
 
 	void Pickup() {
-		print ("lol got picked");
 		Destroy (gameObject, 0f);
 	}
   
 	void OnCollisionEnter2D(Collision2D col) {
-		print ("lol collision");
 		if (col.gameObject.tag == "Player") {
 			Pickup();
 		}

@@ -2,8 +2,6 @@
 using System.Collections;
 
 public class BgScroller : MonoBehaviour {
-
-	public Rigidbody2D ship;
 	public float scroll_speed;
 
 	private Vector2 s_offset;

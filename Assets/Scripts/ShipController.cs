@@ -7,16 +7,12 @@ public class ShipController : Destructables {
 
 	public Weapon[] weapons;
 	public Engine[] engines;
-	private Vector2 velocity;
 
 	float thrust = 0;
-	
-	ParticleSystem particles;
 
 	void Start () {
 		health = maxHealth = 50;
 		Col_dmg_scaler = 0.1f;
-		particles = GetComponentInChildren<ParticleSystem>();
 	}
 
 	void StartEngines() {
@@ -64,7 +60,7 @@ public class ShipController : Destructables {
 			foreach (Weapon w in weapons)
 				w.Fire ();
 
-		velocity = rigidbody2D.velocity;
+		oldVelocity = rigidbody2D.velocity;
 	}
 
 	override public void Die() {
