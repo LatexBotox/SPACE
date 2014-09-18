@@ -15,6 +15,10 @@ public class Radar : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
+		if (!parent) {
+			DestroyImmediate (gameObject);
+			return;
+		}
 		transform.position = parent.transform.position;
 	}
 

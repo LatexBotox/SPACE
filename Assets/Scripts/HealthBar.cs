@@ -18,7 +18,7 @@ public class HealthBar : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		Rect insets = guiTexture.pixelInset;
-		insets.width = Mathf.CeilToInt ((float)ship.Fraction () * MaxWidth);
+		insets.width = Mathf.CeilToInt ((!ship?0f:(float)ship.Fraction ()) * MaxWidth);
 		guiTexture.pixelInset = insets;
 	}
 }

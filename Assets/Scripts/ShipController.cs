@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ShipController : Destructables {
 	Vector2 relPos;
@@ -9,12 +10,16 @@ public class ShipController : Destructables {
 	public Engine[] engines;
 
 	public CustomInput input;
+	public ParticleSystem deathEffect;
 
 	bool thrust = false;
 
 	void Start () {
 		health = maxHealth = 50;
 		Col_dmg_scaler = 0.1f;
+
+		weapons = GetComponentsInChildren<Weapon> ();
+		engines = GetComponentsInChildren<Engine> ();
 	}
 
 	void StartEngines() {
@@ -66,5 +71,8 @@ public class ShipController : Destructables {
 	}
 
 	override public void Die() {
+		GameObject deathEffectClone = Instantiate (deathEffect, transform.position, deathEffect.transform.rotation) as GameObject;
+		Destroy (gameObject, 0f);
+		Destroy (deathEffectClone, deathEffect.startLifetime);
 	}
 }
