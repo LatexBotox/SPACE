@@ -20,7 +20,7 @@ public abstract class Destructables : MonoBehaviour
 	}
 
 	public void Damage(float d) {
-		print (gameObject.name+" damaged for: "+d);
+		//print (gameObject.name+" damaged for: "+d);
 		health -= d;
 		health = (float)Mathf.Max ((float)health, 0);
 		if (health <= 0) {
