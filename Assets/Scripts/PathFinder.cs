@@ -3,8 +3,11 @@ using System.Collections;
 
 public class PathFinder : MonoBehaviour {
 
+	public ShipController ship;
 	public Transform pos;
 	public Transform tar;
+
+	float preferredDistance = 60;
 
 	int update = 0;
 
@@ -17,29 +20,49 @@ public class PathFinder : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
+		if (!tar) 
+			enabled = false;
+		if (!ship) {
+			DestroyImmediate (gameObject);
+			return;
+		}
+
 		int oldLayer = pos.gameObject.layer;
 		pos.gameObject.layer = 2;
-		Vector2 heading = Plot (pos.position, tar.position);
+		Vector2 heading = Plot ((Vector2)pos.position+ship.rigidbody2D.velocity*0.5f, tar.position);
 		Debug.DrawLine(pos.position, heading);
 		Vector2 relPos = (pos.position - tar.position);
-		if (heading == (Vector2)tar.position && Mathf.Abs(relPos.magnitude) < 100) {
-			Vector2 newHeading = (Vector2)pos.position+new Vector2(relPos.y,
-			                                 											-relPos.x).normalized*20;
+		if (heading == (Vector2)tar.position && Mathf.Abs(relPos.magnitude) < preferredDistance) {
+//			Vector2 newHeading = (Vector2)pos.position+new Vector2(relPos.y,
+//			                                 											-relPos.x).normalized*35;
+//
+//			newHeading = Plot (pos.position, newHeading);
+//			Debug.DrawLine (pos.position, newHeading);
+//
+//			newHeading = (Vector2)pos.position+new Vector2(-relPos.y,
+//			                         												relPos.x).normalized*35;
+//			newHeading = Plot (pos.position, newHeading);
+//			Debug.DrawLine (pos.position, newHeading);
 
-			newHeading = Plot (pos.position, newHeading);
-			Debug.DrawLine (pos.position, newHeading);
-//			heading = Plot (pos.position, new Vector2(-relPos.y+tar.position.x,
-//			                                          relPos.x+tar.position.y).normalized*10);
-
-			newHeading = (Vector2)pos.position+new Vector2(-relPos.y,
-			                         												relPos.x).normalized*20;
-			newHeading = Plot (pos.position, newHeading);
-			Debug.DrawLine (pos.position, newHeading);
+			heading = ChooseHeading ((Vector2)pos.position+new Vector2(-relPos.y,relPos.x).normalized*40+ship.rigidbody2D.velocity*0.5f,
+			                         (Vector2)pos.position+new Vector2(relPos.y,-relPos.x).normalized*40+ship.rigidbody2D.velocity*0.5f);
 		}
+		ship.moveTowards(heading);
+
 		pos.gameObject.layer = oldLayer;
 		update = 0;
 	}
+	
+	Vector2 ChooseHeading (Vector2 h1, Vector2 h2) {
 
+		if (Vector2.Dot (h1 - ship.rigidbody2D.position, ship.rigidbody2D.velocity) >
+			Vector2.Dot (h2 - ship.rigidbody2D.position, ship.rigidbody2D.velocity)) {
+			return h1;
+		} else {
+			return h2;
+		}
+
+	}
 
 	Vector2 Plot (Vector2 from, Vector2 to) {
 		Vector2 relPos = to-from;
