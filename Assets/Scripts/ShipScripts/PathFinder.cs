@@ -19,7 +19,7 @@ public class PathFinder : MonoBehaviour {
 		int oldLayer = self.gameObject.layer;
 		self.gameObject.layer = 2;
 
-		Vector2 heading = Plot (pos+self.rigidbody2D.velocity*0.5f, tar, target);
+		Vector2 heading = Plot (pos+vel*0.5f, tar, target);
 		Debug.DrawLine(pos, heading);
 		Vector2 relPos = (pos - tar);
 		if (heading == tar && Mathf.Abs(relPos.magnitude) < preferredDistance) {
@@ -57,8 +57,7 @@ public class PathFinder : MonoBehaviour {
 		if (target && firstRay.transform.gameObject.Equals(target.gameObject)) {
 			return to;
 		}
-		
-		Vector2 colPoint = firstRay.centroid;
+
 		Vector2 silly = new Vector2 (relPos.y, -relPos.x);
 		silly.Normalize ();
 		
@@ -69,7 +68,7 @@ public class PathFinder : MonoBehaviour {
 			newPos = newPos+silly*Mathf.Pow (-1, i)*i*7;
 			RaycastHit2D iterRay = Physics2D.CircleCast (from, 6, newPos-from, distance, layerMask);
 			
-			if (!iterRay.collider || iterRay.transform.gameObject.Equals (target.gameObject)) {
+			if (!iterRay.collider || target && iterRay.transform.gameObject.Equals (target.gameObject)) {
 				return from+(newPos-from).normalized*distance;
 			}
 		}

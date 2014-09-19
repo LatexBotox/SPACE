@@ -3,13 +3,16 @@ using System.Collections;
 
 public class ProjectileWeapon : Weapon {
 	public Projectile projectile;
+	public float setCooldown;
 
-	void Start() {
+	protected override void Start() {
 		base.Start ();
-		cooldown = 0.3f;
+		cooldown = setCooldown;
 	}
 
 	public override void Fire() {
+//		print ("Time: " + Time.time + ", Last Fired: " + t_fired + ", Cooldown: " + cooldown);
+
 		if(Time.time > t_fired + cooldown) {
 			t_fired = Time.time;
 

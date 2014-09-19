@@ -36,7 +36,6 @@ public class Radar : MonoBehaviour {
 	}
 
 	void OnTriggerExit2D(Collider2D other) {
-		print ("Exit: " + other.name);
 		Destroy (arrows[other.GetInstanceID()].gameObject, 0);
 		arrows.Remove (other.GetInstanceID ());
 	}

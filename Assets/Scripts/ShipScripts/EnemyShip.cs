@@ -21,6 +21,10 @@ public class EnemyShip : Ship
 		}
 
 		moveTowards (pf.FindPath(this, target));
+		if (CanSeeTarget()) {
+			RotateWeapons (target.rigidbody2D.position + Random.insideUnitCircle * Random.Range (0, 7));
+			FireWeapons();
+		}
 	}
 
 	public void moveTowards(Vector2 pos) {
@@ -41,8 +45,14 @@ public class EnemyShip : Ship
 	}
 
 	void FindTarget() {
-		target = Physics2D.OverlapCircle (rigidbody2D.position, cockpit.range, 1 << 8).GetComponent<Ship>();
-		print (target.name);
+		Collider2D potentialTarget = Physics2D.OverlapCircle (rigidbody2D.position, cockpit.range, 1 << 8);
+		if (potentialTarget)
+			target = potentialTarget.GetComponent<Ship>();
+	}
+
+	bool CanSeeTarget() {
+		RaycastHit2D ray = Physics2D.Raycast (rigidbody2D.position, target.rigidbody2D.position - rigidbody2D.position, pf.preferredDistance, 1 << 8);
+		return ray.collider && ray.transform.gameObject == target.gameObject;
 	}
 }
 

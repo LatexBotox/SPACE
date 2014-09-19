@@ -6,7 +6,7 @@ public abstract class Destructables : MonoBehaviour
 {
 	protected float health = 100;
 	protected float maxHealth = 100;
-	float col_dmg_scaler = 1;
+	float col_dmg_scaler = 0.2f;
 
 	protected Vector2 oldVelocity = new Vector2 (0, 0);
 
