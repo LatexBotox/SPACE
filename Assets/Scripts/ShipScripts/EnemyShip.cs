@@ -46,12 +46,15 @@ public class EnemyShip : Ship
 
 	void FindTarget() {
 		Collider2D potentialTarget = Physics2D.OverlapCircle (rigidbody2D.position, cockpit.range, 1 << 8);
-		if (potentialTarget)
+		if (potentialTarget) {
+			print ("Target Acquired: "+potentialTarget.name);
 			target = potentialTarget.GetComponent<Ship>();
+
+		}
 	}
 
 	bool CanSeeTarget() {
-		RaycastHit2D ray = Physics2D.Raycast (rigidbody2D.position, target.rigidbody2D.position - rigidbody2D.position, pf.preferredDistance, 1 << 8);
+		RaycastHit2D ray = Physics2D.Raycast (rigidbody2D.position, target.rigidbody2D.position - rigidbody2D.position, pf.preferredDistance*1.5f, 1 << 8);
 		return ray.collider && ray.transform.gameObject == target.gameObject;
 	}
 }
