@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ShipController : Destructables {
-	Vector2 relPos;
 	public float acceleration = 100f;
 
 	public Weapon[] weapons;
@@ -24,15 +23,15 @@ public class ShipController : Destructables {
 		engines = GetComponentsInChildren<Engine> ();
 	}
 
-	void StartEngines() {
-		foreach (Engine e in engines)
-			e.Begin ();
-	}
-	
-	void StopEngines() {
-		foreach (Engine e in engines)
-			e.End ();
-	}
+//	void StartEngines() {
+//		foreach (Engine e in engines)
+//			e.Begin ();
+//	}
+//	
+//	void StopEngines() {
+//		foreach (Engine e in engines)
+//			e.End ();
+//	}
 
 	void Update() {
 		oldVelocity = rigidbody2D.velocity;
@@ -43,9 +42,9 @@ public class ShipController : Destructables {
 		if (thrust != input.Thrust ()) {
 			thrust = input.Thrust ();
 			if(input.Thrust ()) {
-				StartEngines ();
+//				StartEngines ();
 			} else {
-				StopEngines ();
+//				StopEngines ();
 			}
 		}
 
@@ -79,7 +78,7 @@ public class ShipController : Destructables {
 	}
 
 	public void moveTowards(Vector2 pos) {
-		Vector2 relpos = pos - rigidbody2D.position + rigidbody2D.velocity;
+		Vector2 relpos = pos - rigidbody2D.position - rigidbody2D.velocity;
 		float angle = Mathf.DeltaAngle(rigidbody2D.rotation, Mathf.Atan2 (relpos.y, relpos.x)*Mathf.Rad2Deg-90);
 
 		if (Mathf.Abs (angle) < 90) 

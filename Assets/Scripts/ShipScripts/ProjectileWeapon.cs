@@ -5,6 +5,7 @@ public class ProjectileWeapon : Weapon {
 	public Projectile projectile;
 
 	void Start() {
+		base.Start ();
 		cooldown = 0.3f;
 	}
 

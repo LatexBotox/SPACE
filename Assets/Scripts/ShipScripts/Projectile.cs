@@ -22,6 +22,6 @@ public class Projectile : MonoBehaviour {
 		Destroy (gameObject,0f);
 
 		if(other.gameObject.layer != launchedLayer)
-			other.gameObject.SendMessage("Damage", damage); 
+			other.gameObject.SendMessageUpwards("Damage", damage); 
 	}
 }

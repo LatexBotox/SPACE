@@ -4,10 +4,13 @@ using System.Collections;
 public class Cockpit : MonoBehaviour {
 
 	public float range;
-	public GameObject parent;
+	GameObject parent;
 	public Radar radar;
-	
-	void Start () {
+
+	bool radarExists = false;
+
+	public void StartRadar() {
+		parent = gameObject.transform.parent.gameObject;
 		radar = Instantiate (radar, parent.transform.position, radar.transform.rotation) as Radar;
 
 		Physics2D.IgnoreCollision (radar.collider2D, parent.collider2D);
@@ -15,5 +18,12 @@ public class Cockpit : MonoBehaviour {
 
 		radar.range = range;
 		radar.parent = parent;
+
+		radarExists = true;
+	}
+
+	void OnDestroy() {
+		if (radarExists)
+			DestroyImmediate (radar);
 	}
 }

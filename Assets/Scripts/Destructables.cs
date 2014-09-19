@@ -28,7 +28,7 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	void OnCollisionEnter2D(Collision2D col) {
+	protected void OnCollisionEnter2D(Collision2D col) {
 		float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
 		
 		float m = col.rigidbody.mass + rigidbody2D.mass; 

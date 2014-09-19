@@ -20,11 +20,13 @@ ModelImporter:
     2300004: EdgeTrim_002
     2300006: EdgeTrim_003
     2300008: EdgeTrim_004
+    2300010: //RootNode
     3300000: EdgeTrim
     3300002: EdgeTrim_001
     3300004: EdgeTrim_002
     3300006: EdgeTrim_003
     3300008: EdgeTrim_004
+    3300010: //RootNode
     4300000: EdgeTrim_004
     4300002: EdgeTrim_003
     4300004: EdgeTrim_002
