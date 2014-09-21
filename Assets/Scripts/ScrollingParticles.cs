@@ -2,9 +2,11 @@
 using System.Collections;
 
 public class ScrollingParticles : MonoBehaviour {
-	public GameObject player;
+	GameObject player;
 
 	void Start () {
+		player = GameObject.FindWithTag("Player");
+
 		if (!player) {
 			enabled = false;
 			return;
@@ -19,8 +21,10 @@ public class ScrollingParticles : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (!player)
+		if (!player) {
 			DestroyImmediate (gameObject);
+			return;
+		}
 		particleSystem.transform.position = player.transform.position;
 		particleSystem.transform.rotation = Quaternion.AngleAxis (Mathf.Atan2(player.rigidbody2D.velocity.y,
 		                                                                      player.rigidbody2D.velocity.x)*Mathf.Rad2Deg-90,

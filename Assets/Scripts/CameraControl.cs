@@ -7,7 +7,9 @@ public class CameraControl : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		if (!follow)
+			follow = GameObject.FindWithTag ("Player");
+
 	}
 	
 	// Update is called once per frame
