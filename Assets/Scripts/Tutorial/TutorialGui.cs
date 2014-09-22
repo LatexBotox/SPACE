@@ -24,17 +24,25 @@ public class TutorialGui : MonoBehaviour
 		print(speaker);
 		a.volume = 1;
 		a.Play();
+		draw = true;
+	}
+
+	public void HideText() {
+		draw = false;
 	}
 
 
 	void OnGUI() {
 
+		if(!draw)
+			return;
+
 		if(Time.time > end_t) {
+			draw = false;
 			callbackState.GuiCallback();
 		}
 
 		GUI.TextArea(new Rect(10, Screen.height - 90 , 400, 80), speakerName + ":\n" + displayText);
 	}
-
 }
 
