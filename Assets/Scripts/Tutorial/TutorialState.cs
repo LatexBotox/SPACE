@@ -1,20 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
-public abstract class TutorialState
+public abstract class TutorialState : MonoBehaviour
 {
+	public TutorialController tControl;
+	protected bool exit = false;
 
-	protected ShipController ship;
-	protected TutorialController tcontrol;
-
-	public TutorialState(ShipController _ship, TutorialController _tcontrol) {
-		ship = _ship;
-		tcontrol = _tcontrol;
-	}
-
-	public abstract void Start();
-	public abstract void Update();
-	public abstract void Exit();
-	public abstract void GuiCallback();
+	public virtual void TriggerEnter(StateTrigger t, Collider2D c) {}
+	public virtual void sUpdate() {}
+	public virtual bool CheckExit() { return exit; }
+	public virtual void GuiCallback() {} 
+	public abstract void Run();
 }
 

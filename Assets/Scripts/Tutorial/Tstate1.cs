@@ -4,44 +4,38 @@ using System.Collections;
 public class Tstate1 : TutorialState
 {
 
+	public Ship ship;
+
 	private float tPlayed;
 	private float hInterval = 20.0f;
 	private float eTime;
-	private bool exit = false;
+	private bool msgPlayed = false;
 
-	public Tstate1(ShipController _ship, TutorialController _tcontrol) : base(_ship, _tcontrol) {}
-
-	public override void Start ()
+	public override void Run ()
 	{
 		tPlayed = Time.time;
-		tcontrol.DisplayMessage("System recovery; \nRunning diagnostic.. \nCommence main engine test. (Default key: W)", "Rob1", 10.0f);
+		tControl.DisplayMessage("System recovery; \nRunning diagnostic.. \nCommence main engine test. (Default key: W)", "Rob1", 10.0f);
 	}
 
-	public override void Update ()
+	public override void sUpdate ()
 	{
-		if(!exit && ship.rigidbody2D.velocity.magnitude > 10.0f) {
-			tcontrol.DisplayMessage("Success; Main engine test complete.", "Rob2", 6.0f);
-			exit = true;
+
+		if(exit)
+			return;
+
+		if(!msgPlayed && ship.rigidbody2D.velocity.magnitude > 10.0f) {
+			tControl.DisplayMessage("Success; Main engine test complete.", "Rob2", 6.0f);
+			msgPlayed = true;
 			return;
 		}
 
-		if(!exit && Time.time > tPlayed + hInterval)
-			Start ();
-
-	}
-
-	public override void Exit ()
-	{
-
-		tcontrol.NextState();
+		if(Time.time > tPlayed + hInterval)
+			Run ();
 	}
 
 	public override void GuiCallback ()
 	{
-
-		tcontrol.HideMessage();
-		if(exit)
-			Exit ();
+		exit = msgPlayed;
 	}
 }
 

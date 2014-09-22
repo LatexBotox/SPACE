@@ -4,39 +4,48 @@ using System.Collections;
 public class TutorialController : MonoBehaviour
 {
 
-	public ShipController p;
 	public TutorialGui tGui;
+	public TutorialState[] tStates;
 
-	private Queue tStates;
 	private TutorialState curState;
+	private Queue qStates;
 
 	public void HideMessage() {
-		tGui.gameObject.SetActive(false);
+		tGui.HideText();
 	}
 
 	public void DisplayMessage(string msg, string name, float time) {
-		tGui.gameObject.SetActive(true);
 		tGui.ShowText(msg, name, time, curState);
 	}
 
-	// Use this for initialization
+	public void TriggerEnter(StateTrigger t, Collider2D col)
+	{
+		print("aiight received the triger");
+		curState.TriggerEnter(t, col);
+	}
+
 	void Start ()
 	{ 
-		tStates = new Queue(3);
-		curState = new Tstate1(p, this);
-		tStates.Enqueue( new Tstate2(p, this));		
-		curState.Start();
+		qStates = new Queue(tStates);
+		NextState();
 	}
 
 	public void NextState() {
-		curState = tStates.Dequeue() as TutorialState;
-		curState.Start();
+		curState = qStates.Dequeue() as TutorialState;
+		curState.Run();
 	}
 
-	// Update is called once per frame
 	void Update ()
 	{
-		curState.Update();
+		if(curState.CheckExit()) {
+			NextState();
+			if(curState == null) {
+				tGui.gameObject.SetActive(false);
+				gameObject.SetActive(false);
+				return;
+			}
+		}
+
+		curState.sUpdate();
 	}
 }
-
