@@ -4,6 +4,8 @@ using System.Collections;
 public class PathFinder : MonoBehaviour {
 	int layerMask;
 	public int preferredDistance = 40;
+	public int maxIterations = 5;
+	public int cRadius = 7;
 
 	void Start () {
 		layerMask = 1 << 8 | 1 << 9 | 1 << 10;
@@ -48,7 +50,7 @@ public class PathFinder : MonoBehaviour {
 	Vector2 Plot (Vector2 from, Vector2 to, Ship target = null) {
 		Vector2 relPos = to-from;
 		
-		RaycastHit2D firstRay = Physics2D.CircleCast (from, 6, relPos, Mathf.Infinity, layerMask);
+		RaycastHit2D firstRay = Physics2D.CircleCast (from, cRadius, relPos, Mathf.Infinity, layerMask);
 		
 		if (!firstRay) {
 			return to;
@@ -64,9 +66,9 @@ public class PathFinder : MonoBehaviour {
 		Vector2 newPos = firstRay.centroid;
 		float distance = relPos.magnitude / 2;
 		
-		for (int i = 1; i < 13; i++) {
+		for (int i = 1; i < maxIterations; i++) {
 			newPos = newPos+silly*Mathf.Pow (-1, i)*i*7;
-			RaycastHit2D iterRay = Physics2D.CircleCast (from, 6, newPos-from, distance, layerMask);
+			RaycastHit2D iterRay = Physics2D.CircleCast (from, cRadius, newPos-from, distance, layerMask);
 			
 			if (!iterRay.collider || target && iterRay.transform.gameObject.Equals (target.gameObject)) {
 				return from+(newPos-from).normalized*distance;

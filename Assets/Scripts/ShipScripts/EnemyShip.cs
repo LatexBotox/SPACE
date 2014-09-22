@@ -22,7 +22,7 @@ public class EnemyShip : Ship
 
 		moveTowards (pf.FindPath(this, target));
 		if (CanSeeTarget()) {
-			RotateWeapons (target.rigidbody2D.position + Random.insideUnitCircle * Random.Range (0, 7));
+			RotateWeapons (target.rigidbody2D.position + Random.insideUnitCircle * 7);
 			FireWeapons();
 		}
 	}
@@ -54,7 +54,7 @@ public class EnemyShip : Ship
 	}
 
 	bool CanSeeTarget() {
-		RaycastHit2D ray = Physics2D.Raycast (rigidbody2D.position, target.rigidbody2D.position - rigidbody2D.position, pf.preferredDistance*1.5f, 1 << 8);
+		RaycastHit2D ray = Physics2D.Raycast (rigidbody2D.position, target.rigidbody2D.position - rigidbody2D.position, pf.preferredDistance*1.5f, 1 << 8 | 1 << 10);
 		return ray.collider && ray.transform.gameObject == target.gameObject;
 	}
 }

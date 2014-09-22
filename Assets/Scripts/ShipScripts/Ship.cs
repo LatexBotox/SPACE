@@ -8,6 +8,10 @@ public abstract class Ship : Destructables {
 	public Hull hull;
 	public Wings wings;
 	public ParticleSystem deathEffect;
+	public ParticleSystem colEffect;
+
+	Light painLight;
+	float hitTime;
 
 	Weapon[] activeWeapons;
 
@@ -21,7 +25,8 @@ public abstract class Ship : Destructables {
 		maxHealth = health = hull.maxHealth;
 		rigidbody2D.mass = hull.mass;
 
-		activeWeapons = (Weapon[])weapons.Clone ();
+		activeWeapons = weapons;
+		hitTime = Time.time;
 	}
 
 	protected virtual void FixedUpdate() {
@@ -46,12 +51,12 @@ public abstract class Ship : Destructables {
 	}
 
 	protected void RotateWeapons(Vector2 target) {
-		foreach (Weapon w in activeWeapons)
+		foreach (Weapon w in weapons)
 			w.SendMessage("Rotate",target);
 	}
 
 	protected void FireWeapons() {
-		foreach (Weapon w in activeWeapons)
+		foreach (Weapon w in weapons)
 			w.Fire ();
 	}
 
@@ -59,5 +64,14 @@ public abstract class Ship : Destructables {
 		deathEffect = Instantiate (deathEffect, transform.position, deathEffect.transform.rotation) as ParticleSystem;
 		Destroy (gameObject, 0f);
 		Destroy (deathEffect.gameObject, deathEffect.startLifetime);
+	}
+
+	protected override void OnCollisionEnter2D (Collision2D col)
+	{
+		if (!colEffect)
+			return;
+		base.OnCollisionEnter2D (col);
+		GameObject impactClone = Instantiate(colEffect, transform.position, Quaternion.LookRotation(col.contacts[0].normal)) as GameObject;
+		Destroy(impactClone);
 	}
 }

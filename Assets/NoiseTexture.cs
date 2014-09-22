@@ -25,6 +25,9 @@ public class NoiseTexture : MonoBehaviour {
 	Color[] pix, pixn;
 	// Use this for initialization
 	void Start () {
+		if (seed == 0)
+			seed = Random.Range(int.MinValue,int.MaxValue);
+
 		tex = new Texture2D(side, side);
 		normal = new Texture2D(side, side);
 		pix = new Color[tex.width*tex.height];
@@ -41,21 +44,46 @@ public class NoiseTexture : MonoBehaviour {
 		float _x, _y, _z, noise;
 		float width = tex.width;
 		float height = tex.height;
+
+		noise = 0;
+
 		MakeGradients();
+
+//		Measure Performance
+//		float p1, p2, p3, p4;
+//		p1 = p2 = p3 = p4 = 0;
+
+//		p4 -= Time.realtimeSinceStartup;
 
 		PerlinNoise pnoise = new PerlinNoise(seed);
 		for(float y = 0; y < width;y++) {
 			for(float x = 0; x < height;x++) {
+//				p1 -= Time.realtimeSinceStartup;
 				_x = (x/width-0.5f)*2;
 				_y = (y/height-0.5f)*2;
 				_z = Mathf.Sqrt (1 - Mathf.Pow (_x, 2) - Mathf.Pow (_y,2));
+//				p1 += Time.realtimeSinceStartup;
 
-				noise = (pnoise.FractalNoise3D(_x, _y, _z, (int)octaves, frequency, amplitude));
+//				p2 -= Time.realtimeSinceStartup;
+				if (_z>=0)
+					noise = (pnoise.FractalNoise3D(_x, _y, _z, (int)octaves, frequency, amplitude));
+//				p2 += Time.realtimeSinceStartup;
 
+//				p3 -= Time.realtimeSinceStartup;
 				pix[(int)y*tex.width+(int)x] = gradient.Evaluate (1-Mathf.Abs (noise))*(1-Mathf.Abs (noise));
 				pixn[(int)y*tex.width+(int)x] = heightGradient.Evaluate (1-Mathf.Abs (noise))*(1-Mathf.Abs (noise)*4);
+//				p3 += Time.realtimeSinceStartup;
 			}
 		}
+
+//		p4 += Time.realtimeSinceStartup;
+//
+//		p1 /= width*height;
+//		p2 /= width*height;
+//		p3 /= width*height;
+//
+//		print ("Total time: " + p4 + ", Part 1 avg: " + p1 + ", Part 2: " + p2 + ", Part 3: " + p3);
+
 		tex.SetPixels(pix);
 		tex.Apply ();
 		normal.SetPixels (HeightToNormal (pixn));
@@ -122,7 +150,7 @@ public class NoiseTexture : MonoBehaviour {
 		for(int i = 0; i < verts.Length;i++) {
 			Vector3 v = normals[i];
 			v.z = 0;
-			verts[i] = verts[i]+v*(pnoise.FractalNoise3D(verts[i].x, verts[i].y, verts[i].z, (int)octaves/2, frequency, amplitude/2));
+			verts[i] = verts[i]+v*(pnoise.FractalNoise3D(verts[i].x, verts[i].y, verts[i].z, (int)octaves/2, frequency*2, amplitude/2));
 			if (verts[i].z > -0.01) {
 				if (k == 0)
 					colPoints[++j%16] = verts[i];

@@ -4,7 +4,8 @@ using System.Collections;
 public class AsteroidLauncher : Weapon
 {
 		
-	void Start() {
+	protected override void Start() {
+		base.Start ();
 		cooldown = 1.5f;
 	}
 

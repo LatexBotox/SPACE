@@ -19,7 +19,7 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	public void Damage(float d) {
+	public virtual void Damage(float d) {
 		//print (gameObject.name+" damaged for: "+d);
 		health -= d;
 		health = (float)Mathf.Max ((float)health, 0);
@@ -28,7 +28,7 @@ public abstract class Destructables : MonoBehaviour
 		}
 	}
 
-	protected void OnCollisionEnter2D(Collision2D col) {
+	protected virtual void OnCollisionEnter2D(Collision2D col) {
 		float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
 		
 		float m = col.rigidbody.mass + rigidbody2D.mass; 
