@@ -68,9 +68,9 @@ public abstract class Ship : Destructables {
 
 	protected override void OnCollisionEnter2D (Collision2D col)
 	{
+		base.OnCollisionEnter2D (col);
 		if (!colEffect)
 			return;
-		base.OnCollisionEnter2D (col);
 		GameObject impactClone = Instantiate(colEffect, transform.position, Quaternion.LookRotation(col.contacts[0].normal)) as GameObject;
 		Destroy(impactClone);
 	}

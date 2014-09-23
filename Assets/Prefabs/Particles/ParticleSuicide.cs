@@ -3,6 +3,6 @@ using System.Collections;
 
 public class ParticleSuicide : MonoBehaviour {
 	void Start () {
-		Destroy(gameObject, particleSystem.startLifetime);
+		Destroy(gameObject, particleSystem.duration);
 	}
 }

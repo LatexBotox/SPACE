@@ -5,12 +5,15 @@ using System.Collections.Generic;
 public class Asteroid : Destructables {
 	public AsteroidGenerator gen;
 
+	public ParticleSystem deathFX;
+
 	public Mineral mineral;
 	public enum Mineral {
 		Iron,
 		Copperium,
 		Gallium,
-		Whatium
+		Whatium,
+		Blank
 	}
 
 	public int sizeClass;
@@ -40,13 +43,17 @@ public class Asteroid : Destructables {
 
 	public override void Die ()
 	{
+		Destroy (gameObject, 0);
 		if (sizeClass>0 && gen!=null) {
 			for(int i = 0; i < 3;i++) {
 				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
 				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1);
-				clone.rigidbody2D.AddForce ((gen.transform.position-transform.position).normalized*500*sizeClass);
+				clone.rigidbody2D.AddForce ((gen.transform.position-transform.position).normalized*1000*sizeClass);
 			}
 		}
-		Destroy (gameObject, 0);
+		if(deathFX) {
+			deathFX = Instantiate(deathFX, transform.position, transform.rotation) as ParticleSystem;
+			deathFX.transform.localScale = Vector3.one*sizeClass/2;
+		}
 	}
 }

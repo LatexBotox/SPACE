@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AsteroidGenerator : MonoBehaviour {
 	float octaves = 6;
@@ -13,14 +14,20 @@ public class AsteroidGenerator : MonoBehaviour {
 	Texture2D[] textures;
 	Texture2D[] normals;
 
+	Texture2D[,,,] textureArray;
+
 	public Asteroid.Mineral[] minerals;
 	public Asteroid baseAsteroid;
 	public Color baseColor;
 
+	public SortedList<Asteroid.Mineral,float> mineralOccurance;
+	float GenericAsteroidRate = 5;
+
 	PerlinNoise pnoise;
 
-	int variants = 50;
-	int sizes = 2;
+	public int variants = 4;
+	int sizes = 3;
+	public int maxRes = 512;
 
 	int[,] chunks;
 	int chunkSize = 128;
@@ -28,39 +35,61 @@ public class AsteroidGenerator : MonoBehaviour {
 	GameObject player;
 
 	void Start () {
-		variants = Mathf.FloorToInt (variants/minerals.Length)*minerals.Length;
-		textures = new Texture2D[variants*sizes];
-		normals = new Texture2D[variants*sizes];
+		player = GameObject.FindGameObjectWithTag("Player");
+
 
 		float time = 0 - Time.realtimeSinceStartup;
 
 		Random.seed = seed = (int)(seed==0?Time.realtimeSinceStartup:seed);
 
-		for(int i = 0; i < textures.Length; i++) {
-			int side = (int)(256/(Mathf.Floor (i*1f/variants)+1));
-			textures[i] = new Texture2D(side, side);
-			normals[i] = new Texture2D(side, side);
+		mineralOccurance = new SortedList<Asteroid.Mineral, float>();
 
-			GenerateTexture (textures[i], normals[i], 
-			                 baseColor*Random.Range (0.8f,1.2f), 
-			                 Asteroid.MineralToColor(minerals[Mathf.FloorToInt((i%variants)/(variants/minerals.Length))]), 
-			                 Random.Range (int.MinValue, int.MaxValue));
+		foreach (Asteroid.Mineral m in minerals)
+			mineralOccurance.Add(m,0.5f);
 
+		textureArray = new Texture2D[sizes,mineralOccurance.Count+1,variants,2];
+
+		for (int size = 0;size < sizes;size++) {
+			for (int mineral = 1;mineral < minerals.Length+1;mineral++) {
+				for (int variant = 0;variant < variants;variant++) {
+					int res = maxRes/(int)Mathf.Pow (2, sizes-size-1);
+					textureArray[size,mineral,variant,0] = new Texture2D(res, res);
+					textureArray[size,mineral,variant,1] = new Texture2D(res, res);
+
+					GenerateSpecificTexture (textureArray[size,mineral,variant,0],
+					                 				 textureArray[size,mineral,variant,1],
+					                				 baseColor*Random.Range (0.7f, 1.3f),
+					                 				 Asteroid.MineralToColor(minerals[mineral-1]),
+					                         Random.Range (int.MinValue,int.MaxValue));
+				}
+			}
 		}
+
+		for (int size = 0;size < sizes;size++) {
+			for (int variant = 0;variant < variants;variant++) {
+				int res = maxRes/(int)Mathf.Pow (2, sizes-size-1);
+				textureArray[size,0,variant,0] = new Texture2D(res, res);
+				textureArray[size,0,variant,1] = new Texture2D(res, res);
+
+				GenerateGenericTexture (textureArray[size,0,variant,0],
+				                        textureArray[size,0,variant,1],
+				                        baseColor*Random.Range (0.7f, 1.3f),
+				                        Random.Range (int.MinValue,int.MaxValue));
+			}
+		}
+
+
 
 		time += Time.realtimeSinceStartup;
 		print ("Generated Textures in: " + time);
 		pnoise = new PerlinNoise(Random.Range (int.MinValue, int.MaxValue));
-
 		chunks = new int[64,64];
-
-		player = GameObject.FindGameObjectWithTag("Player");
 		enabled = player;
 	}
 
 	void FixedUpdate() {
-		if (chunks[(int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2,
-		           (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2] != 2) {
+		if (player && chunks[(int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2,
+		           					 (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2] != 2) {
 			StartCoroutine("GenerateAdjacentChunks");
 		}
 	}
@@ -92,38 +121,55 @@ public class AsteroidGenerator : MonoBehaviour {
 
 				float ran = pnoise.FractalNoise2D(_x/256, _y/256, 3, 0.1f, 0.7f);
 
-				if(ran>0.2f) {
-					transform.position = new Vector3(_x, _y, 1)+(Vector3)Random.insideUnitCircle*63;
-					GenerateAsteroid(minerals[Random.Range (0,minerals.Length-1)], 2);
-				} else if (ran>0f) {
-					transform.position = new Vector3(_x, _y, 1)+(Vector3)Random.insideUnitCircle*63;
-					GenerateAsteroid(minerals[Random.Range (0,minerals.Length-1)], 1);
+				if (ran > 0f) {
+					transform.position = new Vector3(_x, _y, 1)+(Vector3)Random.insideUnitCircle*31;
+					GenerateRandomAsteroid (ran);
 				}
 			}
 		}
 	}
 
+	public Asteroid GenerateRandomAsteroid(float ran) {
+		float mineralRange = GenericAsteroidRate;
+		int size = Mathf.FloorToInt (Mathf.Lerp (1,sizes,ran*1.5f));
+		
+
+		foreach (KeyValuePair<Asteroid.Mineral, float> p in mineralOccurance)
+			mineralRange += p.Value;
+
+		float mineralf = Random.Range (0, mineralRange);
+	
+		float fa = 0f;
+		foreach (KeyValuePair<Asteroid.Mineral, float> p in mineralOccurance) {
+			fa += p.Value;
+			if (fa > mineralf)
+				return GenerateAsteroid (p.Key, size);
+		}
+		return GenerateAsteroid (Asteroid.Mineral.Blank, size);
+	}
 
 	public Asteroid GenerateAsteroid(Asteroid.Mineral mineral, int size) {
 		Random.seed = seed = seed+1;
-		int ran = Random.Range (0, variants/minerals.Length-1);
-		for (int i = 0; i < minerals.Length;i++){
-			if (minerals[i] == mineral) {
-				ran += (variants/minerals.Length)*i;
-			}
-		}
-		ran += variants*(Mathf.Clamp(sizes-1-size,0,sizes-1));
+		int ran = Random.Range (0,variants-1);
+
+		int mineralIndex = mineralOccurance.IndexOfKey (mineral)+1;
 
 		Asteroid clone = Instantiate (baseAsteroid, transform.position, baseAsteroid.transform.rotation) as Asteroid;
-		clone.renderer.material.mainTexture = textures[ran];
-		textures[ran].Apply();
-		clone.renderer.material.SetTexture ("_BumpMap", normals[ran]);
-		normals[ran].Apply ();
+
+		clone.renderer.material.mainTexture = textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,0];
+		textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,0].Apply();
+		
+		clone.renderer.material.SetTexture ("_BumpMap", textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,1]);
+		textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,1].Apply ();
 		clone.sizeClass = size;
 		clone.gen = this;
 		clone.mineral = mineral;
 
-		clone.transform.localScale = Vector3.one*10*Random.Range (0.8f, 1.2f)/Mathf.Pow (2, sizes-size);
+		clone.transform.localScale = Vector3.one*2*Random.Range (0.8f, 1.2f)*(Mathf.Pow (2,size));
+		clone.rigidbody2D.mass = 2*Mathf.Pow (4,size);
+
+		if (mineralIndex > 0)
+			clone.tag = "valuable";
 
 		DeformMesh (clone.GetComponent<MeshFilter>().mesh, clone.GetComponent<PolygonCollider2D>(), (sizes-size+1), Random.Range (int.MinValue, int.MaxValue));
 
@@ -131,7 +177,7 @@ public class AsteroidGenerator : MonoBehaviour {
 	}
 
 
-	void GenerateTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {
+	void GenerateSpecificTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {
 		float _x, _y, _z, noise;
 		int width = tex.width;
 		int height = tex.height;
@@ -154,6 +200,37 @@ public class AsteroidGenerator : MonoBehaviour {
 				if (_z>=0)
 					noise = (pnoise.FractalNoise3D(_x, _y, _z, (int)octaves, frequency, amplitude));
 
+				pix[(int)y*tex.width+(int)x] = gradients[0].Evaluate (1-Mathf.Abs (noise))*(1-Mathf.Abs (noise));
+				pixn[(int)y*tex.width+(int)x] = gradients[1].Evaluate (1-Mathf.Abs (noise))*(1-Mathf.Abs (noise)*4);
+			}
+		}
+		tex.SetPixels(pix);
+		normal.SetPixels (HeightToNormal (pixn));
+	}
+
+	void GenerateGenericTexture(Texture2D tex, Texture2D normal, Color asteroidColor, int seed) {
+		float _x, _y, _z, noise;
+		int width = tex.width;
+		int height = tex.height;
+
+		Color[] pix = new Color[width*height];
+		Color[] pixn = new Color[width*height];
+		
+		noise = 0;
+		
+		Gradient[] gradients = MakeGenericGradients(asteroidColor);
+
+		PerlinNoise pnoise = new PerlinNoise(seed);
+		for(float y = 0; y < width;y++) {
+			for(float x = 0; x < height;x++) {
+				_x = (x/width-0.5f)*2;
+				_y = (y/height-0.5f)*2;
+				_z = Mathf.Sqrt (1 - Mathf.Pow (_x, 2) - Mathf.Pow (_y,2));
+				
+				noise = 0;
+				if (_z>=0)
+					noise = (pnoise.FractalNoise3D(_x, _y, _z, (int)octaves, frequency, amplitude));
+				
 				pix[(int)y*tex.width+(int)x] = gradients[0].Evaluate (1-Mathf.Abs (noise))*(1-Mathf.Abs (noise));
 				pixn[(int)y*tex.width+(int)x] = gradients[1].Evaluate (1-Mathf.Abs (noise))*(1-Mathf.Abs (noise)*4);
 			}
@@ -202,10 +279,8 @@ public class AsteroidGenerator : MonoBehaviour {
 		Vector3[] normals = mesh.normals;
 		
 		PerlinNoise pnoise = new PerlinNoise(seed);
-		
-		float colRes = 16;
-		
-		Vector2[] colPoints = new Vector2[16];
+
+		Vector2[] colPoints = new Vector2[14];
 		
 		int j = 0;
 		int k = 0;
@@ -215,7 +290,7 @@ public class AsteroidGenerator : MonoBehaviour {
 			verts[i] = verts[i]+v*(pnoise.FractalNoise3D(verts[i].x, verts[i].y, verts[i].z, (int)octaves/2, frequency*2, amplitude/2*mult));
 			if (verts[i].z > -0.01) {
 				if (k == 0)
-					colPoints[++j%16] = verts[i];
+					colPoints[j++%14] = verts[i];
 				k = (k+1)%3;
 			}
 		}
@@ -240,11 +315,13 @@ public class AsteroidGenerator : MonoBehaviour {
 		gck[3].time = threshold+blend;
 		gck[4].color = mineralColor;
 		gck[4].time = 1;
-		GradientAlphaKey[] gak = new GradientAlphaKey[2];
-		gak[0].alpha = 1;
+		GradientAlphaKey[] gak = new GradientAlphaKey[3];
+		gak[0].alpha = 0.15f;
 		gak[0].time = 0;
-		gak[1].alpha = 1;
-		gak[1].time = 1;
+		gak[1].alpha = 0.15f;
+		gak[1].time = threshold+0.01f;
+		gak[2].alpha = 1;
+		gak[2].time = 1;
 		gradients[0].SetKeys(gck, gak);
 		
 		gradients[1] = new Gradient();
@@ -258,6 +335,31 @@ public class AsteroidGenerator : MonoBehaviour {
 		gck[3].time = threshold+blend;
 		gck[4].color = new Color(0,0,0);
 		gck[4].time = 1;
+		gradients[1].SetKeys (gck, gak);
+
+		return gradients;
+	}
+
+	Gradient[] MakeGenericGradients(Color asteroidColor) {
+		Gradient[] gradients = new Gradient[2];
+		gradients[0] = new Gradient();
+		GradientColorKey[] gck = new GradientColorKey[2];
+		gck[0].color = Color.black;
+		gck[0].time = 0;
+		gck[1].color = asteroidColor;
+		gck[1].time = 1;
+		GradientAlphaKey[] gak = new GradientAlphaKey[2];
+		gak[0].alpha = 0.15f;
+		gak[0].time = 0;
+		gak[1].alpha = 0.15f;
+		gak[1].time = 1;
+		gradients[0].SetKeys (gck, gak);
+
+		gradients[1] = new Gradient();
+		gck[0].color = Color.black;
+		gck[0].time = 0;
+		gck[1].color = Color.white;
+		gck[1].time = 1;
 		gradients[1].SetKeys (gck, gak);
 
 		return gradients;

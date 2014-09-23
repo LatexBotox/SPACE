@@ -10,15 +10,23 @@ public class Engine : MonoBehaviour {
 	public float thrustMult;
 	public float maxSpeed;
 
+	bool on;
+
 	void Start() {
 		parent = gameObject.transform.parent.gameObject;
+	}
+
+	void FixedUpdate() {
+		if (!on) 
+			ps.enableEmission = false;
+		on = !on;
 	}
 
 	public void Thrust () {
 		parent.rigidbody2D.AddForce (parent.transform.up.normalized * thrustMult);
 		parent.rigidbody2D.AddForce (-parent.rigidbody2D.velocity.normalized * 
 		                             Mathf.Lerp (0, thrustMult, (parent.rigidbody2D.velocity.magnitude)*20  / maxSpeed - 19 ));
-		ps.Emit (3);
+		ps.enableEmission = on = true;
 	}
 
 

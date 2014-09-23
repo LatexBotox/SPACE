@@ -7,15 +7,20 @@ public class IndicatorArrow : MonoBehaviour {
 	public GameObject target;
 	SpriteRenderer spriteRenderer;
 	public float maxRange = 200;
+
+	float alpha;
 	// Use this for initialization
 	void Start () {
 		spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+		alpha = 1.0f;
 		if (target.layer == LayerMask.NameToLayer ("Ally")) {
 			spriteRenderer.color = Color.green;
 		} else if (target.layer == LayerMask.NameToLayer ("Enemy")) {
 			spriteRenderer.color = Color.red;
-		} else {
+		} else if (target.tag == "valuable") {
 			spriteRenderer.color = Color.yellow;
+		} else {
+			alpha = 0;
 		}
 
 		if (!target) {
@@ -50,6 +55,6 @@ public class IndicatorArrow : MonoBehaviour {
 		spriteRenderer.color = new Color(spriteRenderer.color.r,
 		                                 spriteRenderer.color.g,
 		                                 spriteRenderer.color.b,
-		                                 Mathf.Lerp (0, 1, (relPos.magnitude-25) / 28));
+		                                 Mathf.Lerp (0, alpha, (relPos.magnitude-25) / 28));
 	}
 }

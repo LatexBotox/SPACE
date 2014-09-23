@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour {
 
 	public int launchedLayer = 0;
 
+
 	Vector2 dir;
 	
 	void Start() {

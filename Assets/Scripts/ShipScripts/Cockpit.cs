@@ -10,6 +10,7 @@ public class Cockpit : MonoBehaviour {
 	bool radarExists = false;
 
 	public void StartRadar() {
+		print ("Radar Started. Beep Boop");
 		parent = gameObject.transform.parent.gameObject;
 		radar = Instantiate (radar, parent.transform.position, radar.transform.rotation) as Radar;
 
