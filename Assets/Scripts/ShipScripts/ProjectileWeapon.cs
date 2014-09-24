@@ -8,6 +8,7 @@ public class ProjectileWeapon : Weapon {
 	protected override void Start() {
 		base.Start ();
 		cooldown = setCooldown;
+		rotates = true;
 	}
 
 	public override void Fire() {
@@ -22,6 +23,7 @@ public class ProjectileWeapon : Weapon {
 
 			Physics2D.IgnoreCollision(projectileClone.collider2D, parent.collider2D);
 
+			print (parent.layer);
 			projectileClone.launchedLayer = parent.layer;
 		}
 	}

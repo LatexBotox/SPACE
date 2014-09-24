@@ -7,7 +7,13 @@ public class TutorialMiningLaserMenu : Menu
 	MenuButton pb;
 
 	private void ButtonPressed(int id) {
-		Debug.Log("lawl i pressed thebuy butn");
+		GameObject laser = MonoBehaviour.Instantiate( Resources.Load("LaserCannon"),
+		                               								new Vector2(0,0), 
+		                              								Quaternion.identity) as GameObject;
+
+		Weapon weap = laser.GetComponent(typeof(Weapon)) as Weapon;
+		weap.gameObject.SetActive(false);
+		InventoryManager.GetInstance().AddWeapon(weap);
 	}
 
 	public TutorialMiningLaserMenu(Rect area)

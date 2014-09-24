@@ -10,6 +10,17 @@ public class PlayerShip : Ship
 		cockpit.StartRadar ();
 	}
 
+
+	void OnEnable() {
+		if(weapon == null) {
+			ArrayList weaps = InventoryManager.GetInstance().GetWeapons();
+			if(weaps.Count > 0)
+				InventoryManager.GetInstance().Equip(weaps[0] as Weapon);
+		}
+				
+	}
+
+
 	protected override void FixedUpdate ()
 	{
 		base.FixedUpdate ();

@@ -2,8 +2,10 @@
 using System.Collections;
 
 public abstract class Ship : Destructables {
-	public Weapon[] weapons;
-	public Engine[] engines;
+	//public Weapon[] weapons;
+	//public Engine[] engines;
+	public Weapon weapon;
+	public Engine engine;
 	public Cockpit cockpit;
 	public Hull hull;
 	public Wings wings;
@@ -13,11 +15,13 @@ public abstract class Ship : Destructables {
 	Light painLight;
 	float hitTime;
 
-	Weapon[] activeWeapons;
+	//Weapon[] activeWeapons;
 
 	protected virtual void Start () {
-		weapons = GetComponentsInChildren<Weapon> ();
-		engines = GetComponentsInChildren<Engine> ();
+		/*weapons = GetComponentsInChildren<Weapon> ();
+		engines = GetComponentsInChildren<Engine> ();*/
+		weapon = GetComponentInChildren<Weapon>();
+		engine = GetComponentInChildren<Engine>();
 		cockpit = GetComponentInChildren<Cockpit> ();
 		hull = GetComponentInChildren<Hull> ();
 		wings = GetComponentInChildren<Wings> ();
@@ -25,7 +29,7 @@ public abstract class Ship : Destructables {
 		maxHealth = health = hull.maxHealth;
 		rigidbody2D.mass = hull.mass;
 
-		activeWeapons = weapons;
+		//activeWeapons = weapons;
 		hitTime = Time.time;
 	}
 
@@ -34,8 +38,10 @@ public abstract class Ship : Destructables {
 	}
 
 	protected void ThrustEngines() {
-		foreach (Engine e in engines)
-			e.Thrust();
+		/*foreach (Engine e in engines)
+			e.Thrust();*/
+
+		engine.Thrust();
 	}
 
 	protected void Dampen() {
@@ -51,13 +57,20 @@ public abstract class Ship : Destructables {
 	}
 
 	protected void RotateWeapons(Vector2 target) {
-		foreach (Weapon w in weapons)
-			w.SendMessage("Rotate",target);
+		/*foreach (Weapon w in weapons)
+			w.SendMessage("Rotate",target);*/
+		if(weapon != null) {
+			//weapon.SendMessage("Rotate", target);
+			weapon.Rotate(target);
+			print ("rotate that weapon!");
+		}
 	}
 
 	protected void FireWeapons() {
-		foreach (Weapon w in weapons)
-			w.Fire ();
+		/*foreach (Weapon w in weapons)
+			w.Fire ();*/
+		if(weapon != null) 
+			weapon.Fire();
 	}
 
 	override public void Die() {

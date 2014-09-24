@@ -20,7 +20,6 @@ public class TutorialController : MonoBehaviour
 
 	public void TriggerEnter(StateTrigger t, Collider2D col)
 	{
-		print("aiight received the triger");
 		curState.TriggerEnter(t, col);
 	}
 

@@ -12,6 +12,8 @@ public class BgScroller : MonoBehaviour {
 
 	void Update () {
 
+		if(Camera.main == null)
+			return;
 
 		float scroll_x = Mathf.Repeat(Camera.main.transform.position.x * scroll_speed, 1);
 		float scroll_y = Mathf.Repeat(Camera.main.transform.position.y * scroll_speed, 1);
