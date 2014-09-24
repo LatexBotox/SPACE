@@ -57,11 +57,10 @@ public class Asteroid : Destructables {
 			for(int i = 0; i < 3;i++) {
 				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
 				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1);
+				chunk.AddAsteroid (clone);
 				clone.rigidbody2D.AddForce ((gen.transform.position-transform.position).normalized*1000*sizeClass);
 
 				clone.chunk = chunk;
-
-				chunk.AddAsteroid (clone);
 			}
 		}
 		if(deathFX) {

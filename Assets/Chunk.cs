@@ -1,19 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
 
-[SerializeField]
+
+[Serializable]
 public class AsteroidData {
 	public bool extra = false;
 	public int index, size;
 	public float health;
 	public Asteroid.Mineral mineral;
-	public Vector2 pos;
+	public float posx, posy;
+}
+
+[Serializable]
+public class ChunkData {
+	public int chunkx, chunky;
+	public AsteroidData[] asteroidData;
 }
 
 public class Chunk : MonoBehaviour {
 
-	List<AsteroidData> flaggedAsteroids;
+	public List<AsteroidData> flaggedAsteroids;
 	public List<Asteroid> asteroids;
 	int chunkSize = 128;
 
@@ -26,7 +35,8 @@ public class Chunk : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		flaggedAsteroids = new List<AsteroidData>();
+		if (flaggedAsteroids == null)
+			flaggedAsteroids = new List<AsteroidData>();
 		asteroids = new List<Asteroid>();
 		chunkx = Mathf.FloorToInt (transform.position.x/128);
 		chunky = Mathf.FloorToInt (transform.position.y/128);
@@ -49,23 +59,28 @@ public class Chunk : MonoBehaviour {
 			gen.GenerateChunk(this);
 			alive = true;
 
+
 			foreach (AsteroidData ad in flaggedAsteroids) {
 				if (ad.index > asteroids.Count-1) {
-					gen.transform.position = ad.pos;
+					gen.transform.position = new Vector3(ad.posx,ad.posy,gen.transform.position.z);
 					Asteroid clone = gen.GenerateAsteroid(ad.mineral, ad.size);
 					clone.Health = ad.health;
 					clone.gen = gen;
 					clone.chunk = this;
-				} else if (ad.health == 0 && asteroids[ad.index] != null) {
+					asteroids.Add (clone);
+				} else if (ad.health <= 0) {
 					Destroy (asteroids[ad.index].gameObject,0f);
 					asteroids[ad.index] = null;
-				} else {
-					print ("Restored asteroid at index: " +ad.index);
+				} else if (ad.index != -1) {
 					Asteroid asteroid = asteroids[ad.index];
-					asteroid.rigidbody2D.position = ad.pos;
+					asteroid.rigidbody2D.position = new Vector2(ad.posx, ad.posy);
 					asteroid.Health = ad.health;
 				}
 			}
+
+			foreach (Asteroid a in asteroids)
+				if (a!=null)
+					a.gameObject.SetActive(true);
 
 		}
 		CancelInvoke();
@@ -77,15 +92,16 @@ public class Chunk : MonoBehaviour {
 
 		foreach (AsteroidData ad in flaggedAsteroids) {
 
-			print ("Getting data from asteroid at: " + ad.index);
 			asteroid = asteroids[ad.index];
 			if (asteroid == null) {
 				ad.health = 0;
-				if (ad.extra)
+				if (ad.extra) {
 					ad.index = -1;
+				}
 			} else {
 				ad.health = asteroid.Health;
-				ad.pos = asteroid.transform.position;
+				ad.posx = asteroid.rigidbody2D.position.x;
+				ad.posy = asteroid.rigidbody2D.position.y;
 			}
 		}
 
@@ -100,13 +116,15 @@ public class Chunk : MonoBehaviour {
 	}
 
 	public void RemoveAsteroid(Asteroid asteroid) {
-		asteroids[asteroids.IndexOf(asteroid)] = null;
+		if (asteroids.IndexOf(asteroid)!=-1)	
+			asteroids[asteroids.IndexOf(asteroid)] = null;
 	}
 
 	public void AddAsteroid(Asteroid asteroid) {
 		asteroid.flagged = true;
 		asteroids.Add (asteroid);
 		flaggedAsteroids[FlagAsteroid (asteroid)].extra = true;
+		asteroid.gameObject.SetActive(true);
 	}
 
 	public int FlagAsteroid(Asteroid asteroid) {
@@ -116,11 +134,44 @@ public class Chunk : MonoBehaviour {
 
 		ad.health = asteroid.Health;
 		ad.mineral = asteroid.mineral;
-		ad.pos = asteroid.rigidbody2D.position;
+		ad.posx = asteroid.rigidbody2D.position.x;
+		ad.posy = asteroid.rigidbody2D.position.y;
 		ad.index = asteroids.IndexOf (asteroid);
 		ad.size = asteroid.sizeClass;
 		flaggedAsteroids.Add (ad);
 
 		return flaggedAsteroids.IndexOf (ad);
+	}
+
+	public ChunkData GetChunkData() {
+		if (flaggedAsteroids.Count > 0) {
+			Asteroid asteroid;
+
+			foreach (AsteroidData ad in flaggedAsteroids) {
+				if (ad.index < asteroids.Count) {
+					asteroid = asteroids[ad.index];
+				} else {
+					asteroid = null;
+				}
+				if (asteroid == null) {
+					ad.health = 0;
+					if (ad.extra)
+						ad.index = -1;
+				} else {
+					ad.health = asteroid.Health;
+					ad.posx = asteroid.rigidbody2D.position.x;
+					ad.posy = asteroid.rigidbody2D.position.y;
+				}
+			}
+			
+			flaggedAsteroids.RemoveAll ((AsteroidData obj) => obj.index == -1);
+
+			ChunkData cd = new ChunkData();
+			cd.asteroidData = flaggedAsteroids.ToArray();
+			cd.chunkx = chunkx;
+			cd.chunky = chunky;
+			return cd;
+		}
+		return null;
 	}
 }

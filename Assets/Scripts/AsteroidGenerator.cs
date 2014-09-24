@@ -78,39 +78,11 @@ public class AsteroidGenerator : MonoBehaviour {
 			}
 		}
 
-
-
 		time += Time.realtimeSinceStartup;
 		print ("Generated Textures in: " + time);
-		levelSeed = Random.Range (int.MinValue, int.MaxValue);
 
 		enabled = player;
 	}
-
-//	void FixedUpdate() {
-//		if (player && chunks[(int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2,
-//		           					 (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2] != 2) {
-//			StartCoroutine("GenerateAdjacentChunks");
-//		}
-//	}
-
-//	IEnumerator GenerateAdjacentChunks() {
-//		int chunkx = (int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2;
-//		int chunky = (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2;
-//		chunks[chunkx, chunky] = 2;
-//		for (int x = Mathf.Clamp (chunkx-5, 0, chunks.GetLength (0)-1);
-//		     x <= Mathf.Clamp (chunkx+5, 0, chunks.GetLength (0)-1); x++) {
-//			for (int y = Mathf.Clamp (chunky-5, 0, chunks.GetLength (0)-1); 
-//			     y <= Mathf.Clamp (chunky+5, 0, chunks.GetLength (1)-1); y++) {
-//				if (chunks[x,y] == 0) {
-//					GenerateChunk (x, y);
-//					chunks[x,y] = 1;
-//					yield return new WaitForFixedUpdate();
-//				}
-//			}
-//		}
-//		chunks[chunkx, chunky] = 2;
-//	}
 
 	public void GenerateChunk(Chunk chunk) {
 		lnoise = new PerlinNoise(levelSeed);
