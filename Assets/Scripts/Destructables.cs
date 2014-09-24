@@ -45,6 +45,9 @@ public abstract class Destructables : MonoBehaviour
 		get {
 			return health;
 		}
+		set {
+			health = value;
+		}
 	}
 
 	public float MaxHealth {

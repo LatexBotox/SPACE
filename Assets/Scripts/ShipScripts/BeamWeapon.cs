@@ -9,8 +9,10 @@ public class BeamWeapon : Weapon
 
 	public ParticleSystem[] beams;
 	public LayerMask mask;
+	public ParticleSystem impact;
 
 	bool firing;
+
 
 	protected override void Start ()
 	{
@@ -42,6 +44,11 @@ public class BeamWeapon : Weapon
 		foreach (RaycastHit2D hit in hits) {
 			print ("Hit object: " + hit.collider.gameObject.name);
 			hit.collider.gameObject.SendMessage("Damage", damage);
+			if (impact) {
+				impact.transform.position = hit.point+hit.normal*1.5f;
+				impact.transform.rotation = Quaternion.LookRotation(hit.normal, impact.transform.forward);
+				impact.Emit (100);
+			}
 		}
 	}
 }

@@ -10,6 +10,7 @@ public class AsteroidGenerator : MonoBehaviour {
 	float frequency = 1.2f;
 
 	int seed = 0;
+	public int levelSeed;
 
 	Texture2D[] textures;
 	Texture2D[] normals;
@@ -23,13 +24,12 @@ public class AsteroidGenerator : MonoBehaviour {
 	public SortedList<Asteroid.Mineral,float> mineralOccurance;
 	float GenericAsteroidRate = 5;
 
-	PerlinNoise pnoise;
+	PerlinNoise lnoise;
 
 	public int variants = 4;
 	int sizes = 3;
 	public int maxRes = 512;
-
-	int[,] chunks;
+	
 	int chunkSize = 128;
 
 	GameObject player;
@@ -82,54 +82,64 @@ public class AsteroidGenerator : MonoBehaviour {
 
 		time += Time.realtimeSinceStartup;
 		print ("Generated Textures in: " + time);
-		pnoise = new PerlinNoise(Random.Range (int.MinValue, int.MaxValue));
-		chunks = new int[64,64];
+		levelSeed = Random.Range (int.MinValue, int.MaxValue);
+
 		enabled = player;
 	}
 
-	void FixedUpdate() {
-		if (player && chunks[(int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2,
-		           					 (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2] != 2) {
-			StartCoroutine("GenerateAdjacentChunks");
-		}
-	}
+//	void FixedUpdate() {
+//		if (player && chunks[(int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2,
+//		           					 (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2] != 2) {
+//			StartCoroutine("GenerateAdjacentChunks");
+//		}
+//	}
 
-	IEnumerator GenerateAdjacentChunks() {
-		int chunkx = (int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2;
-		int chunky = (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2;
-		chunks[chunkx, chunky] = 2;
-		for (int x = Mathf.Clamp (chunkx-5, 0, chunks.GetLength (0)-1);
-		     x <= Mathf.Clamp (chunkx+5, 0, chunks.GetLength (0)-1); x++) {
-			for (int y = Mathf.Clamp (chunky-5, 0, chunks.GetLength (0)-1); 
-			     y <= Mathf.Clamp (chunky+5, 0, chunks.GetLength (1)-1); y++) {
-				if (chunks[x,y] == 0) {
-					GenerateChunk (x, y);
-					chunks[x,y] = 1;
-					yield return new WaitForFixedUpdate();
-				}
-			}
-		}
-		chunks[chunkx, chunky] = 2;
-	}
+//	IEnumerator GenerateAdjacentChunks() {
+//		int chunkx = (int)player.transform.position.x/chunkSize+chunks.GetLength (0)/2;
+//		int chunky = (int)player.transform.position.y/chunkSize+chunks.GetLength (1)/2;
+//		chunks[chunkx, chunky] = 2;
+//		for (int x = Mathf.Clamp (chunkx-5, 0, chunks.GetLength (0)-1);
+//		     x <= Mathf.Clamp (chunkx+5, 0, chunks.GetLength (0)-1); x++) {
+//			for (int y = Mathf.Clamp (chunky-5, 0, chunks.GetLength (0)-1); 
+//			     y <= Mathf.Clamp (chunky+5, 0, chunks.GetLength (1)-1); y++) {
+//				if (chunks[x,y] == 0) {
+//					GenerateChunk (x, y);
+//					chunks[x,y] = 1;
+//					yield return new WaitForFixedUpdate();
+//				}
+//			}
+//		}
+//		chunks[chunkx, chunky] = 2;
+//	}
 
-	void GenerateChunk(int chunkx, int chunky) {
-		print ("Generated chunk!");
+	public void GenerateChunk(Chunk chunk) {
+		lnoise = new PerlinNoise(levelSeed);
+
+		int chunkx, chunky;
+		chunkx = chunk.chunkx;
+		chunky = chunk.chunky;
+
+		Random.seed = chunk.chunkSeed;
+
 		for(int x = -chunkSize/128; x < chunkSize/128; x++) {
 			for(int y = -chunkSize/128; y < chunkSize/128; y++) {
-				float _x = x*64+chunkSize*(chunkx-chunks.GetLength(0)/2);
-				float _y = y*64+chunkSize*(chunky-chunks.GetLength(1)/2);
+				float _x = x*64+chunkSize*chunkx;
+				float _y = y*64+chunkSize*chunky;
 
-				float ran = pnoise.FractalNoise2D(_x/256, _y/256, 3, 0.1f, 0.7f);
+				float ran = lnoise.FractalNoise2D(_x/256, _y/256, 3, 0.1f, 0.7f);
 
 				if (ran > 0f) {
-					transform.position = new Vector3(_x, _y, 1)+(Vector3)Random.insideUnitCircle*31;
-					GenerateRandomAsteroid (ran);
+					transform.position = new Vector3(_x, _y, 1) +(Vector3)Random.insideUnitCircle*31;
+					Asteroid a = GenerateRandomAsteroid (ran, chunk.chunkSeed);
+					a.chunk = chunk;
+					chunk.asteroids.Add(a);
 				}
 			}
 		}
 	}
 
-	public Asteroid GenerateRandomAsteroid(float ran) {
+	public Asteroid GenerateRandomAsteroid(float ran, int seed) {
+		Random.seed = seed;
 		float mineralRange = GenericAsteroidRate;
 		int size = Mathf.FloorToInt (Mathf.Lerp (1,sizes,ran*1.5f));
 		

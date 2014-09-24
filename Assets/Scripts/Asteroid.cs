@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class Asteroid : Destructables {
 	public AsteroidGenerator gen;
-
 	public ParticleSystem deathFX;
+	
+	public Chunk chunk;
 
 	public Mineral mineral;
 	public enum Mineral {
@@ -17,6 +18,7 @@ public class Asteroid : Destructables {
 	}
 
 	public int sizeClass;
+	public bool flagged;
 
 	void Start () {
 		
@@ -44,16 +46,36 @@ public class Asteroid : Destructables {
 	public override void Die ()
 	{
 		Destroy (gameObject, 0);
+		if (!flagged) {
+			chunk.FlagAsteroid(this);
+			flagged = true;
+		}
+
+		chunk.RemoveAsteroid (this);
+
 		if (sizeClass>0 && gen!=null) {
 			for(int i = 0; i < 3;i++) {
 				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
 				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1);
 				clone.rigidbody2D.AddForce ((gen.transform.position-transform.position).normalized*1000*sizeClass);
+
+				clone.chunk = chunk;
+
+				chunk.AddAsteroid (clone);
 			}
 		}
 		if(deathFX) {
 			deathFX = Instantiate(deathFX, transform.position, transform.rotation) as ParticleSystem;
 			deathFX.transform.localScale = Vector3.one*sizeClass/2;
+		}
+	}
+
+	protected override void OnCollisionEnter2D (Collision2D col)
+	{
+		base.OnCollisionEnter2D (col);
+		if (!flagged && chunk) {
+			chunk.FlagAsteroid(this);
+			flagged = true;
 		}
 	}
 }

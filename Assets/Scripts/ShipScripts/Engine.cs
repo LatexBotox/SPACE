@@ -18,15 +18,15 @@ public class Engine : MonoBehaviour {
 
 	void FixedUpdate() {
 		if (!on) 
-			ps.enableEmission = false;
-		on = !on;
+			ps.enableEmission = glow.enabled = false;
+		on = false;
 	}
 
 	public void Thrust () {
 		parent.rigidbody2D.AddForce (parent.transform.up.normalized * thrustMult);
 		parent.rigidbody2D.AddForce (-parent.rigidbody2D.velocity.normalized * 
 		                             Mathf.Lerp (0, thrustMult, (parent.rigidbody2D.velocity.magnitude)*20  / maxSpeed - 19 ));
-		ps.enableEmission = on = true;
+		ps.enableEmission = glow.enabled = on = true;
 	}
 
 
