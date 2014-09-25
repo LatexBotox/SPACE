@@ -1,5 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Linq;
+
+[Serializable]
+public class Level {
+	public ChunkData[] chunks; 
+}
+
 
 public class LevelGenerator : MonoBehaviour {
 
@@ -7,9 +18,10 @@ public class LevelGenerator : MonoBehaviour {
 	AsteroidGenerator asteroidGen;
 
 	public Chunk chunk;
-	bool[,] initializedChunks;
+	Chunk[,] initializedChunks;
 	public int levelSize = 256;
 	int chunkSize = 128;
+	public int levelSeed;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +32,10 @@ public class LevelGenerator : MonoBehaviour {
 
 		float t = 0 - Time.realtimeSinceStartup;
 
-		initializedChunks = new bool[levelSize, levelSize];
+		asteroidGen.levelSeed = levelSeed;
+
+		initializedChunks = new Chunk[levelSize, levelSize];
+		Load ();
 
 //		GameObject clone;
 //
@@ -31,7 +46,7 @@ public class LevelGenerator : MonoBehaviour {
 //		}
 		t += Time.realtimeSinceStartup;
 
-		print ("Generated Empty Chunks in: " + t);
+		print ("Loaded Chunks in: " + t);
 	}
 	
 	// Update is called once per frame
@@ -42,8 +57,7 @@ public class LevelGenerator : MonoBehaviour {
 		for (int y = Mathf.FloorToInt(player.transform.position.y/chunkSize)-6;y <= Mathf.FloorToInt(player.transform.position.y/chunkSize)+6;y++) {
 			for (int x = Mathf.FloorToInt(player.transform.position.x/chunkSize)-6;x <= Mathf.FloorToInt(player.transform.position.x/chunkSize)+6;x++) {
 				if (!initializedChunks[y+levelSize/2,x+levelSize/2]) {
-					Instantiate (chunk, new Vector2(x*chunkSize, y*chunkSize),chunk.transform.rotation);
-					initializedChunks[y+levelSize/2,x+levelSize/2] = true;
+					initializedChunks[y+levelSize/2,x+levelSize/2] = Instantiate (chunk, new Vector2(x*chunkSize, y*chunkSize),chunk.transform.rotation) as Chunk;
 				}
 			}
 		}
@@ -55,4 +69,58 @@ public class LevelGenerator : MonoBehaviour {
 				chunk.Generate();
 		}
 	}
+
+	void Update () {
+		if (Input.GetKeyUp(KeyCode.Escape)) {
+			Save ();
+			Application.Quit ();
+		}
+	}
+
+	void Save() {
+		print ("Saving...");
+		List<ChunkData> chunkData = new List<ChunkData>();
+
+		foreach (Chunk chunk in initializedChunks) {
+			if (chunk!= null) {
+				ChunkData cd = chunk.GetChunkData ();
+				if (cd != null) 
+					chunkData.Add(cd);
+			}
+		}
+
+		Level level = new Level();
+		level.chunks = chunkData.ToArray ();
+
+		BinaryFormatter bf = new BinaryFormatter();
+
+		System.IO.Directory.CreateDirectory(Application.persistentDataPath + "/levels/");
+
+		FileStream fs = File.Create (Application.persistentDataPath + "/levels/" + asteroidGen.levelSeed + ".lvl");
+
+		bf.Serialize (fs, level);
+		fs.Close ();
+	}
+
+	void Load() {
+		if (File.Exists (Application.persistentDataPath + "/levels/" + asteroidGen.levelSeed + ".lvl")) {
+			print ("Loading...");
+			BinaryFormatter bf = new BinaryFormatter();
+			FileStream fs = File.Open (Application.persistentDataPath + "/levels/" + asteroidGen.levelSeed + ".lvl", FileMode.Open);
+			Level level = (Level)bf.Deserialize (fs);
+			fs.Close();
+
+			foreach (ChunkData c in level.chunks) {
+				if (c!= null) {
+					Chunk loadedChunk = initializedChunks[c.chunky+levelSize/2, c.chunkx+levelSize/2] = 
+						Instantiate (chunk, new Vector2(c.chunkx*chunkSize, c.chunky*chunkSize), chunk.transform.rotation) as Chunk;
+
+					loadedChunk.Load (c.asteroidData);
+				} else {
+					print (c);
+				}
+			}
+		}
+	}
+
 }
