@@ -8,14 +8,8 @@ public class Asteroid : Destructables {
 	
 	public Chunk chunk;
 
-	public Mineral mineral;
-	public enum Mineral {
-		Iron,
-		Copperium,
-		Gallium,
-		Whatium,
-		Blank
-	}
+	public MineralType mineral;
+
 
 	public int sizeClass;
 	public bool flagged;
@@ -28,15 +22,15 @@ public class Asteroid : Destructables {
 	
 	}
 
-	public static Color MineralToColor(Mineral mineral) {
+	public static Color MineralToColor(MineralType mineral) {
 		switch(mineral) {
-		case(Mineral.Iron):
+		case(MineralType.Iron):
 			return new Color(225/255f, 179/255f, 121/255f);
-		case(Mineral.Copperium):
+		case(MineralType.Copperium):
 			return new Color(215/255f, 225/255f, 121/255f);
-		case(Mineral.Gallium):
+		case(MineralType.Gallium):
 			return new Color(210/255f, 255/255f, 255/255f);
-		case(Mineral.Whatium):
+		case(MineralType.Whatium):
 			return new Color(255/255f, 141/255f, 247/255f);
 		default:
 			return new Color(0/255f,255/255f,0/255f);
@@ -46,12 +40,15 @@ public class Asteroid : Destructables {
 	public override void Die ()
 	{
 		Destroy (gameObject, 0);
-		if (!flagged) {
-			chunk.FlagAsteroid(this);
-			flagged = true;
-		}
 
-		chunk.RemoveAsteroid (this);
+		if(chunk != null) {
+			if (!flagged) {
+				chunk.FlagAsteroid(this);
+				flagged = true;
+			}
+			
+			chunk.RemoveAsteroid (this);
+		}
 
 		if (sizeClass>0 && gen!=null) {
 			for(int i = 0; i < 3;i++) {
@@ -61,7 +58,8 @@ public class Asteroid : Destructables {
 
 				clone.chunk = chunk;
 
-				chunk.AddAsteroid (clone);
+				if(chunk != null)
+					chunk.AddAsteroid (clone);
 			}
 		}
 		if(deathFX) {

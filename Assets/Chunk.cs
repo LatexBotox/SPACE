@@ -7,7 +7,7 @@ public class AsteroidData {
 	public bool extra = false;
 	public int index, size;
 	public float health;
-	public Asteroid.Mineral mineral;
+	public MineralType mineral;
 	public Vector2 pos;
 }
 

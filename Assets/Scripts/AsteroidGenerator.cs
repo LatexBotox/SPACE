@@ -17,11 +17,11 @@ public class AsteroidGenerator : MonoBehaviour {
 
 	Texture2D[,,,] textureArray;
 
-	public Asteroid.Mineral[] minerals;
+	public MineralType[] minerals;
 	public Asteroid baseAsteroid;
 	public Color baseColor;
 
-	public SortedList<Asteroid.Mineral,float> mineralOccurance;
+	public SortedList<MineralType,float> mineralOccurance;
 	float GenericAsteroidRate = 5;
 
 	PerlinNoise lnoise;
@@ -42,9 +42,9 @@ public class AsteroidGenerator : MonoBehaviour {
 
 		Random.seed = seed = (int)(seed==0?Time.realtimeSinceStartup:seed);
 
-		mineralOccurance = new SortedList<Asteroid.Mineral, float>();
+		mineralOccurance = new SortedList<MineralType, float>();
 
-		foreach (Asteroid.Mineral m in minerals)
+		foreach (MineralType m in minerals)
 			mineralOccurance.Add(m,0.5f);
 
 		textureArray = new Texture2D[sizes,mineralOccurance.Count+1,variants,2];
@@ -144,21 +144,21 @@ public class AsteroidGenerator : MonoBehaviour {
 		int size = Mathf.FloorToInt (Mathf.Lerp (1,sizes,ran*1.5f));
 		
 
-		foreach (KeyValuePair<Asteroid.Mineral, float> p in mineralOccurance)
+		foreach (KeyValuePair<MineralType, float> p in mineralOccurance)
 			mineralRange += p.Value;
 
 		float mineralf = Random.Range (0, mineralRange);
 	
 		float fa = 0f;
-		foreach (KeyValuePair<Asteroid.Mineral, float> p in mineralOccurance) {
+		foreach (KeyValuePair<MineralType, float> p in mineralOccurance) {
 			fa += p.Value;
 			if (fa > mineralf)
 				return GenerateAsteroid (p.Key, size);
 		}
-		return GenerateAsteroid (Asteroid.Mineral.Blank, size);
+		return GenerateAsteroid (MineralType.Blank, size);
 	}
 
-	public Asteroid GenerateAsteroid(Asteroid.Mineral mineral, int size) {
+	public Asteroid GenerateAsteroid(MineralType mineral, int size) {
 		Random.seed = seed = seed+1;
 		int ran = Random.Range (0,variants-1);
 

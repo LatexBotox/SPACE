@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 public class InventoryManager
 {
@@ -9,6 +10,9 @@ public class InventoryManager
 	ArrayList engines;
 	ArrayList cockpits;
 	ArrayList wings;
+	int[] minerals;
+	int capacity;
+	int currentLoad;
 
 	static Object mutex = new Object();
 	static InventoryManager instance;
@@ -20,10 +24,40 @@ public class InventoryManager
 		engines 	= new ArrayList();
 		cockpits	= new ArrayList();
 		wings		 	= new ArrayList();
+		minerals	= Enumerable.Repeat(0,4).ToArray();
 	
+		currentLoad = 0;
+		capacity = 1000;
+
+
 		GameObject go = GameObject.Find("TestPlayerShipV2");
 		s = go.GetComponent(typeof(PlayerShip)) as PlayerShip;
 
+	}
+
+	public bool AddMineral(MineralType t, int q) {
+		if(currentLoad + q > capacity)
+			return false;
+
+		switch(t) {
+		case MineralType.Copperium :
+			minerals[0] += q;
+			break;
+		case MineralType.Gallium :
+			minerals[1] += q;
+			break;
+		case MineralType.Iron :
+			minerals[2] += q;
+			break;
+		case MineralType.Whatium :
+			minerals[3] += q;
+			break;
+		default :
+			return false;
+		}
+
+		currentLoad += q;
+		return true;
 	}
 
 	public void AddWeapon(Weapon weap) {

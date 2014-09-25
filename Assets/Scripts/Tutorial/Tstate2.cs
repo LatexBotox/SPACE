@@ -13,7 +13,7 @@ public class Tstate2 : TutorialState
 	{
 		tControl.DisplayMessage("Location unknown.. Attempting connection to main cluster.. ERROR 404\n" +
 		                        "Scanning,.. Fleet Signal confirmed; Waypoint established.",  "Rob3", 10.0f);
-		spawnPos = pShip.transform.position + pShip.transform.up * 500;
+		spawnPos = pShip.transform.position + pShip.transform.up * 200;
 		Instantiate(motherShip, spawnPos, Quaternion.identity);
 		print (spawnPos);
 	}
