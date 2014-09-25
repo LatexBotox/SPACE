@@ -47,21 +47,19 @@ public class AsteroidGenerator : MonoBehaviour {
 		foreach (MineralType m in minerals)
 			mineralOccurance.Add(m,0.5f);
 
-		textureArray = new Texture2D[sizes,mineralOccurance.Count+1,variants,2];
+		textureArray = new Texture2D[sizes,2,variants,2];
 
-		for (int size = 0;size < sizes;size++) {
-			for (int mineral = 1;mineral < minerals.Length+1;mineral++) {
-				for (int variant = 0;variant < variants;variant++) {
-					int res = maxRes/(int)Mathf.Pow (2, sizes-size-1);
-					textureArray[size,mineral,variant,0] = new Texture2D(res, res);
-					textureArray[size,mineral,variant,1] = new Texture2D(res, res);
-
-					GenerateSpecificTexture (textureArray[size,mineral,variant,0],
-					                 				 textureArray[size,mineral,variant,1],
-					                				 baseColor*Random.Range (0.7f, 1.3f),
-					                 				 Asteroid.MineralToColor(minerals[mineral-1]),
-					                         Random.Range (int.MinValue,int.MaxValue));
-				}
+		for (int size = 0; size < sizes;size++) {
+			for (int variant = 0; variant < variants;variant++) {
+				int res = maxRes/(int)Mathf.Pow (2, sizes-size-1);
+				textureArray[size,1,variant,0] = new Texture2D(res, res);
+				textureArray[size,1,variant,1] = new Texture2D(res, res);
+				
+				GenerateMineraledTexture (textureArray[size,1,variant,0],
+				                       	 textureArray[size,1,variant,1],
+				                         Color.white,
+				                         Color.white,
+				                         Random.Range (int.MinValue,int.MaxValue));
 			}
 		}
 
@@ -73,7 +71,7 @@ public class AsteroidGenerator : MonoBehaviour {
 
 				GenerateGenericTexture (textureArray[size,0,variant,0],
 				                        textureArray[size,0,variant,1],
-				                        baseColor*Random.Range (0.7f, 1.3f),
+				                        Color.white,
 				                        Random.Range (int.MinValue,int.MaxValue));
 			}
 		}
@@ -137,12 +135,14 @@ public class AsteroidGenerator : MonoBehaviour {
 		Random.seed = seed = seed+1;
 		int ran = Random.Range (0,variants-1);
 
-		int mineralIndex = mineralOccurance.IndexOfKey (mineral)+1;
+		int mineralIndex = (mineral==MineralType.Blank?0:1);
 
 		Asteroid clone = Instantiate (baseAsteroid, transform.position, baseAsteroid.transform.rotation) as Asteroid;
 
 		clone.renderer.material.mainTexture = textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,0];
 		textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,0].Apply();
+		clone.renderer.material.SetColor ("_Color", baseColor*Random.Range (0.8f, 1.1f));
+		clone.renderer.material.SetColor ("_OffColor", Asteroid.MineralToColor(mineral)*Random.Range (0.9f, 1.0f));
 		
 		clone.renderer.material.SetTexture ("_BumpMap", textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,1]);
 		textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,1].Apply ();
@@ -162,7 +162,7 @@ public class AsteroidGenerator : MonoBehaviour {
 	}
 
 
-	void GenerateSpecificTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {
+	void GenerateMineraledTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {
 		float _x, _y, _z, noise;
 		int width = tex.width;
 		int height = tex.height;
@@ -294,16 +294,16 @@ public class AsteroidGenerator : MonoBehaviour {
 		gck[0].time = 0;
 		gck[1].color = asteroidColor;
 		gck[1].time = threshold-blend;
-		gck[2].color = asteroidColor*0.2f;
+		gck[2].color = asteroidColor*0.5f;
 		gck[2].time = threshold;
 		gck[3].color = mineralColor*0.8f;
 		gck[3].time = threshold+blend;
 		gck[4].color = mineralColor;
 		gck[4].time = 1;
 		GradientAlphaKey[] gak = new GradientAlphaKey[3];
-		gak[0].alpha = 0.15f;
+		gak[0].alpha = 0.05f;
 		gak[0].time = 0;
-		gak[1].alpha = 0.15f;
+		gak[1].alpha = 0.05f;
 		gak[1].time = threshold+0.01f;
 		gak[2].alpha = 1;
 		gak[2].time = 1;
@@ -334,9 +334,9 @@ public class AsteroidGenerator : MonoBehaviour {
 		gck[1].color = asteroidColor;
 		gck[1].time = 1;
 		GradientAlphaKey[] gak = new GradientAlphaKey[2];
-		gak[0].alpha = 0.15f;
+		gak[0].alpha = 0.05f;
 		gak[0].time = 0;
-		gak[1].alpha = 0.15f;
+		gak[1].alpha = 0.05f;
 		gak[1].time = 1;
 		gradients[0].SetKeys (gck, gak);
 

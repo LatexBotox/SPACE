@@ -28,7 +28,7 @@ public class Asteroid : Destructables {
 		case(MineralType.Whatium):
 			return new Color(255/255f, 141/255f, 247/255f);
 		default:
-			return new Color(0/255f,255/255f,0/255f);
+			return Color.white;
 		}
 	}
 
@@ -50,7 +50,6 @@ public class Asteroid : Destructables {
 				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
 				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1);
 
-				chunk.AddAsteroid (clone);
 				clone.chunk = chunk;
 
 				if(chunk != null)
