@@ -62,7 +62,6 @@ public abstract class Ship : Destructables {
 		if(weapon != null) {
 			//weapon.SendMessage("Rotate", target);
 			weapon.Rotate(target);
-			print ("rotate that weapon!");
 		}
 	}
 

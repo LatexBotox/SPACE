@@ -22,8 +22,6 @@ public class ProjectileWeapon : Weapon {
 			                                         spawnpoint.transform.rotation) as Projectile;
 
 			Physics2D.IgnoreCollision(projectileClone.collider2D, parent.collider2D);
-
-			print (parent.layer);
 			projectileClone.launchedLayer = parent.layer;
 		}
 	}

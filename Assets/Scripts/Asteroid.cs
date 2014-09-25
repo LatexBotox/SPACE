@@ -7,6 +7,7 @@ public class Asteroid : Destructables {
 	public ParticleSystem deathFX;
 	
 	public Chunk chunk;
+	public int id;
 
 	public Mineral mineral;
 	public enum Mineral {
@@ -20,13 +21,7 @@ public class Asteroid : Destructables {
 	public int sizeClass;
 	public bool flagged;
 
-	void Start () {
-		
-	}
-
-	void Update () {
-	
-	}
+	Vector2 lastColPoint;
 
 	public static Color MineralToColor(Mineral mineral) {
 		switch(mineral) {
@@ -57,12 +52,14 @@ public class Asteroid : Destructables {
 			for(int i = 0; i < 3;i++) {
 				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
 				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1);
-				chunk.AddAsteroid (clone);
-				clone.rigidbody2D.AddForce ((gen.transform.position-transform.position).normalized*1000*sizeClass);
 
+				chunk.AddAsteroid (clone);
 				clone.chunk = chunk;
+
+				clone.rigidbody2D.AddForce (((Vector2)gen.transform.position-lastColPoint).normalized*1000*sizeClass);
 			}
 		}
+
 		if(deathFX) {
 			deathFX = Instantiate(deathFX, transform.position, transform.rotation) as ParticleSystem;
 			deathFX.transform.localScale = Vector3.one*sizeClass/2;
@@ -72,6 +69,7 @@ public class Asteroid : Destructables {
 	protected override void OnCollisionEnter2D (Collision2D col)
 	{
 		base.OnCollisionEnter2D (col);
+		lastColPoint = col.contacts[0].point+col.contacts[0].normal*5;
 		if (!flagged && chunk) {
 			chunk.FlagAsteroid(this);
 			flagged = true;

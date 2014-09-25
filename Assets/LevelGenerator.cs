@@ -85,7 +85,6 @@ public class LevelGenerator : MonoBehaviour {
 			if (chunk!= null) {
 				ChunkData cd = chunk.GetChunkData ();
 				if (cd != null) 
-					print ("Saved chunk at pos " + cd.chunkx + ", " + cd.chunky);
 					chunkData.Add(cd);
 			}
 		}
@@ -112,14 +111,16 @@ public class LevelGenerator : MonoBehaviour {
 			fs.Close();
 
 			foreach (ChunkData c in level.chunks) {
-				if(c!=null) {
-					print ("Loaded chunk at pos " + c.chunkx + ", " + c.chunky);
+				if (c!= null) {
+					Chunk loadedChunk = initializedChunks[c.chunky+levelSize/2, c.chunkx+levelSize/2] = 
+						Instantiate (chunk, new Vector2(c.chunkx*chunkSize, c.chunky*chunkSize), chunk.transform.rotation) as Chunk;
 
-					initializedChunks[c.chunky+levelSize/2, c.chunkx+levelSize/2] = Instantiate (chunk, new Vector2(c.chunkx*chunkSize, c.chunky*chunkSize), chunk.transform.rotation) as Chunk;
-					initializedChunks[c.chunky+levelSize/2, c.chunkx+levelSize/2].flaggedAsteroids = c.asteroidData.OfType<AsteroidData>().ToList();
-					
+					loadedChunk.Load (c.asteroidData);
+				} else {
+					print (c);
 				}
 			}
 		}
 	}
+
 }

@@ -28,11 +28,13 @@ public abstract class Destructables : MonoBehaviour
 	}
 
 	protected virtual void OnCollisionEnter2D(Collision2D col) {
-		float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
-		float m = col.rigidbody.mass + rigidbody2D.mass; 
-		
-		Damage (deltaV*(col.rigidbody.mass/m)*col_dmg_scaler);
-		col.gameObject.SendMessage ("Damage", (deltaV * (rigidbody2D.mass / m))*col_dmg_scaler);
+		if (col.gameObject.layer == 8 || col.gameObject.layer == 9 || col.gameObject.layer == 10) {
+			float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
+			float m = col.rigidbody.mass + rigidbody2D.mass; 
+			
+			Damage (deltaV*(col.rigidbody.mass/m)*col_dmg_scaler);
+			col.gameObject.SendMessage ("Damage", (deltaV * (rigidbody2D.mass / m))*col_dmg_scaler);
+		}
 	}
 
 	public abstract void Die();

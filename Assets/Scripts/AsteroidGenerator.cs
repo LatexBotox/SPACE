@@ -91,6 +91,8 @@ public class AsteroidGenerator : MonoBehaviour {
 		chunkx = chunk.chunkx;
 		chunky = chunk.chunky;
 
+		int id = 0;
+
 		Random.seed = chunk.chunkSeed;
 
 		for(int x = -chunkSize/128; x < chunkSize/128; x++) {
@@ -104,7 +106,8 @@ public class AsteroidGenerator : MonoBehaviour {
 					transform.position = new Vector3(_x, _y, 1) +(Vector3)Random.insideUnitCircle*31;
 					Asteroid a = GenerateRandomAsteroid (ran, chunk.chunkSeed);
 					a.chunk = chunk;
-					chunk.asteroids.Add(a);
+					a.id = id;
+					chunk.asteroids.Add(id++, a);
 				}
 			}
 		}
