@@ -102,6 +102,14 @@ public class Chunk : MonoBehaviour {
 	}
 
 	public void AddAsteroid(Asteroid asteroid) {
+		while (true) {
+			if (asteroids.ContainsKey (asteroidIndex)) {
+				asteroidIndex--;
+			} else {
+				break;
+			}
+		}
+
 		asteroid.id = asteroidIndex;
 		asteroids.Add (asteroidIndex--, asteroid);
 		asteroid.gameObject.SetActive(true);
@@ -110,6 +118,9 @@ public class Chunk : MonoBehaviour {
 	}
 
 	public void FlagAsteroid(Asteroid asteroid) {
+		if (flaggedAsteroids.ContainsKey(asteroid.id))
+		    return;
+
 		asteroid.flagged = true;
 		AsteroidData ad = new AsteroidData();
 		ad.index = asteroid.id;
@@ -152,7 +163,7 @@ public class Chunk : MonoBehaviour {
 		Asteroid clone = gen.GenerateAsteroid(ad.mineral, ad.size);
 		clone.gen = gen;
 		clone.chunk = this;
-		clone.id = ad.index = asteroidIndex--;
+		clone.id = ad.index;
 		clone.flagged = true;
 
 		asteroids.Add(clone.id, clone);
