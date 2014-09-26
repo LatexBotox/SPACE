@@ -56,8 +56,11 @@ public class LevelGenerator : MonoBehaviour {
 
 		for (int y = Mathf.FloorToInt(player.transform.position.y/chunkSize)-6;y <= Mathf.FloorToInt(player.transform.position.y/chunkSize)+6;y++) {
 			for (int x = Mathf.FloorToInt(player.transform.position.x/chunkSize)-6;x <= Mathf.FloorToInt(player.transform.position.x/chunkSize)+6;x++) {
-				if (!initializedChunks[y+levelSize/2,x+levelSize/2]) {
-					initializedChunks[y+levelSize/2,x+levelSize/2] = Instantiate (chunk, new Vector2(x*chunkSize, y*chunkSize),chunk.transform.rotation) as Chunk;
+				int _x = Mathf.Clamp (x+levelSize/2,0, levelSize-1);
+				int _y = Mathf.Clamp (y+levelSize/2,0, levelSize-1);
+
+				if (!initializedChunks[_y,_x]) {
+					initializedChunks[_y,_x] = Instantiate (chunk, new Vector2(x*chunkSize, y*chunkSize),chunk.transform.rotation) as Chunk;
 				}
 			}
 		}

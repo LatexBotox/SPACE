@@ -14,6 +14,9 @@ public abstract class Ship : Destructables {
 	public Transform weapPos;
 
 
+	Collider2D shipCollider;
+	Collider2D shieldCollider;
+
 	Light painLight;
 	float hitTime;
 
@@ -30,6 +33,14 @@ public abstract class Ship : Destructables {
 
 		maxHealth = health = hull.maxHealth;
 		rigidbody2D.mass = hull.mass;
+
+		shipCollider = GetComponentInChildren<PolygonCollider2D>();
+		if (wings.maxShield > 0) {
+			wings.parent = this;
+			shipCollider.enabled = false;
+			shieldCollider = GetComponentInChildren<CircleCollider2D>();
+			shieldCollider.enabled = true;
+		}
 
 		//activeWeapons = weapons;
 		hitTime = Time.time;
@@ -61,11 +72,11 @@ public abstract class Ship : Destructables {
 	}
 
 	protected void RotateLeft() {
-		rigidbody2D.AddTorque (wings.turnForce);
+		rigidbody2D.AddTorque (wings.GetTurnForce());
 	}
 
 	protected void RotateRight() {
-		rigidbody2D.AddTorque (-wings.turnForce);
+		rigidbody2D.AddTorque (-wings.GetTurnForce());
 	}
 
 	protected void RotateWeapons(Vector2 target) {
@@ -97,5 +108,21 @@ public abstract class Ship : Destructables {
 			return;
 		GameObject impactClone = Instantiate(colEffect, transform.position, Quaternion.LookRotation(col.contacts[0].normal)) as GameObject;
 		Destroy(impactClone);
+	}
+	public override void Damage (float d)
+	{
+		if (wings.maxShield>0)
+			d = wings.Damage(d);
+		base.Damage (d);
+	}
+
+	public void EnableShields() {
+		shipCollider.enabled = false;
+		shieldCollider.enabled = true;
+	}
+
+	public void DisableShields() {
+		shipCollider.enabled = true;
+		shieldCollider.enabled = false;
 	}
 }
