@@ -20,7 +20,6 @@ public class Tstate2 : TutorialState
 
 	public override void TriggerEnter(StateTrigger t, Collider2D c)
 	{
-		print("imma state2 anna i received mu enter");
 		t.gameObject.SetActive(false);
 		exit = true;
 	}

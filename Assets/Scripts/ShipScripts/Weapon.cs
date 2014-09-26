@@ -13,7 +13,7 @@ public abstract class Weapon : MonoBehaviour
 	public abstract void Fire();
 
 	protected virtual void Start() {
-		parent = gameObject.transform.parent.gameObject;
+		parent = gameObject.transform.parent.parent.gameObject;
 	}
 
 	public void Rotate(Vector2 target) {

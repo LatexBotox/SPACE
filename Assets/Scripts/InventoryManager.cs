@@ -105,20 +105,12 @@ public class InventoryManager
 		return wings;
 	}
 
+	public int GetLoad() { return currentLoad; }
+	public int GetMaxLoad() { return capacity; }
+
 	public void Equip(Object item) {
 		if(item is Weapon) {
-			if(s.weapon != null)
-				s.weapon.gameObject.SetActive(false);
-
-			Weapon weapon = item as Weapon;
-			GameObject weappos = GameObject.Find("WeaponPos");
-			weapon.parent = s.gameObject;
-
-			weapon.transform.parent = weappos.transform;
-			weapon.transform.position = weappos.transform.position;
-
-			weapon.gameObject.SetActive(true);
-			s.weapon = weapon;
+			s.SetWeapon(item as Weapon);
 		} else if(item is Engine) {
 			s.engine = item as Engine;
 		} else if(item is Hull) {

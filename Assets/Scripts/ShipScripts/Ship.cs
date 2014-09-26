@@ -11,6 +11,8 @@ public abstract class Ship : Destructables {
 	public Wings wings;
 	public ParticleSystem deathEffect;
 	public ParticleSystem colEffect;
+	public Transform weapPos;
+
 
 	Light painLight;
 	float hitTime;
@@ -31,6 +33,16 @@ public abstract class Ship : Destructables {
 
 		//activeWeapons = weapons;
 		hitTime = Time.time;
+	}
+
+	public void SetWeapon(Weapon weap) {
+		if(weapon != null)
+			weapon.gameObject.SetActive(false);
+
+		weapon = weap;
+		weapon.transform.parent = weapPos;
+		weapon.transform.position = weapPos.position;
+		weapon.gameObject.SetActive(true);
 	}
 
 	protected virtual void FixedUpdate() {

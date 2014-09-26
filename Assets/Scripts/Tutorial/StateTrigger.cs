@@ -8,7 +8,6 @@ public class StateTrigger : MonoBehaviour
 		if(col.tag != "Player")
 			return;
 
-		print("omg trigger");
 		GameObject g = GameObject.FindWithTag("tutCont");
 		TutorialController tc = g.GetComponent<TutorialController>();
 		tc.TriggerEnter(this, col);

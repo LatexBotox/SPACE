@@ -10,9 +10,13 @@ public class Tstate5 : TutorialState
 		tControl.DisplayMessage("Nice! Now go fetch resources!" ,"Captain Stenis", 10.0f);
 		Asteroid a = ag.GenerateAsteroid(MineralType.Whatium, 2);
 		a.transform.position = new Vector3(0,0,0);
+		a.gameObject.SetActive(true);
 	}
 	
 	public override void sUpdate ()
 	{
+		if(InventoryManager.GetInstance().GetLoad() > 0) {
+			exit = true;
+		}
 	}
 }

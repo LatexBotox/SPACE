@@ -34,8 +34,6 @@ public class Chunk : MonoBehaviour {
 
 	bool alive = false;
 
-
-
 	// Use this for initialization
 	void Start () {
 		if (flaggedAsteroids == null)

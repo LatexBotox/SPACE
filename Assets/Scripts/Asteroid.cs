@@ -11,7 +11,6 @@ public class Asteroid : Destructables {
 
 	public MineralType mineral;
 
-
 	public int sizeClass;
 	public bool flagged;
 
@@ -54,10 +53,14 @@ public class Asteroid : Destructables {
 
 				if(chunk != null)
 					chunk.AddAsteroid (clone);
+				else
+					clone.gameObject.SetActive(true);
 					
 				clone.rigidbody2D.AddForce (((Vector2)gen.transform.position-lastColPoint).normalized*1000*sizeClass);
-
 			}
+		} else if(sizeClass == 0) {
+			Mineral drop = gen.GenerateMineral(mineral);
+			drop.transform.position = transform.position;
 		}
 
 		if(deathFX) {

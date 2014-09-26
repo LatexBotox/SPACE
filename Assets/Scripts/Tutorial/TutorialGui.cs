@@ -21,7 +21,6 @@ public class TutorialGui : MonoBehaviour
 		speakerName = speaker;
 		end_t = Time.time + showtime;
 		callbackState = state;
-		print(speaker);
 		a.volume = 1;
 		a.Play();
 		draw = true;

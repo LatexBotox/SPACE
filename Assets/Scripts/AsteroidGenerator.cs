@@ -19,6 +19,7 @@ public class AsteroidGenerator : MonoBehaviour {
 
 	public MineralType[] minerals;
 	public Asteroid baseAsteroid;
+	public Mineral baseMineral;
 	public Color baseColor;
 
 	public SortedList<MineralType,float> mineralOccurance;
@@ -162,6 +163,13 @@ public class AsteroidGenerator : MonoBehaviour {
 		return clone;
 	}
 
+	public Mineral GenerateMineral(MineralType t) {
+
+		Mineral clone = Instantiate(baseMineral, new Vector3(0,0,0), baseMineral.transform.rotation) as Mineral;
+		DeformMesh(clone.GetComponent<MeshFilter>().mesh, clone.GetComponent<PolygonCollider2D>(), 1, Random.Range (int.MinValue, int.MaxValue));
+		return clone;
+
+	}
 
 	void GenerateMineraledTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {
 		float _x, _y, _z, noise;
