@@ -143,6 +143,7 @@ public class AsteroidGenerator : MonoBehaviour {
 		textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,0].Apply();
 		clone.renderer.material.SetColor ("_Color", baseColor*Random.Range (0.8f, 1.1f));
 		clone.renderer.material.SetColor ("_OffColor", Asteroid.MineralToColor(mineral)*Random.Range (0.9f, 1.0f));
+		clone.renderer.material.SetColor ("_SpecColor", Asteroid.MineralToColor(mineral)*Random.Range (1.1f, 1.3f));
 		
 		clone.renderer.material.SetTexture ("_BumpMap", textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,1]);
 		textureArray[Mathf.Clamp(size,0,sizes-1),mineralIndex,ran,1].Apply ();
@@ -304,7 +305,7 @@ public class AsteroidGenerator : MonoBehaviour {
 		gak[0].alpha = 0.05f;
 		gak[0].time = 0;
 		gak[1].alpha = 0.05f;
-		gak[1].time = threshold+0.01f;
+		gak[1].time = threshold;
 		gak[2].alpha = 1;
 		gak[2].time = 1;
 		gradients[0].SetKeys(gck, gak);
