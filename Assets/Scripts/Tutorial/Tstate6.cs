@@ -3,16 +3,15 @@ using System.Collections;
 
 public class Tstate6 : TutorialState
 {
-	public GameObject mship;
-	public TutorialEnemyShip enemy;
+	public EnemyShip enemy;
+	public Transform spawnpos;
 
-	private TutorialEnemyShip clone;
+	EnemyShip clone;
 
 	public override void Run ()
 	{
+		clone = Instantiate(enemy, spawnpos.position, spawnpos.transform.rotation) as EnemyShip;
 		tControl.DisplayMessage("OMG we are under attack!" ,"Captain Stenis", 10.0f);
-		clone = Instantiate(enemy, mship.transform.position + mship.transform.up*100, Quaternion.identity) as TutorialEnemyShip;
-		clone.mtarget = mship;
 	}
 	
 	public override void sUpdate ()

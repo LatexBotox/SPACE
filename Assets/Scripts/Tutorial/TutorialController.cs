@@ -4,11 +4,19 @@ using System.Collections;
 public class TutorialController : MonoBehaviour
 {
 
+	public GameObject mothership;
+
 	public TutorialGui tGui;
 	public TutorialState[] tStates;
 
 	private TutorialState curState;
 	private Queue qStates;
+
+	public void SpawnMothership(Vector2 pos, Quaternion rot) {
+		mothership.SetActive(true);
+		mothership.transform.position = pos;
+		mothership.transform.rotation = rot;
+	}
 
 	public void HideMessage() {
 		tGui.HideText();
@@ -25,6 +33,8 @@ public class TutorialController : MonoBehaviour
 
 	void Start ()
 	{ 
+		mothership.SetActive(false);
+
 		qStates = new Queue(tStates);
 		NextState();
 	}
@@ -32,6 +42,10 @@ public class TutorialController : MonoBehaviour
 	public void NextState() {
 		curState = qStates.Dequeue() as TutorialState;
 		curState.Run();
+	}
+
+	public void TutorialDone() {
+		Debug.Log ("Yaya you are winner!");
 	}
 
 	void Update ()

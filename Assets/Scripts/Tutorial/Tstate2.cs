@@ -3,19 +3,17 @@ using System.Collections;
 
 public class Tstate2 : TutorialState
 {
-
-	public Ship pShip;
-	public GameObject motherShip;
-	private Vector2 spawnPos;
-	private bool foundShip = false;
+	public PlayerShip pship;
 
 	public override void Run ()
 	{
 		tControl.DisplayMessage("Location unknown.. Attempting connection to main cluster.. ERROR 404\n" +
 		                        "Scanning,.. Fleet Signal confirmed; Waypoint established.",  "Rob3", 10.0f);
-		spawnPos = pShip.transform.position + pShip.transform.up * 200;
-		Instantiate(motherShip, spawnPos, Quaternion.identity);
-		print (spawnPos);
+
+
+		Vector2 pos = (Vector2)pship.transform.position + Random.insideUnitCircle.normalized * 200;
+		Quaternion rot = pship.transform.rotation;
+		tControl.SpawnMothership(pos, rot);
 	}
 
 	public override void TriggerEnter(StateTrigger t, Collider2D c)

@@ -4,12 +4,12 @@ using System.Collections;
 public class StateTrigger : MonoBehaviour
 {
 
+	public TutorialController tc;
+
 	void OnTriggerEnter2D(Collider2D col) {
 		if(col.tag != "Player")
 			return;
-
-		GameObject g = GameObject.FindWithTag("tutCont");
-		TutorialController tc = g.GetComponent<TutorialController>();
+		
 		tc.TriggerEnter(this, col);
 	}
 }

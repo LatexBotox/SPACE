@@ -3,13 +3,15 @@ using System.Collections;
 
 public class TutorialEnemyShip : EnemyShip
 {
-	public GameObject mtarget;
+	public Ship mtarget;
+
+	void Start() {
+		gameObject.SetActive(false);
+	}
 
 	protected override void FixedUpdate ()
 	{
-		base.FixedUpdate ();
-		
-		moveTowards (pf.FindPath(this, target));
+		moveTowards (pf.FindPath(this, mtarget));
 		RotateWeapons (target.rigidbody2D.position + Random.insideUnitCircle * 7);
 		FireWeapons();
 	}
