@@ -49,32 +49,22 @@ public class AsteroidGenerator : MonoBehaviour {
 		foreach (MineralType m in minerals)
 			mineralOccurance.Add(m,0.5f);
 
-		textureArray = new Texture2D[sizes,2,variants,2];
+		textureArray = new Texture2D[3,2,50,2];
 
-		for (int size = 0; size < sizes;size++) {
-			for (int variant = 0; variant < variants;variant++) {
-				int res = maxRes/(int)Mathf.Pow (2, sizes-size-1);
-				textureArray[size,1,variant,0] = new Texture2D(res, res);
-				textureArray[size,1,variant,1] = new Texture2D(res, res);
-				
-				GenerateMineraledTexture (textureArray[size,1,variant,0],
-				                       	 textureArray[size,1,variant,1],
-				                         Color.white,
-				                         Color.white,
-				                         Random.Range (int.MinValue,int.MaxValue));
+		for(int size = 0; size<3; size++) {
+			for(int variant = 0;variant<50;variant++) {
+				int res = 128*(int)Mathf.Pow (2,size);
+				print ("Loading: " +"mineral-"+res+"x"+res+"-"+variant+"-Tex.png");
+				textureArray[size, 1, variant, 0] = Resources.Load<Texture2D> ("mineral-"+res+"x"+res+"-"+variant+"-Tex");
+				textureArray[size, 1, variant, 1] = Resources.Load<Texture2D> ("mineral-"+res+"x"+res+"-"+variant+"-Bump");
 			}
 		}
 
-		for (int size = 0;size < sizes;size++) {
-			for (int variant = 0;variant < variants;variant++) {
-				int res = maxRes/(int)Mathf.Pow (2, sizes-size-1);
-				textureArray[size,0,variant,0] = new Texture2D(res, res);
-				textureArray[size,0,variant,1] = new Texture2D(res, res);
-
-				GenerateGenericTexture (textureArray[size,0,variant,0],
-				                        textureArray[size,0,variant,1],
-				                        Color.white,
-				                        Random.Range (int.MinValue,int.MaxValue));
+		for(int size = 0; size<3; size++) {
+			for(int variant = 0;variant<50;variant++) {
+				int res = 128*(int)Mathf.Pow (2,size);
+				textureArray[size, 0, variant, 0] = Resources.Load<Texture2D> ("blank-"+res+"x"+res+"-"+variant+"-Tex");
+				textureArray[size, 0, variant, 1] = Resources.Load<Texture2D> ("blank-"+res+"x"+res+"-"+variant+"-Bump");
 			}
 		}
 
@@ -135,7 +125,7 @@ public class AsteroidGenerator : MonoBehaviour {
 
 	public Asteroid GenerateAsteroid(MineralType mineral, int size) {
 		Random.seed = seed = seed+1;
-		int ran = Random.Range (0,variants-1);
+		int ran = Random.Range (0,49);
 
 		int mineralIndex = (mineral==MineralType.Blank?0:1);
 
@@ -358,26 +348,5 @@ public class AsteroidGenerator : MonoBehaviour {
 		gradients[1].SetKeys (gck, gak);
 
 		return gradients;
-	}
-
-	public void Save() {
-		for (int size = 0; size < sizes;size++) {
-			for (int variant = 0; variant < variants;variant++) {
-				SaveTexture(textureArray[size,1,variant,0], "mineralTex" + levelSeed + "v" + variant + "s" + size );
-				SaveTexture(textureArray[size,1,variant,1], "mineralBump" + levelSeed + "v" + variant + "s" + size );
-				
-				SaveTexture(textureArray[size,0,variant,0], "blankTex" + levelSeed + "v" + variant + "s" + size );
-				SaveTexture(textureArray[size,0,variant,1], "blankBump" + levelSeed + "v" + variant + "s" + size );
-			}
-		}
-	}  
-	
-	void SaveTexture(Texture2D tex, string fileName) {
-		byte[] bytes = tex.EncodeToPNG();
-		FileStream file = File.Open(Application.dataPath + "/GeneratedTextures/" + fileName + ".png", FileMode.Create);
-		
-		BinaryWriter bw = new BinaryWriter(file);
-		bw.Write(bytes);
-		file.Close();
 	}
 }

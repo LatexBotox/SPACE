@@ -78,6 +78,7 @@ public class LevelGenerator : MonoBehaviour {
 			Save ();
 			Application.Quit ();
 		}
+	
 	}
 
 	void Save() {
