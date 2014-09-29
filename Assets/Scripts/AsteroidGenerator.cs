@@ -165,11 +165,11 @@ public class AsteroidGenerator : MonoBehaviour {
 	}
 
 	public Mineral GenerateMineral(MineralType t) {
-
 		Mineral clone = Instantiate(baseMineral, new Vector3(0,0,0), baseMineral.transform.rotation) as Mineral;
-		DeformMesh(clone.GetComponent<MeshFilter>().mesh, clone.GetComponent<PolygonCollider2D>(), 1, Random.Range (int.MinValue, int.MaxValue));
+		DeformMesh(clone.GetComponent<MeshFilter>().mesh, clone.GetComponent<PolygonCollider2D>(), 4, Random.Range (int.MinValue, int.MaxValue));
+		clone.renderer.material.SetColor ("_OffColor", Asteroid.MineralToColor(t));
+		clone.renderer.material.SetColor ("_Color", Asteroid.MineralToColor(t));
 		return clone;
-
 	}
 
 	void GenerateMineraledTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {

@@ -56,12 +56,15 @@ public class Asteroid : Destructables {
 				else
 					clone.gameObject.SetActive(true);
 					
-				clone.rigidbody2D.AddForce (((Vector2)gen.transform.position-lastColPoint).normalized*1000*sizeClass);
+				clone.rigidbody2D.AddForce (((Vector2)gen.transform.position-lastColPoint).normalized*10*sizeClass, ForceMode2D.Impulse);
 			}
-		} else if(sizeClass == 0) {
+		} //else if(sizeClass == 0) {
+
+		if (mineral != MineralType.Blank) {
 			Mineral drop = gen.GenerateMineral(mineral);
 			drop.transform.position = transform.position;
 		}
+//		}
 
 		if(deathFX) {
 			deathFX = Instantiate(deathFX, transform.position, transform.rotation) as ParticleSystem;
