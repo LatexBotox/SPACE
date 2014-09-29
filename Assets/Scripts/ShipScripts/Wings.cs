@@ -48,9 +48,15 @@ public class Wings : MonoBehaviour
 		return spill;
 	}
 
+	public float Fraction() {
+		if (maxShield>0) 
+			return curShield/maxShield;
+		return 0;
+	}
+
 	public float GetTurnForce() {
 		if (curShield > 0)
-			return turnForce*1.5f;
+			return turnForce*2f;
 
 		return turnForce;
 	}
