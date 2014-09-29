@@ -59,8 +59,6 @@ public class AsteroidGenerator : MonoBehaviour {
 				
 				GenerateMineraledTexture (textureArray[size,1,variant,0],
 				                       	 textureArray[size,1,variant,1],
-				                         Color.white,
-				                         Color.white,
 				                         Random.Range (int.MinValue,int.MaxValue));
 			}
 		}
@@ -73,7 +71,6 @@ public class AsteroidGenerator : MonoBehaviour {
 
 				GenerateGenericTexture (textureArray[size,0,variant,0],
 				                        textureArray[size,0,variant,1],
-				                        Color.white,
 				                        Random.Range (int.MinValue,int.MaxValue));
 			}
 		}
@@ -172,7 +169,7 @@ public class AsteroidGenerator : MonoBehaviour {
 
 	}
 
-	void GenerateMineraledTexture(Texture2D tex, Texture2D normal, Color asteroidColor, Color mineralColor, int seed) {
+	void GenerateMineraledTexture(Texture2D tex, Texture2D normal, int seed) {
 		float _x, _y, _z, noise;
 		int width = tex.width;
 		int height = tex.height;
@@ -182,7 +179,7 @@ public class AsteroidGenerator : MonoBehaviour {
 
 		noise = 0;
 		
-		Gradient[] gradients = MakeGradients(asteroidColor, mineralColor);
+		Gradient[] gradients = MakeGradients();
 		
 		PerlinNoise pnoise = new PerlinNoise(seed);
 		for(float y = 0; y < width;y++) {
@@ -203,7 +200,7 @@ public class AsteroidGenerator : MonoBehaviour {
 		normal.SetPixels (HeightToNormal (pixn));
 	}
 
-	void GenerateGenericTexture(Texture2D tex, Texture2D normal, Color asteroidColor, int seed) {
+	void GenerateGenericTexture(Texture2D tex, Texture2D normal, int seed) {
 		float _x, _y, _z, noise;
 		int width = tex.width;
 		int height = tex.height;
@@ -213,7 +210,7 @@ public class AsteroidGenerator : MonoBehaviour {
 		
 		noise = 0;
 		
-		Gradient[] gradients = MakeGenericGradients(asteroidColor);
+		Gradient[] gradients = MakeGenericGradients();
 
 		PerlinNoise pnoise = new PerlinNoise(seed);
 		for(float y = 0; y < width;y++) {
@@ -295,20 +292,20 @@ public class AsteroidGenerator : MonoBehaviour {
 		mesh.RecalculateBounds();
 	}
 
-	Gradient[] MakeGradients(Color asteroidColor, Color mineralColor) {
+	Gradient[] MakeGradients() {
 
 		Gradient[] gradients = new Gradient[2];
 		gradients[0] = new Gradient();
 		GradientColorKey[] gck = new GradientColorKey[5];
 		gck[0].color = Color.black;
 		gck[0].time = 0;
-		gck[1].color = asteroidColor;
+		gck[1].color = Color.white;
 		gck[1].time = threshold-blend;
-		gck[2].color = asteroidColor*0.5f;
+		gck[2].color = Color.white*0.5f;
 		gck[2].time = threshold;
-		gck[3].color = mineralColor*0.8f;
+		gck[3].color = Color.white*0.8f;
 		gck[3].time = threshold+blend;
-		gck[4].color = mineralColor;
+		gck[4].color = Color.white;
 		gck[4].time = 1;
 		GradientAlphaKey[] gak = new GradientAlphaKey[3];
 		gak[0].alpha = 0.05f;
@@ -335,13 +332,13 @@ public class AsteroidGenerator : MonoBehaviour {
 		return gradients;
 	}
 
-	Gradient[] MakeGenericGradients(Color asteroidColor) {
+	Gradient[] MakeGenericGradients() {
 		Gradient[] gradients = new Gradient[2];
 		gradients[0] = new Gradient();
 		GradientColorKey[] gck = new GradientColorKey[2];
 		gck[0].color = Color.black;
 		gck[0].time = 0;
-		gck[1].color = asteroidColor;
+		gck[1].color = Color.white;
 		gck[1].time = 1;
 		GradientAlphaKey[] gak = new GradientAlphaKey[2];
 		gak[0].alpha = 0.05f;
