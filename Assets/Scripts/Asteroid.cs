@@ -47,7 +47,7 @@ public class Asteroid : Destructables {
 		if (sizeClass>0 && gen!=null) {
 			for(int i = 0; i < 3;i++) {
 				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
-				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1);
+				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1,chunk.chunkSeed+Random.Range(int.MinValue,int.MaxValue)+id);
 
 				clone.chunk = chunk;
 

@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Engine : MonoBehaviour {
 
-	public ParticleSystem ps;
-	public Light glow;
+	ParticleSystem[] ps;
+	Light[] glow;
 	GameObject parent;
 
 	public float thrustMult;
@@ -14,11 +14,17 @@ public class Engine : MonoBehaviour {
 
 	void Start() {
 		parent = gameObject.transform.parent.gameObject;
+		ps = GetComponentsInChildren<ParticleSystem>();
+		glow = GetComponentsInChildren<Light>();
 	}
 
 	void FixedUpdate() {
-		if (!on) 
-			ps.enableEmission = glow.enabled = false;
+		if (!on) {
+			foreach (ParticleSystem p in ps)
+				p.enableEmission = false;
+			foreach (Light l in glow)
+				l.enabled = false;
+		}
 		on = false;
 	}
 
@@ -26,7 +32,11 @@ public class Engine : MonoBehaviour {
 		parent.rigidbody2D.AddForce (parent.transform.up.normalized * thrustMult);
 		parent.rigidbody2D.AddForce (-parent.rigidbody2D.velocity.normalized * 
 		                             Mathf.Lerp (0, thrustMult, (parent.rigidbody2D.velocity.magnitude)*20  / maxSpeed - 19 ));
-		ps.enableEmission = glow.enabled = on = true;
+		on = true;
+		foreach (ParticleSystem p in ps)
+			p.enableEmission = true;
+		foreach (Light l in glow)
+			l.enabled = true;
 	}
 
 

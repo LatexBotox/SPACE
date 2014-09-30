@@ -29,13 +29,13 @@ struct Input {
 
 void surf (Input IN, inout SurfaceOutput o) {
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
-	o.Albedo = tex.rgb * _Color.rgb * tex.a + tex.rgb * _PaintColor.rgb * (1.0-tex.a);
+	o.Albedo = tex.rgb * _Color.rgb * tex.a + tex.rgb * _PaintColor.rgb * (1.0-tex.a) * _PaintColor.a;
 	o.Gloss = tex.a;
 	o.Alpha = 1;
 	o.Specular = _Shininess;
 	o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 	half rim = 1.0 - saturate(dot (normalize(IN.viewDir), o.Normal));
-	o.Emission = _Color * pow(rim, 3);
+	o.Emission = _Color * pow(rim, 15);
 }
 ENDCG
 }

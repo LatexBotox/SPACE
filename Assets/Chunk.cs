@@ -159,7 +159,7 @@ public class Chunk : MonoBehaviour {
 
 	void SpawnAsteroidFromData(AsteroidData ad) {
 		gen.transform.position = new Vector3(ad.posx,ad.posy,gen.transform.position.z);
-		Asteroid clone = gen.GenerateAsteroid(ad.mineral, ad.size);
+		Asteroid clone = gen.GenerateAsteroid(ad.mineral, ad.size, chunkSeed+ad.index);
 		clone.gen = gen;
 		clone.chunk = this;
 		clone.id = ad.index;

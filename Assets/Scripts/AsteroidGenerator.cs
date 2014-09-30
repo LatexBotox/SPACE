@@ -104,7 +104,7 @@ public class AsteroidGenerator : MonoBehaviour {
 
 				if (ran > 0f) {
 					transform.position = new Vector3(_x, _y, 1) +(Vector3)Random.insideUnitCircle*31;
-					Asteroid a = GenerateRandomAsteroid (ran, chunk.chunkSeed);
+					Asteroid a = GenerateRandomAsteroid (ran, chunk.chunkSeed+id);
 					a.chunk = chunk;
 					a.id = id;
 					chunk.asteroids.Add(id++, a);
@@ -128,13 +128,13 @@ public class AsteroidGenerator : MonoBehaviour {
 		foreach (KeyValuePair<MineralType, float> p in mineralOccurance) {
 			fa += p.Value;
 			if (fa > mineralf)
-				return GenerateAsteroid (p.Key, size);
+				return GenerateAsteroid (p.Key, size, seed);
 		}
-		return GenerateAsteroid (MineralType.Blank, size);
+		return GenerateAsteroid (MineralType.Blank, size, seed);
 	}
 
-	public Asteroid GenerateAsteroid(MineralType mineral, int size) {
-		Random.seed = seed = seed+1;
+	public Asteroid GenerateAsteroid(MineralType mineral, int size, int seed) {
+		Random.seed = seed;
 		int ran = Random.Range (0,variants-1);
 
 		int mineralIndex = (mineral==MineralType.Blank?0:1);
