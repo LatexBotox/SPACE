@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Cockpit : MonoBehaviour {
+public class Cockpit : ShipComponent {
 
 	public float range;
 	GameObject parent;

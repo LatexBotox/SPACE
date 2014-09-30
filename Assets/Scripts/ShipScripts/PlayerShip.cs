@@ -9,8 +9,8 @@ public class PlayerShip : Ship
 	KeyListener thrust, rotatel, rotater, dampen, shoot;
 
 	protected override void Start () {
-		base.Start ();
-		cockpit.StartRadar ();
+		//base.Start ();
+		//cockpit.StartRadar ();
 
 		if(weapon != null) 
 		{
@@ -28,6 +28,12 @@ public class PlayerShip : Ship
 		Stuff.input.RegHeldListener(rotater);
 		Stuff.input.RegHeldListener(dampen);
 		Stuff.input.RegHeldListener(shoot);
+	}
+	
+	public override void Init() {
+		base.Init ();
+		cockpit.StartRadar ();
+
 	}
 
 	void OnEnable() {

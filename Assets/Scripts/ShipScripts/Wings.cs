@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Wings : MonoBehaviour
+public class Wings : ShipComponent
 {
 	public float dampeningFactor;
 	public float turnForce;
@@ -17,15 +17,19 @@ public class Wings : MonoBehaviour
 
 	public Ship parent;
 
+	public ShieldImpact impact;
+	public SpriteRenderer shieldSprite;
+
 	void Start() {
 		curShield = maxShield;
-
 		regenStartsAt = 0;
 	}
 
 	void Update() {
 		if(Time.time > regenStartsAt && curShield < maxShield) {
 			parent.EnableShields();
+			if (shieldSprite)
+				shieldSprite.enabled = true;
 			curShield = Mathf.Clamp(curShield+shieldRegen*Time.deltaTime, 0, maxShield);
 		}
 	}
@@ -43,6 +47,8 @@ public class Wings : MonoBehaviour
 
 		if (curShield == 0) {
 			parent.DisableShields();
+			if (shieldSprite)
+				shieldSprite.enabled = false;
 		}
 
 		return spill;
@@ -61,5 +67,11 @@ public class Wings : MonoBehaviour
 		return turnForce;
 	}
 
+
+	public void Impact(Vector2 impactDir) {
+		print ("SHIELDS UP");
+		ShieldImpact clone = Instantiate (impact, parent.transform.position+new Vector3(0,0,-2), Quaternion.LookRotation(transform.forward, impactDir)) as ShieldImpact;
+		clone.transform.parent = parent.transform;
+	}
 }
 

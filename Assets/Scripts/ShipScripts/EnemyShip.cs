@@ -57,5 +57,15 @@ public class EnemyShip : Ship
 		RaycastHit2D ray = Physics2D.Raycast (rigidbody2D.position, target.rigidbody2D.position - rigidbody2D.position, pf.preferredDistance*1.5f, 1 << 8 | 1 << 10);
 		return ray.collider && ray.transform.gameObject == target.gameObject;
 	}
+
+	void DESTRUCTION() {
+		Destroy (gameObject, 0f);
+	}
+
+	public void DespawnIn(float t) {
+		CancelInvoke("DESTRUCTION");
+		Invoke ("DESTRUCTION",t);
+	}
 }
+
 

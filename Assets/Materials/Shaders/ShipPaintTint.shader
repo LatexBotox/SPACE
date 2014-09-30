@@ -27,6 +27,7 @@ struct Input {
 	float3 viewDir;
 };
 
+
 void surf (Input IN, inout SurfaceOutput o) {
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
 	o.Albedo = tex.rgb * _Color.rgb * tex.a + tex.rgb * _PaintColor.rgb * (1.0-tex.a) * _PaintColor.a;
@@ -34,11 +35,10 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha = 1;
 	o.Specular = _Shininess;
 	o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
-	half rim = 1.0 - saturate(dot (normalize(IN.viewDir), o.Normal));
-	o.Emission = _Color * pow(rim, 15);
+	float3 orthoView = (0,0,1);
 }
 ENDCG
 }
 
-FallBack "Specular"
+//FallBack "Specular"
 }
