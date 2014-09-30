@@ -36,7 +36,6 @@ public class TutorialMiningLaserMenu : Menu
 			return;
 
 		GUI.Box(a, "");
-
 		pb.gUpdate();
 
 	}

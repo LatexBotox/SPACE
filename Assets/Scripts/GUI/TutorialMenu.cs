@@ -24,8 +24,8 @@ public class TutorialMenu : Menu
 		wm = new TutorialWeaponMenu(new Rect(a.width, 0, a.width, a.height));
 		wm.SetDraw(false);
 
-		float xOff = 0.15f * a.width;
-		float yOff = 0.02f * a.height;
+		float xOff = 0.0f;//0.15f * a.width;
+		float yOff = 0.0f;//0.02f * a.height;
 		float btnWidth = a.width - 2*xOff;
 		float btnHeight = 0.05f * a.height; 
 
