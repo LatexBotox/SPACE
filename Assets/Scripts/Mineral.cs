@@ -16,7 +16,7 @@ public class Mineral: Pickup
 	
 	protected override void Pick ()
 	{
-		if(InventoryManager.GetInstance().AddMineral(type, quantity)) {
+		if(Stuff.inventory.AddMineral(type, quantity)) {
 			Destroy(this.gameObject, 0.0f);
 		}
 	}

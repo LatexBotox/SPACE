@@ -48,11 +48,12 @@ public abstract class Ship : Destructables {
 
 	public void SetWeapon(Weapon weap) {
 		if(weapon != null)
-			weapon.gameObject.SetActive(false);
+			Destroy(weapon, 0.0f);
 
 		weapon = weap;
 		weapon.transform.parent = weapPos;
 		weapon.transform.position = weapPos.position;
+		weapon.transform.rotation = weapPos.rotation;
 		weapon.gameObject.SetActive(true);
 	}
 

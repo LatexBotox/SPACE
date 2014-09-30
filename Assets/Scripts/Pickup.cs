@@ -8,7 +8,9 @@ public abstract class Pickup : MonoBehaviour {
 	}
   
 	void OnTriggerEnter2D(Collider2D col) {
+		print ("lawl");
 		if (col.gameObject.tag == "Player") {
+			print ("pick me mofo");
 			Pick();
 		}
 	}

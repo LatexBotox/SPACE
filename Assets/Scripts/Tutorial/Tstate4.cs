@@ -13,7 +13,7 @@ public class Tstate4 : TutorialState
 
 	public override void sUpdate ()
 	{
-		if(InventoryManager.GetInstance().GetWeapons().Count > 0) {
+		if(Stuff.inventory.GetWeapons().Count > 0) {
 			exit = true;
 		}
 	}

@@ -13,7 +13,7 @@ public class TutorialMiningLaserMenu : Menu
 
 		Weapon weap = laser.GetComponent(typeof(Weapon)) as Weapon;
 		weap.gameObject.SetActive(false);
-		InventoryManager.GetInstance().AddWeapon(weap);
+		Stuff.inventory.AddWeapon(weap);
 	}
 
 	public TutorialMiningLaserMenu(Rect area)

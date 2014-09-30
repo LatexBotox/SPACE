@@ -15,7 +15,7 @@ public class Tstate5 : TutorialState
 	
 	public override void sUpdate ()
 	{
-		if(InventoryManager.GetInstance().GetLoad() > 0) {
+		if(Stuff.inventory.GetLoad() > 0) {
 			exit = true;
 		}
 	}

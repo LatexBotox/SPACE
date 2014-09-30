@@ -1,42 +1,28 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 using System.Linq;
 
-public class InventoryManager
+public class InventoryManager : MonoBehaviour
 {
-	PlayerShip s;
-	ArrayList weapons;
-	ArrayList hulls;
-	ArrayList engines;
-	ArrayList cockpits;
-	ArrayList wings;
-	int[] minerals;
-	int capacity;
-	int currentLoad;
+	public Weapon[] weaps;// 	= new ArrayList();
 
-	static Object mutex = new Object();
-	static InventoryManager instance;
+	List<Weapon> weapons = new List<Weapon>();
+	ArrayList hulls 		= new ArrayList();
+	ArrayList engines 	= new ArrayList();
+	ArrayList cockpits 	= new ArrayList();
+	ArrayList wings 		= new ArrayList();
+	int[] minerals = new int[4];
+	int currentLoad = 0;
+	int loadCapacity = 1000;
 
-	private InventoryManager() 
-	{
-		weapons 	= new ArrayList();
-		hulls 		= new ArrayList();
-		engines 	= new ArrayList();
-		cockpits	= new ArrayList();
-		wings		 	= new ArrayList();
-		minerals	= Enumerable.Repeat(0,4).ToArray();
-	
-		currentLoad = 0;
-		capacity = 1000;
-
-
-		GameObject go = GameObject.Find("TestPlayerShipV2");
-		s = go.GetComponent(typeof(PlayerShip)) as PlayerShip;
-
+	void Start() {
+		weapons.AddRange(weaps);
 	}
 
 	public bool AddMineral(MineralType t, int q) {
-		if(currentLoad + q > capacity)
+		if(currentLoad + q > loadCapacity)
 			return false;
 
 		switch(t) {
@@ -76,8 +62,8 @@ public class InventoryManager
 	}
 	
 	public void AddCockpit(Cockpit cockpit) {
-		if(!weapons.Contains(cockpit))
-			weapons.Add(cockpit);
+		if(!cockpits.Contains(cockpit))
+			cockpits.Add(cockpit);
 	}
 
 	public void AddWings(Wings wing) {
@@ -85,7 +71,7 @@ public class InventoryManager
 			wings.Add(wing);
 	}
 
-	public ArrayList GetWeapons() {
+	public List<Weapon> GetWeapons() {
 		return weapons;
 	}
 
@@ -106,31 +92,23 @@ public class InventoryManager
 	}
 
 	public int GetLoad() { return currentLoad; }
-	public int GetMaxLoad() { return capacity; }
+	public int GetMaxLoad() { return loadCapacity; }
 
 	public void Equip(Object item) {
 		if(item is Weapon) {
-			s.SetWeapon(item as Weapon);
+		
+			Weapon clone = Instantiate(item, new Vector2(0,0), Quaternion.identity) as Weapon; 
+			Stuff.player.SetWeapon(clone);
 		} else if(item is Engine) {
-			s.engine = item as Engine;
+			Stuff.player.engine = item as Engine;
 		} else if(item is Hull) {
-			s.hull = item as Hull;
+			Stuff.player.hull = item as Hull;
 		}	else if(item is Wings) {
-				s.wings = item as Wings;
+			Stuff.player.wings = item as Wings;
 		} else if(item is Cockpit) {
-			s.cockpit = item as Cockpit;
+			Stuff.player.cockpit = item as Cockpit;
+		} else {
+			Debug.LogError("invalid type: " + item.GetType());		
 		}
-	}
-
-	public static InventoryManager GetInstance() 
-	{
-		lock(mutex) 
-		{
-			if(instance == null) {
-				instance = new InventoryManager();
-			}
-		}
-
-		return instance;
 	}
 }
