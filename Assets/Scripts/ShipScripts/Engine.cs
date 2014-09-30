@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Engine : MonoBehaviour {
+public class Engine : ShipComponent {
 
 	ParticleSystem[] ps;
 	Light[] glow;
@@ -13,6 +13,12 @@ public class Engine : MonoBehaviour {
 	bool on;
 
 	void Start() {
+		parent = gameObject.transform.parent.gameObject;
+		ps = GetComponentsInChildren<ParticleSystem>();
+		glow = GetComponentsInChildren<Light>();
+	}
+
+	public void Init() {
 		parent = gameObject.transform.parent.gameObject;
 		ps = GetComponentsInChildren<ParticleSystem>();
 		glow = GetComponentsInChildren<Light>();

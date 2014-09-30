@@ -17,11 +17,8 @@ public class BeamWeapon : Weapon
 	protected override void Start ()
 	{
 		base.Start();
-		rotates = false;
 		beams = GetComponentsInChildren<ParticleSystem>();
-
 		mask = 1<<10|(parent.gameObject.layer==8?0:1)<<8|(parent.gameObject.layer==9?0:1)<<9;
-		print((int)mask);
 	}
 	
 	void FixedUpdate() {

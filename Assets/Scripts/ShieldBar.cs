@@ -8,6 +8,7 @@ public class ShieldBar : MonoBehaviour {
 	Wings wings;
 	// Use this for initialization
 	void Start () {
+		ship = GameObject.FindGameObjectWithTag("Player").GetComponent<Ship>();
 		Rect insets = guiTexture.pixelInset;
 		insets.x = MaxWidth / -2;
 		insets.width = MaxWidth;

@@ -8,7 +8,6 @@ public class ProjectileWeapon : Weapon {
 	protected override void Start() {
 		base.Start ();
 		cooldown = setCooldown;
-		rotates = true;
 	}
 
 	public override void Fire() {

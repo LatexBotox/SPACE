@@ -22,10 +22,11 @@ public class ChunkData {
 
 public class Chunk : MonoBehaviour {
 	public SortedList<int, Asteroid> asteroids;
-	public SortedList<int, AsteroidData> flaggedAsteroids;
+	SortedList<int, AsteroidData> flaggedAsteroids;
 
 	public int chunkx, chunky;
 	public AsteroidGenerator gen;
+	public EnemyGenerator eGen;
 	public int chunkSeed;
 
 	int chunkSize = 128; //128 means zero stutter when generating a chunk. 
@@ -45,7 +46,8 @@ public class Chunk : MonoBehaviour {
 		chunkx = Mathf.FloorToInt (transform.position.x/128);
 		chunky = Mathf.FloorToInt (transform.position.y/128);
 
-		gen = GameObject.FindGameObjectWithTag("AsteroidGenerator").GetComponent<AsteroidGenerator>();;
+		gen = transform.parent.GetComponentInChildren<AsteroidGenerator>();
+		eGen = transform.parent.GetComponentInChildren<EnemyGenerator>();
 
 		chunkSeed = gen.levelSeed+chunkx+chunky*chunkSize;
 	}
@@ -74,10 +76,14 @@ public class Chunk : MonoBehaviour {
 			foreach (KeyValuePair<int, Asteroid> p in asteroids)
 				if (p.Value!=null)
 					p.Value.gameObject.SetActive(true);
+
+			if(eGen)
+				eGen.GenerateRandomEnemy(chunkx*chunkSize, chunky*chunkSize, chunkSeed);
+
 		}
 
 		CancelInvoke();
-		Invoke ("DestroyAsteroids", 30);
+		Invoke ("DestroyAsteroids", 5);
 	}
 
 	void DestroyAsteroids () {
@@ -89,6 +95,7 @@ public class Chunk : MonoBehaviour {
 
 		asteroids.Clear();
 		alive = false;
+
 	}
 
 	public void RemoveAsteroid(Asteroid asteroid) {

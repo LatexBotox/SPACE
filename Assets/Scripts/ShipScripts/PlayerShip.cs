@@ -6,10 +6,14 @@ public class PlayerShip : Ship
 	public CustomInput input;	
 
 	protected override void Start () {
-		base.Start ();
-		cockpit.StartRadar ();
+//		base.Start ();
+//		cockpit.StartRadar ();
 	}
 
+	public override void Init() {
+		base.Init ();
+		cockpit.StartRadar ();
+	}
 
 	void OnEnable() {
 		if(weapon == null) {

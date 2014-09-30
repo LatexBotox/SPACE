@@ -25,15 +25,37 @@ public abstract class Ship : Destructables {
 	protected virtual void Start () {
 		/*weapons = GetComponentsInChildren<Weapon> ();
 		engines = GetComponentsInChildren<Engine> ();*/
+//		weapon = GetComponentInChildren<Weapon>();
+//		engine = GetComponentInChildren<Engine>();
+//		cockpit = GetComponentInChildren<Cockpit> ();
+//		hull = GetComponentInChildren<Hull> ();
+//		wings = GetComponentInChildren<Wings> ();
+//
+//		maxHealth = health = hull.maxHealth;
+//		rigidbody2D.mass = hull.mass;
+//
+//		shipCollider = GetComponentInChildren<PolygonCollider2D>();
+//		if (wings.maxShield > 0) {
+//			wings.parent = this;
+//			shipCollider.enabled = false;
+//			shieldCollider = GetComponentInChildren<CircleCollider2D>();
+//			shieldCollider.enabled = true;
+//		}
+//
+//		//activeWeapons = weapons;
+//		hitTime = Time.time;
+	}
+
+	public virtual void Init() {
 		weapon = GetComponentInChildren<Weapon>();
 		engine = GetComponentInChildren<Engine>();
 		cockpit = GetComponentInChildren<Cockpit> ();
 		hull = GetComponentInChildren<Hull> ();
 		wings = GetComponentInChildren<Wings> ();
-
+		
 		maxHealth = health = hull.maxHealth;
 		rigidbody2D.mass = hull.mass;
-
+		
 		shipCollider = GetComponentInChildren<PolygonCollider2D>();
 		if (wings.maxShield > 0) {
 			wings.parent = this;
@@ -41,7 +63,7 @@ public abstract class Ship : Destructables {
 			shieldCollider = GetComponentInChildren<CircleCollider2D>();
 			shieldCollider.enabled = true;
 		}
-
+		
 		//activeWeapons = weapons;
 		hitTime = Time.time;
 	}
@@ -103,7 +125,10 @@ public abstract class Ship : Destructables {
 
 	protected override void OnCollisionEnter2D (Collision2D col)
 	{
+		if (wings && wings.curShield>0)
+			wings.Impact (col.contacts[0].point-rigidbody2D.position);
 		base.OnCollisionEnter2D (col);
+
 		if (!colEffect)
 			return;
 		GameObject impactClone = Instantiate(colEffect, transform.position, Quaternion.LookRotation(col.contacts[0].normal)) as GameObject;

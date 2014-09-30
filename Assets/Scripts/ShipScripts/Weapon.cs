@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public abstract class Weapon : MonoBehaviour
+public abstract class Weapon : ShipComponent
 {
 	public GameObject parent;
 	public GameObject spawnpoint;
@@ -13,6 +13,10 @@ public abstract class Weapon : MonoBehaviour
 	public abstract void Fire();
 
 	protected virtual void Start() {
+		parent = gameObject.transform.parent.parent.gameObject;
+	}
+
+	public virtual void Init() {
 		parent = gameObject.transform.parent.parent.gameObject;
 	}
 

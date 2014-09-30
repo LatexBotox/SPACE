@@ -12,7 +12,7 @@ SubShader {
 	LOD 400
 	
 CGPROGRAM
-#pragma surface surf BlinnPhong
+#pragma surface surf BlinnPhong vertex:vert
 
 
 sampler2D _MainTex;
@@ -25,7 +25,14 @@ struct Input {
 	float2 uv_MainTex;
 	float2 uv_BumpMap;
 	float3 viewDir;
+	half rim;
 };
+
+void vert (inout appdata_full v, out Input o) {
+  UNITY_INITIALIZE_OUTPUT(Input,o);
+  float3 orthoView = (0,0,1);
+  o.rim =  0.9+saturate(dot (orthoView, abs(mul(UNITY_MATRIX_MVP, v.normal))));
+}
 
 void surf (Input IN, inout SurfaceOutput o) {
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
@@ -34,8 +41,9 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha = 1;
 	o.Specular = _Shininess;
 	o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
-	half rim = 1.0 - saturate(dot (normalize(IN.viewDir), o.Normal));
-	o.Emission = _Color * pow(rim, 1.5);
+//	
+//	half rim = 1.0 - saturate(dot (orthoView, o.Normal));
+	o.Emission = _Color * pow(IN.rim, 15)*0.1+_OffColor*tex.a*0.7;
 }
 ENDCG
 }

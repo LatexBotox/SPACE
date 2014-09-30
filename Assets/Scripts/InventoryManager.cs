@@ -30,9 +30,14 @@ public class InventoryManager
 		capacity = 1000;
 
 
-		GameObject go = GameObject.Find("TestPlayerShipV2");
+		GameObject go = GameObject.FindGameObjectWithTag("Player");
 		s = go.GetComponent(typeof(PlayerShip)) as PlayerShip;
 
+	}
+
+	void FixedUpdate() {
+		if(s==null)
+			s = GameObject.FindGameObjectWithTag ("Player").GetComponent<PlayerShip>();
 	}
 
 	public bool AddMineral(MineralType t, int q) {

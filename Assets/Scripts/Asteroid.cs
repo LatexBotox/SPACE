@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Asteroid : Destructables {
 	public AsteroidGenerator gen;
-	public ParticleSystem deathFX;
+	public ParticleSystem[] deathFX;
 	
 	public Chunk chunk;
 	public int id;
@@ -45,8 +45,18 @@ public class Asteroid : Destructables {
 		}
 
 		if (sizeClass>0 && gen!=null) {
-			for(int i = 0; i < 3;i++) {
-				gen.transform.position = transform.position+(Vector3)Random.insideUnitCircle.normalized*5*sizeClass;
+			if (chunk != null)
+				Random.seed = chunk.chunkSeed+id;
+			float numAsteroids = Random.Range(sizeClass, sizeClass+3);
+
+			print ("Spawning " + numAsteroids + " asteroids.");
+
+			float angleStep = 360/numAsteroids;
+			float startAngle = Random.Range (0,360);
+
+			for(int i = 0; i < numAsteroids;i++) {
+				gen.transform.position = transform.position + (Vector3)new Vector2(Mathf.Cos (Mathf.Deg2Rad*(startAngle+angleStep*i)), 
+				                                                          				 Mathf.Sin (Mathf.Deg2Rad*(startAngle+angleStep*i)))*(sizeClass+1)*2;
 				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1,chunk.chunkSeed+Random.Range(int.MinValue,int.MaxValue)+id);
 
 				clone.chunk = chunk;
@@ -58,17 +68,15 @@ public class Asteroid : Destructables {
 					
 				clone.rigidbody2D.AddForce (((Vector2)gen.transform.position-lastColPoint).normalized*10*sizeClass, ForceMode2D.Impulse);
 			}
-		} //else if(sizeClass == 0) {
+		}
 
 		if (mineral != MineralType.Blank) {
 			Mineral drop = gen.GenerateMineral(mineral);
 			drop.transform.position = transform.position;
 		}
-//		}
 
-		if(deathFX) {
-			deathFX = Instantiate(deathFX, transform.position, transform.rotation) as ParticleSystem;
-			deathFX.transform.localScale = Vector3.one*sizeClass/2;
+		if(deathFX.Length>0) {
+			Instantiate(deathFX[(int)Mathf.Clamp(sizeClass,0,deathFX.Length-1)], transform.position+new Vector3(0,0,-5), transform.rotation);
 		}
 	}
 
