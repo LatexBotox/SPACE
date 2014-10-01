@@ -15,14 +15,14 @@ public class CameraHandler : MonoBehaviour
 	}
 
 	public void ActivateMainCam() {
-		pl.gameObject.SetActive(true);
+		PlayerShip.instance.gameObject.SetActive(true);
 		hGui.gameObject.SetActive(false);
 		mainCam.gameObject.SetActive(true);
 		hangarCam.gameObject.SetActive(false);
 	}
 
 	public void ActivateHangarCam() {
-		pl.gameObject.SetActive(false);
+		PlayerShip.instance.gameObject.SetActive(false);
 		hGui.gameObject.SetActive(true);
 		mainCam.gameObject.SetActive(false);
 		hangarCam.gameObject.SetActive(true);

@@ -13,7 +13,7 @@ public class Tstate4 : TutorialState
 
 	public override void sUpdate ()
 	{
-		if(Stuff.inventory.GetWeapons().Count > 0) {
+		if(PlayerShip.instance.weapon!=null) {
 			exit = true;
 		}
 	}

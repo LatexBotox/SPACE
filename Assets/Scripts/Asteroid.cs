@@ -55,7 +55,7 @@ public class Asteroid : Destructables {
 			for(int i = 0; i < numAsteroids;i++) {
 				gen.transform.position = transform.position + (Vector3)new Vector2(Mathf.Cos (Mathf.Deg2Rad*(startAngle+angleStep*i)), 
 				                                                          				 Mathf.Sin (Mathf.Deg2Rad*(startAngle+angleStep*i)))*(sizeClass+1)*2;
-				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1,chunk.chunkSeed+Random.Range(int.MinValue,int.MaxValue)+id);
+				Asteroid clone = gen.GenerateAsteroid(mineral, sizeClass-1,Random.Range(int.MinValue,int.MaxValue)+id);
 
 				clone.chunk = chunk;
 

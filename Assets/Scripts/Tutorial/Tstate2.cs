@@ -7,6 +7,7 @@ public class Tstate2 : TutorialState
 
 	public override void Run ()
 	{
+		pship=PlayerShip.instance;
 		tControl.DisplayMessage("Location unknown.. Attempting connection to main cluster.. ERROR 404\n" +
 		                        "Scanning,.. Fleet Signal confirmed; Waypoint established.",  "Rob", 10.0f);
 

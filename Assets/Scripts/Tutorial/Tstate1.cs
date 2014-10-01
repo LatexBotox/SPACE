@@ -20,6 +20,14 @@ public class Tstate1 : TutorialState
 	public override void sUpdate ()
 	{
 
+		ship = PlayerShip.instance;
+
+		if(ship==null)
+			return;
+
+		if(ship.weapon!=null)
+			Destroy(ship.weapon.gameObject,0f);
+
 		if(exit)
 			return;
 
