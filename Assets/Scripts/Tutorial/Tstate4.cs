@@ -8,7 +8,7 @@ public class Tstate4 : TutorialState
 	public override void Run ()
 	{
 		camHandle.ActivateHangarCam();
-		tControl.DisplayMessage("Install the mining laser so that i can FRAPE YOOUUU", "Captain Stenis", 10.0f);
+		tControl.DisplayMessage("Very good! Now equip the mining laser.", "Captain Stenis", 10.0f);
 	}
 
 	public override void sUpdate ()

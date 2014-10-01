@@ -8,7 +8,7 @@ public class Tstate2 : TutorialState
 	public override void Run ()
 	{
 		tControl.DisplayMessage("Location unknown.. Attempting connection to main cluster.. ERROR 404\n" +
-		                        "Scanning,.. Fleet Signal confirmed; Waypoint established.",  "Rob3", 10.0f);
+		                        "Scanning,.. Fleet Signal confirmed; Waypoint established.",  "Rob", 10.0f);
 
 
 		Vector2 pos = (Vector2)pship.transform.position + Random.insideUnitCircle.normalized * 200;

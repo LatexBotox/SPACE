@@ -9,7 +9,8 @@ public class Tstate3 : TutorialState
 
 	public override void Run ()
 	{
-		tControl.DisplayMessage("Imma gay for you Lowe! Please park your junk \nin mah trunk, aaaaalll the way up there", "Captain Stenis", 10.0f);
+		tControl.DisplayMessage("Great Scott! I thought you were lost!" +
+			"We were sucked into <insert plot device here> and ended up here. " +
+			"You seem to have lost your mining laser, get into the hangar so we can requip your ship!", "Captain Stenis", 10.0f);
 	}
 }
-
