@@ -5,7 +5,6 @@ public class ShieldImpact : MonoBehaviour {
 	SpriteRenderer sprite;
 
 	void Start() {
-		print ("IMPACT");
 		sprite = GetComponent<SpriteRenderer>();
 		Destroy(gameObject, 2f);
 	}

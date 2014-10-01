@@ -17,7 +17,6 @@ public class Projectile : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter2D(Collision2D other) {
-		print ("collided with: " + other.gameObject.name);
 		ParticleSystem impactClone = (ParticleSystem)Instantiate (impact, other.contacts[other.contacts.Length-1].point,
 		                                                          Quaternion.LookRotation(other.contacts[other.contacts.Length-1].normal));
 		Destroy (impactClone.gameObject, impactClone.duration);

@@ -36,10 +36,10 @@ public class BeamWeapon : Weapon
 		}
 		RaycastHit2D[] hits = Physics2D.CircleCastAll (spawnpoint.transform.position, width/2, transform.up, range, mask);
 
-		Debug.DrawRay (spawnpoint.transform.position, parent.transform.up);
+		//Debug.DrawRay (spawnpoint.transform.position, parent.transform.up);
 
 		foreach (RaycastHit2D hit in hits) {
-			print ("Hit object: " + hit.collider.gameObject.name);
+			//print ("Hit object: " + hit.collider.gameObject.name);
 			hit.collider.gameObject.SendMessage("Damage", damage*Time.deltaTime);
 			if (impact) {
 				impact.transform.position = hit.point+hit.normal*1.5f;

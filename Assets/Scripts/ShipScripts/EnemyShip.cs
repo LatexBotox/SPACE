@@ -48,9 +48,7 @@ public class EnemyShip : Ship
 	void FindTarget() {
 		Collider2D potentialTarget = Physics2D.OverlapCircle (rigidbody2D.position, cockpit.range, 1 << 8);
 		if (potentialTarget) {
-			print ("Target Acquired: "+potentialTarget.name);
 			target = potentialTarget.GetComponent<Ship>();
-
 		}
 	}
 

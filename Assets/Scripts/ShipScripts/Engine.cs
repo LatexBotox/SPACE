@@ -35,6 +35,8 @@ public class Engine : ShipComponent {
 	}
 
 	public void Thrust () {
+		if (parent==null)
+			return;
 		parent.rigidbody2D.AddForce (parent.transform.up.normalized * thrustMult*Time.deltaTime, ForceMode2D.Impulse);
 		parent.rigidbody2D.AddForce (-parent.rigidbody2D.velocity.normalized * 
 		                             Mathf.Lerp (0, thrustMult, (parent.rigidbody2D.velocity.magnitude)*20  / maxSpeed - 19 )*Time.deltaTime, ForceMode2D.Impulse);

@@ -24,7 +24,6 @@ public class IndicatorArrow : MonoBehaviour {
 		}
 
 		if (!target) {
-			print ("OFF");
 			enabled = false;
 		}
 	}

@@ -38,20 +38,11 @@ public class LevelGenerator : MonoBehaviour {
 
 		initializedChunks = new Chunk[levelSize, levelSize];
 		Load ();
-
-//		GameObject clone;
-//
-//		for(float y = -levelSize/2;y < levelSize/2;y++) {
-//			for(float x = -levelSize/2;x < levelSize/2;x++) {
-//				Instantiate (chunk, new Vector2(y*chunkSize, x*chunkSize),chunk.transform.rotation);
-//			}
-//		}
 		t += Time.realtimeSinceStartup;
 
-		print ("Loaded Chunks in: " + t);
+		//print ("Loaded Chunks in: " + t);
 	}
-	
-	// Update is called once per frame
+
 	void FixedUpdate () {
 		if(!player)
 			return;
@@ -129,8 +120,6 @@ public class LevelGenerator : MonoBehaviour {
 						Instantiate (chunk, new Vector2(c.chunkx*chunkSize, c.chunky*chunkSize), chunk.transform.rotation) as Chunk;
 
 					loadedChunk.Load (c.asteroidData);
-				} else {
-					print (c);
 				}
 			}
 		}

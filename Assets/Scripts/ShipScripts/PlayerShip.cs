@@ -37,14 +37,6 @@ public class PlayerShip : Ship
 		cockpit.StartRadar ();
 	}
 
-	void OnEnable() {
-		if(weapon == null) {
-			List<Weapon> weaps = InventoryManager.instance.GetWeapons();
-			if(weaps.Count > 0)
-				InventoryManager.instance.Equip(weaps[0] as Weapon);
-		}
-	}
-
 
 	protected override void FixedUpdate ()
 	{
