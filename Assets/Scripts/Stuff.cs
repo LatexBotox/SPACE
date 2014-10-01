@@ -13,8 +13,11 @@ public static class Stuff
 		g = FindGameobj("InventoryManager");
 		inventory = FindComponent(g, typeof(InventoryManager)) as InventoryManager;
 
-		g = FindGameobj("TestPlayerShipV2");
-		player = FindComponent(g, typeof(PlayerShip)) as PlayerShip;
+		try {
+			player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerShip>();
+		} catch(UnityException e) {
+			Debug.LogError("Player Not Found");
+		}
 
 		g = FindGameobj("CustomInput");
 		input = FindComponent(g, typeof(CustomInput)) as CustomInput;

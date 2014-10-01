@@ -9,6 +9,7 @@ public class EnemyShip : Ship
 	protected override void Start ()
 	{
 		base.Start ();
+		base.Init ();
 		enabled = pf;
 	}
 

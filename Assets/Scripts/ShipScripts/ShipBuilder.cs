@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ShipBuilder : MonoBehaviour {
-	public Wings[] 		wings;
+	public Wings[] 	wings;
 	public Engine[] 	engines;
 	public Weapon[] 	weapons;
 	public Hull[] 		hulls;
@@ -25,20 +25,27 @@ public class ShipBuilder : MonoBehaviour {
 	Hull 		selectedHull;
 	Cockpit selectedCockpit;
 
+	public static ShipBuilder instance;
 
-	SortedList<ShipComponent, bool> unlocked;
+	SortedList<string, bool> unlocked;
 	void Start () {
-//		unlocked = new SortedList<ShipComponent, bool>();
-//		foreach(ShipComponent s in wings)
-//			unlocked.Add (s, true);
-//		foreach(ShipComponent s in engines)
-//			unlocked.Add (s, true);
-//		foreach(ShipComponent s in weapons)
-//			unlocked.Add (s, true);
-//		foreach(ShipComponent s in hulls)
-//			unlocked.Add (s, true);
-//		foreach(ShipComponent s in cockpits)
-//			unlocked.Add (s, true);
+		if (instance!=null) {
+			Destroy (gameObject, 0f);
+			return;
+		}
+		instance = this;
+
+		unlocked = new SortedList<string, bool>();
+		foreach(ShipComponent s in wings)
+			unlocked.Add (s.name, true);
+		foreach(ShipComponent s in engines)
+			unlocked.Add (s.name, true);
+		foreach(ShipComponent s in weapons)
+			unlocked.Add (s.name, true);
+		foreach(ShipComponent s in hulls)
+			unlocked.Add (s.name, true);
+		foreach(ShipComponent s in cockpits)
+			unlocked.Add (s.name, true);
 		selectedWing = wings[wingIndex];
 		selectedEngine = engines[engineIndex];
 		selectedWeapon = weapons[weaponIndex];
@@ -73,5 +80,11 @@ public class ShipBuilder : MonoBehaviour {
 		weapon.Init ();
 
 		return ship;
+	}
+
+	public void ChangeWeapon(Weapon w) {
+		if (unlocked[w.name]) {
+			PlayerShip.instance.SetWeapon (w);
+		}
 	}
 }

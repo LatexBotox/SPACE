@@ -3,7 +3,6 @@ using System.Collections;
 
 public class SandboxSpawner : MonoBehaviour {
 
-	public Transform t;
 	public EnemyShip[] enemies;
 
 	int e_index;
@@ -14,13 +13,21 @@ public class SandboxSpawner : MonoBehaviour {
 
 	void Start() {
 		e_index = 0;
-		next = new KeyListener(Stuff.input.SelectNextKey, this.NextEnemy, 0.2f);
-		prev = new KeyListener(Stuff.input.SelectNextKey, this.PrevEnemy, 0.2f);
-		spawn = new KeyListener(Stuff.input.EnterKey, this.SpawnEnemy, 0.2f);
+	}
 
-		Stuff.input.RegDownListener(next);
-		Stuff.input.RegDownListener(prev);
-		Stuff.input.RegDownListener(spawn);
+	void FixedUpdate() {
+		try {
+			next = new KeyListener(CustomInput.instance.SelectNextKey, this.NextEnemy, 0.2f);
+			prev = new KeyListener(CustomInput.instance.SelectNextKey, this.PrevEnemy, 0.2f);
+			spawn = new KeyListener(CustomInput.instance.EnterKey, this.SpawnEnemy, 0.2f);
+			
+			CustomInput.instance.RegDownListener(next);
+			CustomInput.instance.RegDownListener(prev);
+			CustomInput.instance.RegDownListener(spawn);
+			enabled = false;
+		} catch (UnityException e) {
+			
+		} 
 	}
 
 	public void NextEnemy() {
@@ -32,6 +39,6 @@ public class SandboxSpawner : MonoBehaviour {
 	}
 
 	public void SpawnEnemy() {
-		Instantiate(enemies[e_index], t.position + t.up * 100, t.rotation);
+		Instantiate(enemies[e_index], PlayerShip.instance.transform.position + PlayerShip.instance.transform.up * 100, PlayerShip.instance.transform.rotation);
 	}
 }

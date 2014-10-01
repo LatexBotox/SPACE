@@ -35,9 +35,9 @@ public class Engine : ShipComponent {
 	}
 
 	public void Thrust () {
-		parent.rigidbody2D.AddForce (parent.transform.up.normalized * thrustMult);
+		parent.rigidbody2D.AddForce (parent.transform.up.normalized * thrustMult*Time.deltaTime, ForceMode2D.Impulse);
 		parent.rigidbody2D.AddForce (-parent.rigidbody2D.velocity.normalized * 
-		                             Mathf.Lerp (0, thrustMult, (parent.rigidbody2D.velocity.magnitude)*20  / maxSpeed - 19 ));
+		                             Mathf.Lerp (0, thrustMult, (parent.rigidbody2D.velocity.magnitude)*20  / maxSpeed - 19 )*Time.deltaTime, ForceMode2D.Impulse);
 		on = true;
 		foreach (ParticleSystem p in ps)
 			p.enableEmission = true;

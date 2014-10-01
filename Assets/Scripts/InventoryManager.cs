@@ -17,7 +17,16 @@ public class InventoryManager : MonoBehaviour
 	int currentLoad = 0;
 	int loadCapacity = 1000;
 
+	public static InventoryManager instance;
+
 	void Start() {
+		if (instance !=null) {
+			Destroy (gameObject, 0f);
+			return;
+		}
+
+		instance = this;
+		DontDestroyOnLoad(gameObject);
 		weapons.AddRange(weaps);
 	}
 
@@ -98,15 +107,15 @@ public class InventoryManager : MonoBehaviour
 		if(item is Weapon) {
 		
 			Weapon clone = Instantiate(item, new Vector2(0,0), Quaternion.identity) as Weapon; 
-			Stuff.player.SetWeapon(clone);
+			PlayerShip.instance.SetWeapon(clone);
 		} else if(item is Engine) {
-			Stuff.player.engine = item as Engine;
+			PlayerShip.instance.engine = item as Engine;
 		} else if(item is Hull) {
-			Stuff.player.hull = item as Hull;
+			PlayerShip.instance.hull = item as Hull;
 		}	else if(item is Wings) {
-			Stuff.player.wings = item as Wings;
+			PlayerShip.instance.wings = item as Wings;
 		} else if(item is Cockpit) {
-			Stuff.player.cockpit = item as Cockpit;
+			PlayerShip.instance.cockpit = item as Cockpit;
 		} else {
 			Debug.LogError("invalid type: " + item.GetType());		
 		}

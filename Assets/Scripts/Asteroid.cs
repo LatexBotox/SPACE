@@ -49,8 +49,6 @@ public class Asteroid : Destructables {
 				Random.seed = chunk.chunkSeed+id;
 			float numAsteroids = Random.Range(sizeClass, sizeClass+3);
 
-			print ("Spawning " + numAsteroids + " asteroids.");
-
 			float angleStep = 360/numAsteroids;
 			float startAngle = Random.Range (0,360);
 

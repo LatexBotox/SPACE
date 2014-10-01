@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CustomInput : MonoBehaviour {
 	KeyCode thrustKey = KeyCode.W;
@@ -12,6 +13,24 @@ public class CustomInput : MonoBehaviour {
 	KeyCode enterKey = KeyCode.Return;
 	KeyCode nextWeaponKey = KeyCode.E;
 	KeyCode prevWeaponKey = KeyCode.Q;
+
+	List<KeyListener> keyDownListeners;
+	List<KeyListener> keyUpListeners;
+	List<KeyListener> keyHeldListeners;
+
+	public static CustomInput instance;
+
+	void Start() {
+		if(instance!=null) {
+			Destroy (gameObject, 0f);
+			return;
+		}
+		instance = this;
+
+		keyDownListeners = new List<KeyListener>();
+		keyUpListeners	 = new List<KeyListener>();
+		keyHeldListeners = new List<KeyListener>();
+	}
 
 	public KeyCode ThrustKey {
 		get {
@@ -103,9 +122,7 @@ public class CustomInput : MonoBehaviour {
 		}
 	}
 
-	ArrayList keyDownListeners = new ArrayList();
-	ArrayList keyUpListeners	 = new ArrayList();
-	ArrayList keyHeldListeners = new ArrayList();
+
 	
 	public void RegDownListener(KeyListener kl) {
 		keyDownListeners.Add(kl);
@@ -131,6 +148,7 @@ public class CustomInput : MonoBehaviour {
 	public void RemHeldListener(KeyListener kl) {
 		keyHeldListeners.Remove(kl);
 	}
+
 
 	
 	void Update() {

@@ -8,39 +8,40 @@ public class PlayerShip : Ship
 
 	KeyListener thrust, rotatel, rotater, dampen, shoot;
 
+	public static PlayerShip instance;
+
 	protected override void Start () {
 		//base.Start ();
 		//cockpit.StartRadar ();
-
-		if(weapon != null) 
-		{
-			Stuff.inventory.AddWeapon(weapon);
+		if(instance!=null) {
+			Destroy (gameObject, 0f);
+			return;
 		}
+		instance = this;
 
-		thrust 	= new KeyListener(Stuff.input.ThrustKey, 	this.ThrustEngines);
-		rotatel = new KeyListener(Stuff.input.RotateLKey, this.RotateLeft);
-		rotater = new KeyListener(Stuff.input.RotateRKey, this.RotateRight);
-		dampen 	= new KeyListener(Stuff.input.DampenKey, 	this.Dampen);
-		shoot 	= new KeyListener(Stuff.input.ShootKey, 	this.FireWeapons);
+		thrust 	= new KeyListener(CustomInput.instance.ThrustKey, 	this.ThrustEngines);
+		rotatel = new KeyListener(CustomInput.instance.RotateLKey, this.RotateLeft);
+		rotater = new KeyListener(CustomInput.instance.RotateRKey, this.RotateRight);
+		dampen 	= new KeyListener(CustomInput.instance.DampenKey, 	this.Dampen);
+		shoot 	= new KeyListener(CustomInput.instance.ShootKey, 	this.FireWeapons);
 
-		Stuff.input.RegHeldListener(thrust);
-		Stuff.input.RegHeldListener(rotatel);
-		Stuff.input.RegHeldListener(rotater);
-		Stuff.input.RegHeldListener(dampen);
-		Stuff.input.RegHeldListener(shoot);
+		CustomInput.instance.RegHeldListener(thrust);
+		CustomInput.instance.RegHeldListener(rotatel);
+		CustomInput.instance.RegHeldListener(rotater);
+		CustomInput.instance.RegHeldListener(dampen);
+		CustomInput.instance.RegHeldListener(shoot);
 	}
 	
 	public override void Init() {
 		base.Init ();
 		cockpit.StartRadar ();
-
 	}
 
 	void OnEnable() {
 		if(weapon == null) {
-			List<Weapon> weaps = Stuff.inventory.GetWeapons();
+			List<Weapon> weaps = InventoryManager.instance.GetWeapons();
 			if(weaps.Count > 0)
-				Stuff.inventory.Equip(weaps[0] as Weapon);
+				InventoryManager.instance.Equip(weaps[0] as Weapon);
 		}
 	}
 
@@ -52,6 +53,12 @@ public class PlayerShip : Ship
 
 		RotateWeapons (Camera.main.ScreenToWorldPoint (Input.mousePosition));
 
+	}
+
+	public override void Die ()
+	{
+		instance = null;
+		base.Die ();
 	}
 }
 

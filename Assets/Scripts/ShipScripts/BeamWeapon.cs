@@ -34,13 +34,13 @@ public class BeamWeapon : Weapon
 			ps.enableEmission = firing = true;
 			ps.startRotation = Random.Range ((transform.rotation.z-5)*Mathf.Deg2Rad, (transform.rotation.z+5)*Mathf.Deg2Rad);
 		}
-		RaycastHit2D[] hits = Physics2D.CircleCastAll (spawnpoint.transform.position, width/2, parent.transform.up, range, mask);
+		RaycastHit2D[] hits = Physics2D.CircleCastAll (spawnpoint.transform.position, width/2, transform.up, range, mask);
 
 		Debug.DrawRay (spawnpoint.transform.position, parent.transform.up);
 
 		foreach (RaycastHit2D hit in hits) {
 			print ("Hit object: " + hit.collider.gameObject.name);
-			hit.collider.gameObject.SendMessage("Damage", damage);
+			hit.collider.gameObject.SendMessage("Damage", damage*Time.deltaTime);
 			if (impact) {
 				impact.transform.position = hit.point+hit.normal*1.5f;
 				impact.transform.rotation = Quaternion.LookRotation(hit.normal, impact.transform.forward);

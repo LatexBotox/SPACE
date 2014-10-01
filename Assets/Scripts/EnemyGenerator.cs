@@ -36,7 +36,6 @@ public class EnemyGenerator : MonoBehaviour {
 			if(accu>ran) {
 				clone = Instantiate(enemies[i],transform.position,enemies[i].transform.rotation) as EnemyShip;
 				clone.DespawnIn(15);
-				print("Spawned Enemy!");
 				break;
 			}
 		}

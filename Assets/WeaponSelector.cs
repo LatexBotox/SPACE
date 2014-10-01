@@ -4,34 +4,38 @@ using System.Collections.Generic;
 
 public class WeaponSelector : MonoBehaviour 
 {
-	int wid;
 	KeyListener next, prev;
 
 
 	void Start() {
-		wid = 0;
-		next = new KeyListener(Stuff.input.NextWeaponKey, this.NextWeapon, 0.2f);
-		prev = new KeyListener(Stuff.input.PrevWeaponKey, this.PrevWeapon, 0.2f);
-		Stuff.input.RegDownListener(next);
-		Stuff.input.RegDownListener(prev);
+
 	}
 
+	void FixedUpdate() {
+		try {
+			next = new KeyListener(CustomInput.instance.NextWeaponKey, this.NextWeapon, 0.2f);
+			prev = new KeyListener(CustomInput.instance.PrevWeaponKey, this.PrevWeapon, 0.2f);
+			CustomInput.instance.RegDownListener(next);
+			CustomInput.instance.RegDownListener(prev);
+			enabled = false;
+		} catch (UnityException e) {
+
+		} 
+	}
 
 	void NextWeapon() {
-		List<Weapon> w = Stuff.inventory.GetWeapons();
-		wid = (++wid)%w.Count;
-	
-		foreach(Weapon weap in w) {
-			print (weap.name);
-		}
+		ShipBuilder.instance.weaponIndex = (ShipBuilder.instance.weaponIndex+1)%ShipBuilder.instance.weapons.Length;
 
-
-		Stuff.inventory.Equip(w[wid] as Weapon);
+		ShipBuilder.instance.ChangeWeapon(ShipBuilder.instance.weapons[ShipBuilder.instance.weaponIndex]);
 	}
 
 	void PrevWeapon() {
-		List<Weapon> w = Stuff.inventory.GetWeapons();
-		wid = (++wid)%w.Count;
-		Stuff.inventory.Equip(w.ToArray ()[wid] as Weapon);
+		if (ShipBuilder.instance.weaponIndex == 0) {
+			ShipBuilder.instance.weaponIndex = ShipBuilder.instance.weapons.Length-1;
+		} else {
+			ShipBuilder.instance.weaponIndex--;
+		}
+		
+		ShipBuilder.instance.ChangeWeapon(ShipBuilder.instance.weapons[ShipBuilder.instance.weaponIndex]);
 	}
 }

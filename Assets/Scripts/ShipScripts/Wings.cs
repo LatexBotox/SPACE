@@ -23,6 +23,9 @@ public class Wings : ShipComponent
 	void Start() {
 		curShield = maxShield;
 		regenStartsAt = 0;
+
+		if (curShield == 0&&shieldSprite)
+			shieldSprite.enabled = false;
 	}
 
 	void Update() {
@@ -69,7 +72,6 @@ public class Wings : ShipComponent
 
 
 	public void Impact(Vector2 impactDir) {
-		print ("SHIELDS UP");
 		ShieldImpact clone = Instantiate (impact, parent.transform.position+new Vector3(0,0,-2), Quaternion.LookRotation(transform.forward, impactDir)) as ShieldImpact;
 		clone.transform.parent = parent.transform;
 	}

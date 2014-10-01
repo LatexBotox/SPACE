@@ -70,11 +70,11 @@ public abstract class Ship : Destructables {
 
 	public void SetWeapon(Weapon weap) {
 		if(weapon != null)
-			Destroy(weapon, 0.0f);
+			Destroy(weapon.gameObject, 0.0f);
 
-		weapon = weap;
+		weapon = Instantiate(weap) as Weapon;
 		weapon.transform.parent = weapPos;
-		weapon.transform.position = weapPos.position;
+		weapon.transform.localPosition = Vector3.zero;
 		weapon.transform.rotation = weapPos.rotation;
 		weapon.gameObject.SetActive(true);
 	}
@@ -91,15 +91,15 @@ public abstract class Ship : Destructables {
 	}
 
 	protected void Dampen() {
-		rigidbody2D.AddForce (rigidbody2D.velocity*-wings.dampeningFactor);
+		rigidbody2D.AddForce (rigidbody2D.velocity*-wings.dampeningFactor*Time.deltaTime, ForceMode2D.Impulse);
 	}
 
 	protected void RotateLeft() {
-		rigidbody2D.AddTorque (wings.GetTurnForce());
+		rigidbody2D.AddTorque (wings.GetTurnForce()*Time.deltaTime, ForceMode2D.Impulse);
 	}
 
 	protected void RotateRight() {
-		rigidbody2D.AddTorque (-wings.GetTurnForce());
+		rigidbody2D.AddTorque (-wings.GetTurnForce()*Time.deltaTime, ForceMode2D.Impulse);
 	}
 
 	protected void RotateWeapons(Vector2 target) {
