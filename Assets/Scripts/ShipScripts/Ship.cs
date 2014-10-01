@@ -68,7 +68,7 @@ public abstract class Ship : Destructables {
 		hitTime = Time.time;
 	}
 
-	public void SetWeapon(Weapon weap) {
+	public Weapon SetWeapon(Weapon weap) {
 		if(weapon != null)
 			Destroy(weapon.gameObject, 0.0f);
 
@@ -77,6 +77,7 @@ public abstract class Ship : Destructables {
 		weapon.transform.localPosition = Vector3.zero;
 		weapon.transform.rotation = weapPos.rotation;
 		weapon.gameObject.SetActive(true);
+		return weapon;
 	}
 
 	protected virtual void FixedUpdate() {

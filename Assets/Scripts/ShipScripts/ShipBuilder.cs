@@ -84,7 +84,7 @@ public class ShipBuilder : MonoBehaviour {
 
 	public void ChangeWeapon(Weapon w) {
 		if (unlocked[w.name]) {
-			PlayerShip.instance.SetWeapon (w);
+			PlayerShip.instance.SetWeapon (w).renderer.material.SetColor("_PaintColor",weaponColor);
 		}
 	}
 }
