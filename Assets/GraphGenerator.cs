@@ -46,10 +46,10 @@ public class GraphGenerator : MonoBehaviour {
 			//failing to find a next point is not exceptional
 			//but for some reason i cant return null from FindNextPoint..
 			try {
-				print ("attempting to create new node..");
+				//print ("attempting to create new node..");
 				Vector2 nextPos = FindNextPoint (currentPos);
 				GraphNode clone = Instantiate (node, nextPos, Quaternion.identity) as GraphNode;
-				print ("Successfully created node at: " + nextPos);
+				//print ("Successfully created node at: " + nextPos);
 
 				BuildEdges (clone, FindNeighbours(nextPos));
 
@@ -119,7 +119,6 @@ public class GraphGenerator : MonoBehaviour {
 		}*/
 
 		if ((p - (Vector2)transform.position).sqrMagnitude > radius * radius) {
-			print ("Failed to create node at: " + p + "(out of bounds)");
 			return false;
 		}
 
@@ -127,7 +126,6 @@ public class GraphGenerator : MonoBehaviour {
 		foreach (GraphNode gn in allNodes) {
 			float dist = (p - (Vector2)gn.transform.position).sqrMagnitude;
 			if(dist < minDist*minDist) {
-				print ("Failed to create node at: " + p + "(too close to others)");
 				return false;
 			}
 		}
