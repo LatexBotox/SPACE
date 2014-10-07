@@ -7,30 +7,21 @@ class NoSpaceException : System.Exception {}
 
 public class GraphGenerator : MonoBehaviour {
 
-
 	public GraphNode node;
 	public GraphEdge edge;
-	public Rect area;
 	public float maxDist, minDist;
 	public int seed;
 	public int maxNrNodes;
 	public float radius;
 
+	Stack buildNodes = new Stack();
+	ArrayList allNodes = new ArrayList();
 
-	Stack buildNodes;
-	ArrayList allNodes;
-
-	// Use this for initialization
-	void Start () {
-
-		buildNodes = new Stack ();
-		allNodes = new ArrayList ();
-
-		DFRandomWalk ();
-	
+	public GraphNode Generate() {
+		return DFRandomWalk ();
 	}
 	
-	void DFRandomWalk() {
+	GraphNode DFRandomWalk() {
 
 		//First create the origin node at the position of the generator object
 		Random.seed = seed;
@@ -51,7 +42,14 @@ public class GraphGenerator : MonoBehaviour {
 				GraphNode clone = Instantiate (node, nextPos, Quaternion.identity) as GraphNode;
 				//print ("Successfully created node at: " + nextPos);
 
+				ArrayList nbrs = FindNeighbours(nextPos);
 				BuildEdges (clone, FindNeighbours(nextPos));
+
+				foreach(GraphNode gn in nbrs) {
+					gn.neighbours.Add(clone);
+				}
+
+				clone.neighbours.AddRange(nbrs);
 
 				buildNodes.Push(clone);
 				allNodes.Add(clone);
@@ -61,6 +59,7 @@ public class GraphGenerator : MonoBehaviour {
 		}
 
 		print ("Finishied generating graph with " + allNodes.Count + " nodes");
+		return origin;
 	}
 
 	void BuildEdges(GraphNode me, ArrayList others) {

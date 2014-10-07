@@ -12,6 +12,7 @@ public class Tstate5 : TutorialState
 		Asteroid a = ag.GenerateAsteroid(MineralType.Whatium, 2, Random.Range (int.MinValue, int.MaxValue));
 		a.transform.position = new Vector3(0,0,0);
 		a.gameObject.SetActive(true);
+		PlayerShip.instance.weapon.enabled = true;
 	}
 	
 	public override void sUpdate ()
