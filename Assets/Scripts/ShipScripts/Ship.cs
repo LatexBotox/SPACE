@@ -127,20 +127,37 @@ public abstract class Ship : Destructables {
 
 	protected override void OnCollisionEnter2D (Collision2D col)
 	{
-		if (wings && wings.curShield>0)
+		if (wings && wings.curShield>0) {
 			wings.Impact (col.contacts[0].point-rigidbody2D.position);
-		base.OnCollisionEnter2D (col);
+		}
+
+		if (col.gameObject.GetComponent<Destructables>()) {
+			float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
+			float m = col.rigidbody.mass + rigidbody2D.mass; 
+			
+			CollisionDamage (deltaV*(col.rigidbody.mass/m), col.gameObject.layer);
+			
+			col.gameObject.GetComponent<Destructables>().CollisionDamage(deltaV * (rigidbody2D.mass / m)*(wings.curShield>0?wings.colVictimMult:1), gameObject.layer);
+		}
 
 		if (!colEffect)
 			return;
 		GameObject impactClone = Instantiate(colEffect, transform.position, Quaternion.LookRotation(col.contacts[0].normal)) as GameObject;
 		Destroy(impactClone);
 	}
+
 	public override void Damage (float d)
 	{
 		if (wings.maxShield>0)
 			d = wings.Damage(d);
 		base.Damage (d);
+	}
+
+	public override void CollisionDamage (float d, int layer)
+	{	
+		if (wings && wings.curShield>0)
+			d *= wings.colSelfMult;
+		base.CollisionDamage (d, layer);
 	}
 
 	public void EnableShields() {

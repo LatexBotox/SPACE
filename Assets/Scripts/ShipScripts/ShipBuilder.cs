@@ -9,6 +9,8 @@ public class ShipBuilder : MonoBehaviour {
 	public Hull[] 		hulls;
 	public Cockpit[]	cockpits;
 
+	public Upgrade[] upgrades;
+
 	public Ship shipBase;
 
 	public int wingIndex, engineIndex, weaponIndex, hullIndex, cockpitIndex;
@@ -18,6 +20,8 @@ public class ShipBuilder : MonoBehaviour {
 	public Color hullColor;
 	public Color weaponColor;
 	public Color cockpitColor;
+
+	public bool waitForInput = false;
 
 	Wings 	selectedWing;
 	Engine 	selectedEngine;
@@ -52,10 +56,17 @@ public class ShipBuilder : MonoBehaviour {
 		selectedHull = hulls[hullIndex];
 		selectedCockpit = cockpits[cockpitIndex];
 
-		SpawnShip();
+		if(!waitForInput)
+			SpawnShip();
 	}
 
 	public Ship SpawnShip() {
+		selectedWing = wings[wingIndex];
+		selectedEngine = engines[engineIndex];
+		selectedWeapon = weapons[weaponIndex];
+		selectedHull = hulls[hullIndex];
+		selectedCockpit = cockpits[cockpitIndex];
+
 		Ship ship = Instantiate (shipBase, transform.position, shipBase.transform.rotation) as Ship;
 		Wings wing = Instantiate (selectedWing, transform.position+selectedWing.transform.position, selectedWing.transform.rotation) as Wings;
 		Engine engine = Instantiate (selectedEngine, transform.position+selectedEngine.transform.position, selectedEngine.transform.rotation) as Engine;
@@ -68,18 +79,33 @@ public class ShipBuilder : MonoBehaviour {
 		weapon.transform.parent = ship.weapPos.transform;
 		hull.transform.parent = ship.transform;
 		cockpit.transform.parent = ship.transform;
-
+		
 		wing.renderer.material.SetColor("_PaintColor", wingColor);
 		engine.renderer.material.SetColor("_PaintColor", engineColor);
 		weapon.renderer.material.SetColor("_PaintColor", weaponColor);
 		hull.renderer.material.SetColor("_PaintColor", hullColor);
 		cockpit.renderer.material.SetColor("_PaintColor", cockpitColor);
 
+		foreach (ShipComponent c in ship.GetComponentsInChildren<ShipComponent>())
+			ApplyUpgrades (c);
+
 		ship.Init ();
 		engine.Init ();
 		weapon.Init ();
 
 		return ship;
+	}
+
+	public void DespawnShip() {
+		PlayerShip.instance.Destroy();
+	}
+
+	void ApplyUpgrades(ShipComponent c) {
+		foreach (Upgrade u in upgrades) {
+			if (c.GetComponent(u.typeName)) {
+				u.ApplyUpgrade(c);
+			}
+		}
 	}
 
 	public void ChangeWeapon(Weapon w) {

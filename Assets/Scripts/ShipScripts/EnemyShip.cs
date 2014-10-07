@@ -48,7 +48,7 @@ public class EnemyShip : Ship
 	void FindTarget() {
 		Collider2D potentialTarget = Physics2D.OverlapCircle (rigidbody2D.position, cockpit.range, 1 << 8);
 		if (potentialTarget) {
-			target = potentialTarget.GetComponent<Ship>();
+			target = potentialTarget.GetComponent<PlayerShip>();
 		}
 	}
 
@@ -59,6 +59,12 @@ public class EnemyShip : Ship
 
 	void DESTRUCTION() {
 		Destroy (gameObject, 0f);
+	}
+
+	public override void CollisionDamage (float d, int layer)
+	{	
+		if (layer == gameObject.layer)
+			base.CollisionDamage(d*0.1f,layer);
 	}
 
 	public void DespawnIn(float t) {
