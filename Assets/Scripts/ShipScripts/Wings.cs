@@ -24,7 +24,7 @@ public class Wings : ShipComponent
 	public SpriteRenderer shieldSprite;
 
 	void Start() {
-		curShield = maxShield;
+		Mathf.Clamp(curShield, 0, maxShield);
 		regenStartsAt = 0;
 
 		if (curShield == 0&&shieldSprite)

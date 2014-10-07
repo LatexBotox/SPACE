@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemyShip : Ship
 {
 	public PathFinder pf;
-	protected Ship target;
+	public Ship target;
 
 	protected override void Start ()
 	{

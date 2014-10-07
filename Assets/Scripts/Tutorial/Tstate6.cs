@@ -11,6 +11,7 @@ public class Tstate6 : TutorialState
 	public override void Run ()
 	{
 		clone = Instantiate(enemy, spawnpos.position, spawnpos.transform.rotation) as EnemyShip;
+		clone.target = PlayerShip.instance;
 		tControl.DisplayMessage("Ship detected! Closing in fast! Their signature reads.. Oh no.. SPACEPIRATES! Save me mommy!" ,"Captain Stenis", 10.0f);
 	}
 	
