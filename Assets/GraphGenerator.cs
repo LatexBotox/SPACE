@@ -13,11 +13,14 @@ public class GraphGenerator : MonoBehaviour {
 	public int seed;
 	public int maxNrNodes;
 	public float radius;
+	public int nrtiers;
+	public int maxsteps;
 
 	Stack buildNodes = new Stack();
 	ArrayList allNodes = new ArrayList();
 
 	public GraphNode Generate() {
+		nrtiers = 4;
 		return DFRandomWalk ();
 	}
 	
@@ -43,7 +46,7 @@ public class GraphGenerator : MonoBehaviour {
 				//print ("Successfully created node at: " + nextPos);
 
 				ArrayList nbrs = FindNeighbours(nextPos);
-				BuildEdges (clone, FindNeighbours(nextPos));
+				BuildEdges (clone, nbrs);
 
 				foreach(GraphNode gn in nbrs) {
 					gn.neighbours.Add(clone);
@@ -58,8 +61,46 @@ public class GraphGenerator : MonoBehaviour {
 			}
 		}
 
+		CalcTiers(origin);
+
 		print ("Finishied generating graph with " + allNodes.Count + " nodes");
 		return origin;
+	}
+
+	void CalcTiers(GraphNode origin) {
+		Queue frontier = new Queue();
+		int maxStep = 0; 
+
+		ArrayList visited = new ArrayList();
+		 
+		origin.steps = 0;
+		frontier.Enqueue(origin);
+
+		while(frontier.Count > 0) {
+
+			GraphNode gn = (GraphNode)frontier.Dequeue();
+			visited.Add(gn);
+
+			foreach(GraphNode g in gn.neighbours) {
+				if(!visited.Contains(g)) {
+					maxStep = gn.steps+1>maxStep ? gn.steps+1 : maxStep;
+					g.steps = maxStep+1;
+					frontier.Enqueue(g);
+				}
+			}
+		}
+	
+		int range =  maxStep / nrtiers;
+		foreach(GraphNode gn in visited) {
+			for(int i=0; i<=nrtiers; i++) {
+				if(i*range <= gn.steps && gn.steps <= (i+1)*range) {
+					gn.tier = i;
+					gn.seed = Random.Range(0, int.MaxValue);
+					break;
+				}
+			}
+		}
+
 	}
 
 	void BuildEdges(GraphNode me, ArrayList others) {
@@ -130,10 +171,5 @@ public class GraphGenerator : MonoBehaviour {
 		}
 
 		return true;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

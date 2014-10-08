@@ -20,7 +20,7 @@ public class MapController : MonoBehaviour {
 		currentNode = gg.Generate ();
 
 		mship = Instantiate(mshipprefab, currentNode.transform.position, Quaternion.identity) as MapMothership;
-		mship.gn = currentNode;
+		mship.SetState(MshipState.ORBIT, currentNode);
 	}
 
 	public void NodeClicked(GraphNode gn) {
@@ -29,7 +29,7 @@ public class MapController : MonoBehaviour {
 
 		foreach(GraphNode g in gn.neighbours) {
 			if(g == currentNode) {
-				mship.SetState(MshipState.TRAVEL);
+				mship.SetState(MshipState.TRAVEL, gn);
 				SetCurrentNode(gn);
 			}
 		}
@@ -39,7 +39,6 @@ public class MapController : MonoBehaviour {
 		currentNode.SetActive(false);
 		currentNode = gn;
 		currentNode.SetActive(true);
-		mship.gn = gn;
 	}
 
 	void OnGUI() {
