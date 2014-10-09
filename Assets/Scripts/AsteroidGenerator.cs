@@ -11,6 +11,8 @@ public class AsteroidGenerator : MonoBehaviour {
 	float frequency = 1.2f;
 
 	int seed = 0;
+
+	public static AsteroidGenerator instance;
 	public int levelSeed;
 
 	Texture2D[,,,] textureArray;
@@ -34,6 +36,13 @@ public class AsteroidGenerator : MonoBehaviour {
 	GameObject player;
 
 	void Start () {
+		if(instance != null) {
+			Destroy(gameObject, 0f);
+			return;
+		}
+
+		instance = this;
+
 		player = GameObject.FindGameObjectWithTag("Player");
 
 

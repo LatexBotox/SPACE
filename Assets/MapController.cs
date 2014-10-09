@@ -6,7 +6,9 @@ public class MapController : MonoBehaviour {
 	public static MapController mc;
 	public GraphGenerator generatorPrefab;
 	public MapMothership mshipprefab;
+	public LevelGenerator lvlgprefab;
 
+	LevelGenerator ag;
 	GraphGenerator gg;
 	GraphNode currentNode;
 	MapMothership mship;
@@ -44,7 +46,14 @@ public class MapController : MonoBehaviour {
 	void OnGUI() {
 		if(mship.IsOrbiting()) {
 			GUI.TextArea(new Rect(10, Screen.height - 90 , 400, 80), currentNode.GetNodeInfo());
-			GUI.Button(new Rect(350, Screen.height - 40, 50, 20), "Enter"); 
+			if(GUI.Button(new Rect(410, Screen.height - 40, 50, 20), "Enter")) {
+				print ("lol");
+				ag = Instantiate(lvlgprefab) as LevelGenerator;
+				DontDestroyOnLoad(ag);
+				ag.levelSeed = currentNode.seed;
+				ag.enabled = true;
+				Application.LoadLevel(2);
+			}
 		}
 	}
 }

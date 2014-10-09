@@ -45,7 +45,7 @@ public class TutorialController : MonoBehaviour
 	}
 
 	public void TutorialDone() {
-		Debug.Log ("Yaya you are winner!");
+		Application.LoadLevel(1);
 	}
 
 	void Update ()

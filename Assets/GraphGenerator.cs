@@ -151,12 +151,7 @@ public class GraphGenerator : MonoBehaviour {
 	}
 
 	bool IsValid(Vector2 p) {
-
-		/*if (!area.Contains (p)) {
-			print ("Failed to create node at: " + p + "(out of bounds)");
-			return false;
-
-		}*/
+	
 
 		if ((p - (Vector2)transform.position).sqrMagnitude > radius * radius) {
 			return false;

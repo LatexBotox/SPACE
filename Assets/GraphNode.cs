@@ -4,6 +4,7 @@ using System.Collections;
 
 
 public class GraphNode : MonoBehaviour {
+
 	public ArrayList edges = new ArrayList();
 	public ArrayList neighbours = new ArrayList();
 	public int tier;
