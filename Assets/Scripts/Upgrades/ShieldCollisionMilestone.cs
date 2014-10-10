@@ -3,24 +3,23 @@ using System.Collections;
 
 public class ShieldCollisionMilestone : Upgrade
 {
-	public float colSelfPerRank = 0.25f;
-	public float colVictimPerRank = 0.5f;
+	public float colSelfMult = 0.25f;
+	public float colVictimMult = 0.5f;
 
 	public void Reset() {
 		typeName = "Wings";
-		rank = 0;
-		maxRank = 2;
-		upgradeCost = new int[]{400,800};
+		upgradeName = "Shield Collision";
+		description = "Reduces damage taken from collisions while shields are up by 25%. " +
+			"Increases damage enemies take from colliding with you when your shields are up by 50%.";
 	}
 	
-	public override void ApplyUpgrade (ShipComponent comp)
-	{
+	public override void ApplyUpgrade (ShipComponent comp) {
 		Wings w = comp.GetComponent (typeName) as Wings;
 		if(!w)
 			return;
 		
-		w.colSelfMult = 1-(colSelfPerRank*rank);
-		w.colVictimMult = 1+(colVictimPerRank*rank);
+		w.colSelfMult = 1-colSelfMult;
+		w.colVictimMult = 1+colVictimMult;
 	}
 }
 

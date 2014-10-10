@@ -8,10 +8,14 @@ public class HangarUI : MonoBehaviour {
 	public int rowHeight = 30;
 	public int rowSpacing = 20;
 
+	GUIStyle iconActive, iconDisabled, iconNormal, buttonActive, colorIndicator, emptyStyle;
+
 	ShipBuilder shipbuilder;
 
 	int row = 0;
 	int column = 0;
+
+	Color setAllColor = Color.white;
 
 	delegate void UI(int active);
 	UI topUI;
@@ -19,9 +23,19 @@ public class HangarUI : MonoBehaviour {
 	int curActive;
 	int parentUI;
 
+	int selectedPartIndex = -1;
+	int selectedPartID = -1;
+	UI 	selectedPartType;
+
 	void Start() {
 		topUI = Default;
 		shipbuilder = ShipBuilder.instance;
+		iconActive = skin.GetStyle("Icon Active");
+		iconDisabled = skin.GetStyle ("Icon Disabled");
+		iconNormal = skin.GetStyle ("Icon Button");
+		buttonActive = skin.GetStyle("ActiveButton");
+		colorIndicator = skin.GetStyle ("ColorIndicator");
+		emptyStyle = skin.GetStyle ("Empty");
 	}
 
 	void Update() {
@@ -39,6 +53,7 @@ public class HangarUI : MonoBehaviour {
 	void Default(int active) {
 		currentUI = Default;
 		curActive = active;
+		GUI.depth = 0;
 		CreatePanel ();
 		CreateNavButton ("Research",Research);
 		CreateNavButton ("Components",Components);
@@ -50,6 +65,12 @@ public class HangarUI : MonoBehaviour {
 		if (CreateButton ("Destroy Ship")) {
 			shipbuilder.DespawnShip();
 		}
+
+		if (CreateButton ("Save")) 
+			shipbuilder.Save ();
+
+		if (CreateButton ("Load"))
+			shipbuilder.Load ();
 	}
 
 	void Research(int active) {
@@ -57,6 +78,17 @@ public class HangarUI : MonoBehaviour {
 		curActive = active;
 		currentUI = Research;
 		CreatePanel ();
+		Rect r = new Rect(column*columnWidth+(columnWidth-32)/2,rowSpacing,32,32);
+		foreach (Upgrade u in shipbuilder.upgrades) {
+			Upgrade (u, r);
+			r.y += rowHeight+rowSpacing;
+		}
+
+		r = new Rect(column*columnWidth+(columnWidth-32)/2,rowSpacing,32,32);
+		foreach (Upgrade u in shipbuilder.upgrades) {
+			UpgradeTooltip (u, r);
+			r.y += rowHeight+rowSpacing;
+		}
 	}
 
 	void Components(int active) {
@@ -69,6 +101,20 @@ public class HangarUI : MonoBehaviour {
 		CreateNavButton ("Wings", Wings);
 		CreateNavButton ("Engine", Engine);
 		CreateNavButton ("Weapons", Weapons);
+
+		Color c = setAllColor;
+		Color cold = GUI.color;
+		GUI.color = c;
+		CreateColorIndicator();
+		GUI.color = cold;
+		
+		c.r = CreateColorSlider (c.r);
+		c.g = CreateColorSlider (c.g);
+		c.b = CreateColorSlider (c.b);
+		if (c!=setAllColor) {
+			shipbuilder.SetAllColors(c);
+			setAllColor = c;
+		}
 	}
 
 	void Cockpit(int active) {
@@ -77,12 +123,21 @@ public class HangarUI : MonoBehaviour {
 		currentUI = Cockpit;
 
 		CreatePanel ();
-		for (int i = 0; i < shipbuilder.cockpits.Length;i++) {
-			if (CreateButton ("Cockpit " + (i+1), i==shipbuilder.cockpitIndex))
-				shipbuilder.cockpitIndex = i;
-		}
+        
+        int i = 0;
+        foreach (Cockpit c in shipbuilder.cockpits)
+        {
+            if (CreateNavButton(c.componentName, SpecificPart))
+            {
+                selectedPartID = c.uniqueID;
+                selectedPartIndex = i;
+                selectedPartType = Cockpit;
+            }
 
-		Component(ref shipbuilder.cockpitColor);
+            i++;
+        }
+
+		shipbuilder.cockpitColor = Component(shipbuilder.cockpitColor);
 	}
 
 	void Hull(int active) {
@@ -91,12 +146,21 @@ public class HangarUI : MonoBehaviour {
 		currentUI = Hull;
 
 		CreatePanel ();
-		for (int i = 0; i < shipbuilder.hulls.Length;i++) {
-			if (CreateButton ("Hull " + (i+1),i==shipbuilder.hullIndex))
-				shipbuilder.hullIndex = i;
-		}
 
-		Component(ref shipbuilder.hullColor);
+        int i = 0;
+        foreach (Hull h in shipbuilder.hulls)
+        {
+            if (CreateNavButton(h.componentName, SpecificPart))
+            {
+                selectedPartID = h.uniqueID;
+                selectedPartIndex = i;
+                selectedPartType = Hull;
+            }
+
+            i++;
+        }
+
+		shipbuilder.hullColor = Component(shipbuilder.hullColor);
 	}
 
 	void Wings(int active) {
@@ -105,12 +169,21 @@ public class HangarUI : MonoBehaviour {
 		currentUI = Wings;
 
 		CreatePanel ();
-		for (int i = 0; i < shipbuilder.wings.Length;i++) {
-			if (CreateButton ("Wings " + (i+1),i==shipbuilder.wingIndex))
-				shipbuilder.wingIndex = i;
-		}
 
-		Component(ref shipbuilder.wingColor);
+        int i = 0;
+        foreach (Wings w in shipbuilder.wings)
+        {
+            if (CreateNavButton(w.componentName, SpecificPart))
+            {
+                selectedPartID = w.uniqueID;
+                selectedPartIndex = i;
+                selectedPartType = Wings;
+            }
+
+            i++;
+        }
+
+		shipbuilder.wingColor = Component(shipbuilder.wingColor);
 	}
 
 	void Engine(int active) {
@@ -119,12 +192,21 @@ public class HangarUI : MonoBehaviour {
 		currentUI = Engine;
 
 		CreatePanel ();
-		for (int i = 0; i < shipbuilder.engines.Length;i++) {
-			if (CreateButton ("Engine " + (i+1),i==shipbuilder.engineIndex))
-				shipbuilder.engineIndex = i;
-		}
 
-		Component(ref shipbuilder.engineColor);
+        int i = 0;
+        foreach (Engine e in shipbuilder.engines)
+        {
+            if (CreateNavButton(e.componentName, SpecificPart))
+            {
+                selectedPartID = e.uniqueID;
+                selectedPartIndex = i;
+                selectedPartType = Engine;
+            }
+
+            i++;
+        }
+
+		shipbuilder.engineColor = Component(shipbuilder.engineColor);
 	}
 
 	void Weapons(int active) {
@@ -133,15 +215,24 @@ public class HangarUI : MonoBehaviour {
 		currentUI = Weapons;
 
 		CreatePanel ();
-		for (int i = 0; i < shipbuilder.weapons.Length;i++) {
-			if (CreateButton ("Weapon " + (i+1),i==shipbuilder.weaponIndex))
-				shipbuilder.weaponIndex = i;
-		}
 
-		Component(ref shipbuilder.weaponColor);
+        int i = 0;
+        foreach (Weapon w in shipbuilder.weapons)
+        {
+            if (CreateNavButton(w.componentName, SpecificPart))
+            {
+                selectedPartID = w.uniqueID;
+                selectedPartIndex = i;
+                selectedPartType = Weapons;
+            }
+
+            i++;
+        }
+
+		shipbuilder.weaponColor = Component(shipbuilder.weaponColor);
 	}
 
-	void Component(ref Color componentColor) {
+	Color Component(Color componentColor) {
 		Color c = componentColor;
 		Color cold = GUI.color;
 		GUI.color = c;
@@ -151,12 +242,61 @@ public class HangarUI : MonoBehaviour {
 		c.r = CreateColorSlider(c.r);
 		c.g = CreateColorSlider (c.g);
 		c.b = CreateColorSlider (c.b);
-		componentColor = c;
+		return c;
+	}
+
+	void Upgrade(Upgrade u, Rect r) {
+		GUI.DrawTexture (r, u.icon);
+		if (u.bought) {
+			GUI.Button (r,"",iconActive);
+		} else if (u.preReq==null||u.preReq.bought) {
+			if (GUI.Button (r,"",iconNormal))
+				u.Buy();
+		} else {
+			GUI.Button (r,"",iconDisabled);
+		}
+	}
+
+	void SpecificPart(int active) {
+		if (selectedPartID < 0)
+			return;
+
+		selectedPartType(selectedPartIndex);
+
+        column++;
+        float width = Camera.main.pixelWidth - columnWidth * column;
+
+        if (shipbuilder.IsBought(selectedPartID))
+        {
+            if (GUI.Button(new Rect(Camera.main.pixelWidth - columnWidth - 5, Camera.main.pixelHeight - rowHeight - 5, columnWidth, rowHeight), "Equip"))
+            {
+                shipbuilder.Equip(selectedPartID);
+            }
+        }
+        else if (shipbuilder.IsUnlocked(selectedPartID))
+        {
+            if (GUI.Button(new Rect(Camera.main.pixelWidth - columnWidth - 5, Camera.main.pixelHeight - rowHeight - 5, columnWidth, rowHeight), "Buy - " + 999))
+            {
+                shipbuilder.Buy(selectedPartID);
+            }
+        }
+	}
+
+	void UpgradeTooltip(Upgrade u, Rect r) {
+		GUI.Button (r,new GUIContent("",u.Tooltip),emptyStyle);
+
+		float w = skin.label.fixedWidth;
+		float h = skin.label.CalcHeight(new GUIContent(GUI.tooltip),w);
+		
+		if (!string.IsNullOrEmpty(GUI.tooltip))
+			GUI.Label (new Rect(Mathf.Clamp (Event.current.mousePosition.x-w,5,Camera.main.pixelWidth-w-5),
+			                    Mathf.Clamp (Event.current.mousePosition.y-h,5,Camera.main.pixelHeight-h-5),w,h),GUI.tooltip);
+		GUI.tooltip = null;
 	}
 
 	bool CreateNavButton(string text, UI f) {
 		if (++row == curActive) {
-			if (GUI.Button (new Rect(columnWidth*column,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth,rowHeight),text,skin.FindStyle ("ActiveButton"))) {
+			if (GUI.Button (new Rect(columnWidth*column,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth,rowHeight),text,buttonActive)) {
 				topUI = currentUI;
 				return true;
 			}
@@ -174,7 +314,7 @@ public class HangarUI : MonoBehaviour {
 	bool CreateButton(string text, bool isActive) {
 		row++;
 		if (isActive) {
-			if (GUI.Button (new Rect(columnWidth*column,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth,rowHeight),text,skin.FindStyle ("ActiveButton"))) {
+			if (GUI.Button (new Rect(columnWidth*column,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth,rowHeight),text,buttonActive)) {
 				return true;
 			}
 		} else if (GUI.Button (new Rect(columnWidth*column,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth,rowHeight),text)) {
@@ -197,6 +337,6 @@ public class HangarUI : MonoBehaviour {
 
 	void CreateColorIndicator() {
 		row++;
-		GUI.Box (new Rect(columnWidth*column+5,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth-10,rowHeight),"",skin.FindStyle("ColorIndicator"));
+		GUI.Box (new Rect(columnWidth*column+5,rowSpacing+(rowHeight+rowSpacing)*row,columnWidth-10,rowHeight),"",colorIndicator);
 	}
 }
