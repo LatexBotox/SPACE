@@ -4,8 +4,12 @@ using System.Collections;
 
 
 public class GraphNode : MonoBehaviour {
+
 	public ArrayList edges = new ArrayList();
 	public ArrayList neighbours = new ArrayList();
+	public int tier;
+	public int seed;
+	public int steps;
 
 	public void SetActive(bool a) {
 		foreach(GraphEdge ge in edges) {
@@ -14,23 +18,10 @@ public class GraphNode : MonoBehaviour {
 	}
 
 	public string GetNodeInfo() {
-		return "lol this be info";
+		return "tier: " + tier + "\nseed: " + seed;
 	}
 
 	void OnMouseDown() {
 		MapController.mc.NodeClicked(this);
 	}
-
-	/*void OnMouseEnter() {
-		foreach (GraphEdge ge in edges) {
-			ge.SetActive(true);
-		}
-	}
-
-	void OnMouseExit() {
-		foreach (GraphEdge ge in edges) {
-			ge.SetActive(false);
-		}
-	}*/
-
 }

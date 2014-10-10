@@ -6,7 +6,9 @@ public class MapController : MonoBehaviour {
 	public static MapController mc;
 	public GraphGenerator generatorPrefab;
 	public MapMothership mshipprefab;
+	public LevelGenerator lvlgprefab;
 
+	LevelGenerator ag;
 	GraphGenerator gg;
 	GraphNode currentNode;
 	MapMothership mship;
@@ -20,7 +22,7 @@ public class MapController : MonoBehaviour {
 		currentNode = gg.Generate ();
 
 		mship = Instantiate(mshipprefab, currentNode.transform.position, Quaternion.identity) as MapMothership;
-		mship.gn = currentNode;
+		mship.SetState(MshipState.ORBIT, currentNode);
 	}
 
 	public void NodeClicked(GraphNode gn) {
@@ -29,7 +31,7 @@ public class MapController : MonoBehaviour {
 
 		foreach(GraphNode g in gn.neighbours) {
 			if(g == currentNode) {
-				mship.SetState(MshipState.TRAVEL);
+				mship.SetState(MshipState.TRAVEL, gn);
 				SetCurrentNode(gn);
 			}
 		}
@@ -39,13 +41,19 @@ public class MapController : MonoBehaviour {
 		currentNode.SetActive(false);
 		currentNode = gn;
 		currentNode.SetActive(true);
-		mship.gn = gn;
 	}
 
 	void OnGUI() {
 		if(mship.IsOrbiting()) {
 			GUI.TextArea(new Rect(10, Screen.height - 90 , 400, 80), currentNode.GetNodeInfo());
-			GUI.Button(new Rect(350, Screen.height - 40, 50, 20), "Enter"); 
+			if(GUI.Button(new Rect(410, Screen.height - 40, 50, 20), "Enter")) {
+				print ("lol");
+				ag = Instantiate(lvlgprefab) as LevelGenerator;
+				DontDestroyOnLoad(ag);
+				ag.levelSeed = currentNode.seed;
+				ag.enabled = true;
+				Application.LoadLevel(2);
+			}
 		}
 	}
 }
