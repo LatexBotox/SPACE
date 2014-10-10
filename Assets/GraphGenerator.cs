@@ -38,30 +38,12 @@ public class GraphGenerator : MonoBehaviour {
 	public int nrtiers;
 	public int maxsteps;
 
-<<<<<<< HEAD
-	float ntime;
-
-
-	Stack buildNodes;
-	ArrayList allNodes;
-
-	// Use this for initialization
-	void Start () {
-
-		buildNodes = new Stack ();
-		allNodes = new ArrayList ();
-		ntime = 0;
-			
-		DFRandomWalk ();
-	
-=======
 	Stack buildNodes = new Stack();
 	ArrayList allNodes = new ArrayList();
 
 	public GraphNode Generate() {
 		nrtiers = 4;
 		return DFRandomWalk ();
->>>>>>> origin/master
 	}
 	
 	GraphNode DFRandomWalk() {
@@ -100,12 +82,6 @@ public class GraphGenerator : MonoBehaviour {
 				buildNodes.Pop();
 			}
 		}
-<<<<<<< HEAD
-	
-		print ("Alahuaackbaar");
-		print ("Finishied generating graph with " + allNodes.Count + " nodes");
-		print ("Time spent looking for neighbours: " + ntime);
-=======
 
 		CalcTiers(origin);
 
@@ -147,7 +123,6 @@ public class GraphGenerator : MonoBehaviour {
 			}
 		}
 
->>>>>>> origin/master
 	}
 
 	void BuildEdges(GraphNode me, ArrayList others) {
