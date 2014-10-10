@@ -52,5 +52,16 @@ public class PlayerShip : Ship
 		instance = null;
 		base.Die ();
 	}
+
+	public void Destroy() {
+		CustomInput.instance.RemHeldListener(thrust);
+		CustomInput.instance.RemHeldListener(rotatel);
+		CustomInput.instance.RemHeldListener(rotater);
+		CustomInput.instance.RemHeldListener(dampen);
+		CustomInput.instance.RemHeldListener(shoot);
+
+		instance = null;
+		Destroy (gameObject, 0);
+	}
 }
 

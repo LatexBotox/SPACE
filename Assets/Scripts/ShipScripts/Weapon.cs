@@ -17,6 +17,7 @@ public abstract class Weapon : ShipComponent
 	}
 
 	public virtual void Init() {
+		enabled = true;
 		parent = gameObject.transform.parent.parent.gameObject;
 	}
 

@@ -14,6 +14,7 @@ public class Tstate4 : TutorialState
 	public override void sUpdate ()
 	{
 		if(PlayerShip.instance.weapon!=null) {
+			PlayerShip.instance.weapon.enabled = false;
 			exit = true;
 		}
 	}

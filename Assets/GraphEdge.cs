@@ -6,14 +6,10 @@ public class GraphEdge : MonoBehaviour {
 	public bool active;
 
 	public void SetActive(bool a) {
-		LineRenderer rend = gameObject.GetComponent<LineRenderer> ();
-
-		print ("herp diderp set me");
-
 		if (a) {
-			rend.SetColors (activeC, activeC);
+			renderer.material.SetColor ("_Color", activeC);
 		}	else  {
-			rend.SetColors (inactiveC, inactiveC);
+			renderer.material.SetColor ("_Color", inactiveC);
 		}
 	}
 

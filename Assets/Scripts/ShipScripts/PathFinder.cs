@@ -4,7 +4,7 @@ using System.Collections;
 public class PathFinder : MonoBehaviour {
 	int layerMask;
 	public int preferredDistance = 40;
-	public int maxIterations = 5;
+	public int maxIterations = 3;
 	public int cRadius = 7;
 
 	void Start () {

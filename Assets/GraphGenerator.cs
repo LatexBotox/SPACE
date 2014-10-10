@@ -29,15 +29,16 @@ class NodeComp : IComparer<Collider2D> {
 
 public class GraphGenerator : MonoBehaviour {
 
-
 	public GraphNode node;
 	public GraphEdge edge;
-	public Rect area;
 	public float maxDist, minDist;
 	public int seed;
 	public int maxNrNodes;
 	public float radius;
+	public int nrtiers;
+	public int maxsteps;
 
+<<<<<<< HEAD
 	float ntime;
 
 
@@ -53,9 +54,17 @@ public class GraphGenerator : MonoBehaviour {
 			
 		DFRandomWalk ();
 	
+=======
+	Stack buildNodes = new Stack();
+	ArrayList allNodes = new ArrayList();
+
+	public GraphNode Generate() {
+		nrtiers = 4;
+		return DFRandomWalk ();
+>>>>>>> origin/master
 	}
 	
-	void DFRandomWalk() {
+	GraphNode DFRandomWalk() {
 
 		//First create the origin node at the position of the generator object
 		Random.seed = seed;
@@ -71,12 +80,19 @@ public class GraphGenerator : MonoBehaviour {
 			//failing to find a next point is not exceptional
 			//but for some reason i cant return null from FindNextPoint..
 			try {
-				print ("attempting to create new node..");
+				//print ("attempting to create new node..");
 				Vector2 nextPos = FindNextPoint (currentPos);
 				GraphNode clone = Instantiate (node, nextPos, Quaternion.identity) as GraphNode;
-				print ("Successfully created node at: " + nextPos);
+				//print ("Successfully created node at: " + nextPos);
 
-				BuildEdges (clone, FindNeighbours(nextPos));
+				ArrayList nbrs = FindNeighbours(nextPos);
+				BuildEdges (clone, nbrs);
+
+				foreach(GraphNode gn in nbrs) {
+					gn.neighbours.Add(clone);
+				}
+
+				clone.neighbours.AddRange(nbrs);
 
 				buildNodes.Push(clone);
 				allNodes.Add(clone);
@@ -84,10 +100,54 @@ public class GraphGenerator : MonoBehaviour {
 				buildNodes.Pop();
 			}
 		}
+<<<<<<< HEAD
 	
 		print ("Alahuaackbaar");
 		print ("Finishied generating graph with " + allNodes.Count + " nodes");
 		print ("Time spent looking for neighbours: " + ntime);
+=======
+
+		CalcTiers(origin);
+
+		print ("Finishied generating graph with " + allNodes.Count + " nodes");
+		return origin;
+	}
+
+	void CalcTiers(GraphNode origin) {
+		Queue frontier = new Queue();
+		int maxStep = 0; 
+
+		ArrayList visited = new ArrayList();
+		 
+		origin.steps = 0;
+		frontier.Enqueue(origin);
+
+		while(frontier.Count > 0) {
+
+			GraphNode gn = (GraphNode)frontier.Dequeue();
+			visited.Add(gn);
+
+			foreach(GraphNode g in gn.neighbours) {
+				if(!visited.Contains(g)) {
+					maxStep = gn.steps+1>maxStep ? gn.steps+1 : maxStep;
+					g.steps = maxStep+1;
+					frontier.Enqueue(g);
+				}
+			}
+		}
+	
+		int range =  maxStep / nrtiers;
+		foreach(GraphNode gn in visited) {
+			for(int i=0; i<=nrtiers; i++) {
+				if(i*range <= gn.steps && gn.steps <= (i+1)*range) {
+					gn.tier = i;
+					gn.seed = Random.Range(0, int.MaxValue);
+					break;
+				}
+			}
+		}
+
+>>>>>>> origin/master
 	}
 
 	void BuildEdges(GraphNode me, ArrayList others) {
@@ -146,15 +206,9 @@ public class GraphGenerator : MonoBehaviour {
 	}
 
 	bool IsValid(Vector2 p) {
-
-		/*if (!area.Contains (p)) {
-			print ("Failed to create node at: " + p + "(out of bounds)");
-			return false;
-
-		}*/
+	
 
 		if ((p - (Vector2)transform.position).sqrMagnitude > radius * radius) {
-			print ("Failed to create node at: " + p + "(out of bounds)");
 			return false;
 		}
 
@@ -168,7 +222,6 @@ public class GraphGenerator : MonoBehaviour {
 		/*foreach (GraphNode gn in allNodes) {
 			float dist = (p - (Vector2)gn.transform.position).sqrMagnitude;
 			if(dist < minDist*minDist) {
-				print ("Failed to create node at: " + p + "(too close to others)");
 				return false;
 			}
 		}*/

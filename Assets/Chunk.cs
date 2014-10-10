@@ -83,7 +83,7 @@ public class Chunk : MonoBehaviour {
 		}
 
 		CancelInvoke();
-		Invoke ("DestroyAsteroids", 5);
+		Invoke ("DestroyAsteroids", 30);
 	}
 
 	void DestroyAsteroids () {

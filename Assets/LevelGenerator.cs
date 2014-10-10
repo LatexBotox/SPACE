@@ -28,7 +28,7 @@ public class LevelGenerator : MonoBehaviour {
 	void Start () {
 		asteroidGen = gameObject.GetComponentInChildren<AsteroidGenerator>();
 		enemyGen = gameObject.GetComponentInChildren<EnemyGenerator>();
-		enabled = player = GameObject.FindGameObjectWithTag("Player");
+		//enabled = player = GameObject.FindGameObjectWithTag("Player");
 
 
 
@@ -44,9 +44,13 @@ public class LevelGenerator : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		if(!player)
+
+
+		if(!PlayerShip.instance)
 			return;
 
+		player = PlayerShip.instance.gameObject;
+		
 		for (int y = Mathf.FloorToInt(player.transform.position.y/chunkSize)-6;y <= Mathf.FloorToInt(player.transform.position.y/chunkSize)+6;y++) {
 			for (int x = Mathf.FloorToInt(player.transform.position.x/chunkSize)-6;x <= Mathf.FloorToInt(player.transform.position.x/chunkSize)+6;x++) {
 				int _x = Mathf.Clamp (x+levelSize/2,0, levelSize-1);
@@ -62,8 +66,9 @@ public class LevelGenerator : MonoBehaviour {
 
 		foreach(Collider2D c in Physics2D.OverlapCircleAll(player.transform.position, chunkSize*4, 1<<15)) {
 			chunk = c.GetComponent<Chunk>();
-			if (chunk)
+			if (chunk) {
 				chunk.Generate();
+			}
 		}
 
 		foreach(Collider2D c in Physics2D.OverlapCircleAll (player.transform.position, chunkSize*4, 1<<9)) {

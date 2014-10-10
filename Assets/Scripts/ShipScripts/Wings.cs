@@ -15,13 +15,16 @@ public class Wings : ShipComponent
 
 	public float spillMult;
 
+	public float colSelfMult = 1;
+	public float colVictimMult = 1;
+
 	public Ship parent;
 
 	public ShieldImpact impact;
 	public SpriteRenderer shieldSprite;
 
 	void Start() {
-		curShield = maxShield;
+		Mathf.Clamp(curShield, 0, maxShield);
 		regenStartsAt = 0;
 
 		if (curShield == 0&&shieldSprite)
@@ -70,8 +73,11 @@ public class Wings : ShipComponent
 		return turnForce;
 	}
 
-
 	public void Impact(Vector2 impactDir) {
+		Impact (impactDir, null);
+	}
+
+	public void Impact(Vector2 impactDir, Destructables target) {
 		ShieldImpact clone = Instantiate (impact, parent.transform.position+new Vector3(0,0,-2), Quaternion.LookRotation(transform.forward, impactDir)) as ShieldImpact;
 		clone.transform.parent = parent.transform;
 	}

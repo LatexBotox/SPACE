@@ -11,10 +11,9 @@ public class AsteroidGenerator : MonoBehaviour {
 	float frequency = 1.2f;
 
 	int seed = 0;
-	public int levelSeed;
 
-	Texture2D[] textures;
-	Texture2D[] normals;
+	public static AsteroidGenerator instance;
+	public int levelSeed;
 
 	Texture2D[,,,] textureArray;
 
@@ -37,6 +36,13 @@ public class AsteroidGenerator : MonoBehaviour {
 	GameObject player;
 
 	void Start () {
+		if(instance != null) {
+			Destroy(gameObject, 0f);
+			return;
+		}
+
+		instance = this;
+
 		player = GameObject.FindGameObjectWithTag("Player");
 
 
@@ -82,14 +88,13 @@ public class AsteroidGenerator : MonoBehaviour {
 		print ("Generated Textures in: " + time);
 
 		enabled = player;
+
+		lnoise = new PerlinNoise(levelSeed);
 	}
 
 	public void GenerateChunk(Chunk chunk) {
-		lnoise = new PerlinNoise(levelSeed);
-
-		int chunkx, chunky;
-		chunkx = chunk.chunkx;
-		chunky = chunk.chunky;
+		int chunkx = chunk.chunkx;
+		int chunky = chunk.chunky;
 
 		int id = 0;
 
