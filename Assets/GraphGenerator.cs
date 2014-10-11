@@ -128,7 +128,7 @@ public class GraphGenerator : MonoBehaviour {
 	void BuildEdges(GraphNode me, ArrayList others) {
 		foreach (GraphNode gn in others) {
 			GraphEdge ge = Instantiate(edge) as GraphEdge;
-			ge.SetActive(false);
+			ge.ShowColor(false);
 			ge.SetPositions(me.transform.position, gn.transform.position);
 			me.edges.Add (ge);
 			gn.edges.Add(ge);
@@ -137,7 +137,6 @@ public class GraphGenerator : MonoBehaviour {
 
 
 	ArrayList FindNeighbours(Vector2 p) {
-		float t = Time.time;
 		ArrayList ret = new ArrayList ();
 		List<Collider2D> results = new List<Collider2D>();
 

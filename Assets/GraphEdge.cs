@@ -3,9 +3,9 @@ using System.Collections;
 
 public class GraphEdge : MonoBehaviour {
 	public Color activeC, inactiveC;
-	public bool active;
+	public bool showColor;
 
-	public void SetActive(bool a) {
+	public void ShowColor(bool a) {
 		if (a) {
 			renderer.material.SetColor ("_Color", activeC);
 		}	else  {

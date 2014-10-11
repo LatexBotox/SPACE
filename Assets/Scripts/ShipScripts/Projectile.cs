@@ -17,12 +17,11 @@ public class Projectile : MonoBehaviour {
 	}
 	
 	void OnCollisionEnter2D(Collision2D other) {
-
-		//print (other.gameObject.name);
+		
 		ParticleSystem impactClone = (ParticleSystem)Instantiate (impact, other.contacts[other.contacts.Length-1].point,
 		                                                          Quaternion.LookRotation(other.contacts[other.contacts.Length-1].normal));
 		Destroy (impactClone.gameObject, impactClone.duration);
-		Destroy (gameObject,0f);
+		Destroy (gameObject,0.001f);
 
 		if(other.gameObject.layer != launchedLayer)
 			other.gameObject.SendMessageUpwards("Damage", damage); 

@@ -264,7 +264,7 @@ public class HangarUI : MonoBehaviour {
 		selectedPartType(selectedPartIndex);
 
         column++;
-        float width = Camera.main.pixelWidth - columnWidth * column;
+        //float width = Camera.main.pixelWidth - columnWidth * column;
 
         if (shipbuilder.IsBought(selectedPartID))
         {

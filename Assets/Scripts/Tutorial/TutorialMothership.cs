@@ -3,7 +3,7 @@ using System.Collections;
 
 public class TutorialMothership : Ship
 {
-	void Start ()
+	override protected void Start ()
 	{
 		gameObject.SetActive(false);
 	}

@@ -7,7 +7,6 @@ public class SandboxSpawner : MonoBehaviour {
 
 	int e_index;
 	float spawnt = 0f;
-	float spawndelay = 0.5f;
 	KeyListener next, prev, spawn;
 
 

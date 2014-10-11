@@ -13,7 +13,7 @@ public class GraphNode : MonoBehaviour {
 
 	public void SetActive(bool a) {
 		foreach(GraphEdge ge in edges) {
-			ge.SetActive(a);
+			ge.ShowColor(a);
 		}
 	}
 

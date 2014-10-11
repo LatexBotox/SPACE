@@ -111,7 +111,7 @@ public class ShipBuilder : MonoBehaviour {
 		} else {
 			UpdateSelected ();
 		}
-
+		
 		if(!waitForInput)
 			SpawnShip();
 	}

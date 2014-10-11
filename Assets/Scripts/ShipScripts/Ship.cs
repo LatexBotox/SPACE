@@ -125,12 +125,7 @@ public abstract class Ship : Destructables {
 		Destroy (deathEffect.gameObject, deathEffect.startLifetime);
 	}
 
-	protected override void OnCollisionEnter2D (Collision2D col)
-	{
-		if (wings && wings.curShield>0) {
-			wings.Impact (col.contacts[0].point-rigidbody2D.position);
-		}
-
+	void DealCollisionDmg(Collision2D col) {
 		if (col.gameObject.GetComponent<Destructables>()) {
 			float deltaV = 0.5f*(oldVelocity-rigidbody2D.velocity).sqrMagnitude;
 			float m = col.rigidbody.mass + rigidbody2D.mass; 
@@ -139,6 +134,15 @@ public abstract class Ship : Destructables {
 			
 			col.gameObject.GetComponent<Destructables>().CollisionDamage(deltaV * (rigidbody2D.mass / m)*(wings.curShield>0?wings.colVictimMult:1), gameObject.layer);
 		}
+	}
+
+	protected override void OnCollisionEnter2D (Collision2D col)
+	{
+		if (wings && wings.curShield>0) {
+			wings.Impact (col.contacts[0].point-rigidbody2D.position);
+		}
+
+		DealCollisionDmg (col);
 
 		if (!colEffect)
 			return;
