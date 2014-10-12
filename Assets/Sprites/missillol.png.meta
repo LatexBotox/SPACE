@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: bf0ff26bc62c1f6408a9bcccebea09b5
+guid: 9649913adf6235340855713e0f1c5fc4
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: missillol
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
