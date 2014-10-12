@@ -6,16 +6,11 @@ using System.Linq;
 
 public class InventoryManager : MonoBehaviour
 {
-	public Weapon[] weaps;// 	= new ArrayList();
-
-	List<Weapon> weapons = new List<Weapon>();
-	ArrayList hulls 		= new ArrayList();
-	ArrayList engines 	= new ArrayList();
-	ArrayList cockpits 	= new ArrayList();
-	ArrayList wings 		= new ArrayList();
 	int[] minerals = new int[4];
 	int currentLoad = 0;
 	int loadCapacity = 1000;
+
+    int currency;
 
 	public static InventoryManager instance;
 
@@ -27,7 +22,6 @@ public class InventoryManager : MonoBehaviour
 
 		instance = this;
 		DontDestroyOnLoad(gameObject);
-		weapons.AddRange(weaps);
 	}
 
 	public bool AddMineral(MineralType t, int q) {
@@ -55,50 +49,14 @@ public class InventoryManager : MonoBehaviour
 		return true;
 	}
 
-	public void AddWeapon(Weapon weap) {
-		if(!weapons.Contains(weap))
-			weapons.Add(weap);
-	}
-	
-	public void AddHull(Hull hull) {
-		if(!hulls.Contains(hull))
-			hulls.Add(hull);
-	}
-	
-	public void AddEngine(Engine engine) {
-		if(!engines.Contains(engine))
-			engines.Add(engine);
-	}
-	
-	public void AddCockpit(Cockpit cockpit) {
-		if(!cockpits.Contains(cockpit))
-			cockpits.Add(cockpit);
-	}
+    public void MineralsToCurrency() {
+        for (int i = 0; i < minerals.Length; i++)
+        {
+            currency += i * minerals[i];
+            minerals[i] = 0;
+        }
+    }
 
-	public void AddWings(Wings wing) {
-		if(!wings.Contains(wing))
-			wings.Add(wing);
-	}
-
-	public List<Weapon> GetWeapons() {
-		return weapons;
-	}
-
-	public ArrayList GetHulls() {
-		return hulls;
-	}
-	
-	public ArrayList GetEngines() {
-		return engines;
-	}
-
-	public ArrayList GetCockpits() {
-		return cockpits;
-	}
-
-	public ArrayList GetWings() {
-		return wings;
-	}
 
 	public int GetLoad() { return currentLoad; }
 	public int GetMaxLoad() { return loadCapacity; }

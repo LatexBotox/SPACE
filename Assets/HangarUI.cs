@@ -70,7 +70,7 @@ public class HangarUI : MonoBehaviour {
 			shipbuilder.Save ();
 
 		if (CreateButton ("Load"))
-			shipbuilder.Load ();
+			shipbuilder.Load (0);
 	}
 
 	void Research(int active) {
