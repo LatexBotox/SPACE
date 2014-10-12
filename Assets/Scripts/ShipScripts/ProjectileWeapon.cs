@@ -28,6 +28,9 @@ public class ProjectileWeapon : Weapon {
 			foreach( Collider2D c in parent.GetComponents<Collider2D>())
 				Physics2D.IgnoreCollision(projectileClone.collider2D, c);
 
+			foreach(Collider2D c in ignore)
+				Physics2D.IgnoreCollision(projectileClone.collider2D, c);
+
 			projectileClone.launchedLayer = parent.layer;
 		}
 	}

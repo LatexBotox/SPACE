@@ -7,8 +7,10 @@ public abstract class Weapon : ShipComponent
 	public GameObject spawnpoint;
 	public bool rotates = true;
 
+	protected ArrayList ignore = new ArrayList();
+
 	protected float cooldown;
-	protected float t_fired = 0f;
+	protected float t_fired = 0f;			
 
 	public abstract void Fire();
 
@@ -19,6 +21,14 @@ public abstract class Weapon : ShipComponent
 	public virtual void Init() {
 		enabled = true;
 		parent = gameObject.transform.parent.parent.gameObject;
+	}
+
+	public void AddIgnore(Collider2D col) {
+		ignore.Add(col);
+	}
+
+	public void RemoveIgnore(Collider2D col) {
+		ignore.Remove(col);
 	}
 
 	public void Rotate(Vector2 target) {

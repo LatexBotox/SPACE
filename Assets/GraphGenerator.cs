@@ -40,10 +40,14 @@ public class GraphGenerator : MonoBehaviour {
 
 	Stack buildNodes = new Stack();
 	ArrayList allNodes = new ArrayList();
-
+	ArrayList[] tierList;
 
 	public GraphNode Generate() {
 		nrtiers = 4;
+		tierList = new ArrayList[nrtiers];
+		for(int i=0; i<nrtiers; ++i)
+			tierList[i] = new ArrayList();
+
 		return DFRandomWalk ();
 	}
 	
@@ -85,9 +89,18 @@ public class GraphGenerator : MonoBehaviour {
 		}
 
 		CalcTiers(origin);
+		PickSpecials();
 
 		print ("Finishied generating graph with " + allNodes.Count + " nodes");
 		return origin;
+	}
+
+	void PickSpecials() {
+		foreach(ArrayList l in tierList) {
+			int randindex = Random.Range(0, l.Count);
+			GraphNode gn = l.ToArray()[randindex] as GraphNode;
+			gn.special = true;
+		}
 	}
 
 	void CalcTiers(GraphNode origin) {
@@ -115,15 +128,15 @@ public class GraphGenerator : MonoBehaviour {
 	
 		int range =  maxStep / nrtiers;
 		foreach(GraphNode gn in visited) {
-			for(int i=0; i<=nrtiers; i++) {
+			for(int i=0; i<nrtiers; i++) {
 				if(i*range <= gn.steps && gn.steps <= (i+1)*range) {
 					gn.tier = i;
 					gn.seed = Random.Range(0, int.MaxValue);
+					tierList[i].Add(gn);
 					break;
 				}
 			}
 		}
-
 	}
 
 	void BuildEdges(GraphNode me, ArrayList others) {
@@ -167,7 +180,7 @@ public class GraphGenerator : MonoBehaviour {
 
 	Vector2 FindNextPoint(Vector2 p) {
 		Vector2 dir = Random.insideUnitCircle.normalized;
-		float mnitud = minDist + Random.value * (maxDist - minDist);
+		float mnitud = minDist + Random.value * (maxDist - minDist) + node.transform.localScale.x;
 
 		for (int i=0; i<4; ++i) {
 			Vector2 np = p+dir*mnitud;
@@ -188,10 +201,10 @@ public class GraphGenerator : MonoBehaviour {
 		}
 
 	
-		if (Physics2D.OverlapCircle (p, minDist, 1 << 16) != null) {
-			print ("Failed to create node at: " + p + "(too close to others)");
+		Collider2D col = Physics2D.OverlapCircle (p, minDist, 1 << 16);
+		if (col != null) {
+			print ("Failed to create node at: " + p + "(too close to others) " + col.name);
 			return false;
-
 		}
 
 		/*foreach (GraphNode gn in allNodes) {

@@ -16,9 +16,13 @@ public class EnemyMotherShip : Destructables {
 	Weapon weapon1, weapon2;
 	Shield _shield;
 
-
+	void OnDestroy() {
+		print ("Aarrgh I die, but la resistance lives on!");
+	}
 
 	void Start () {
+
+		print ("lawl i liiiive!");
 		maxHealth = health = 200;
 		
 		Transform w1 = transform.FindChild("weaponpos1");
@@ -34,6 +38,10 @@ public class EnemyMotherShip : Destructables {
 
 		weapon1.parent = gameObject;
 		weapon2.parent = gameObject;
+
+		weapon1.AddIgnore(_shield.shcollider);
+    weapon2.AddIgnore(_shield.shcollider);
+
 	}
 
 	protected virtual void OnCollisionEnter2D(Collision2D col) {
@@ -42,6 +50,7 @@ public class EnemyMotherShip : Destructables {
 
 	public override void Damage (float d)
 	{
+		print ("aaargh take the dmg");
 		base.Damage (_shield.Damage(d));
 	}
 	override public void Die() {
@@ -94,16 +103,15 @@ public class EnemyMotherShip : Destructables {
 		ArrayList obstacles = new ArrayList ();
 		Vector2 p1, p2;
 
-		p1 = (Vector2)transform.position - forward * 200f - left * 20;
+		p1 = (Vector2)transform.position - forward * 20f - left * 20;
 		p2 = (Vector2)transform.position + forward * 200f + left * 20;
 
 
 		obstacles.AddRange (Physics2D.OverlapAreaAll (p1, p2, 1<<10));
-		Collider2D closest = obstacles [0] as Collider2D;
-
-		if (!closest)
+		if(obstacles.Count == 0)
 			return;
 
+		Collider2D closest = obstacles [0] as Collider2D;
 		float highestdot = Vector2.Dot((closest.transform.position - transform.position).normalized, forward);
 		foreach (Collider2D c in obstacles) {
 			float dot = Vector2.Dot((c.transform.position - transform.position).normalized, forward);
