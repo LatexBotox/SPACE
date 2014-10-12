@@ -41,6 +41,7 @@ public class GraphGenerator : MonoBehaviour {
 	Stack buildNodes = new Stack();
 	ArrayList allNodes = new ArrayList();
 
+
 	public GraphNode Generate() {
 		nrtiers = 4;
 		return DFRandomWalk ();
