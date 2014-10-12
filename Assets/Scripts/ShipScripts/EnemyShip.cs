@@ -29,7 +29,26 @@ public class EnemyShip : Ship
 	}
 
 	public void moveTowards(Vector2 pos) {
-		Vector2 relpos = pos - rigidbody2D.position - rigidbody2D.velocity;
+		Vector2 mpos = transform.position;
+		Vector2 forward = transform.up;
+		Vector2 right = transform.right;
+		Vector2 dir = (pos - mpos).normalized;
+		float angle = Vector2.Angle (dir, forward) * Mathf.Deg2Rad;
+		float rdot = Vector2.Dot (right, dir);
+
+
+		if (rdot > 0.0f)
+			RotateRight ();//RotateRight (angle);
+		else
+			RotateLeft(); //RotateLeft (angle);
+
+
+		if (angle < 0.4)
+			ThrustEngines ();
+
+
+
+		/*Vector2 relpos = pos - rigidbody2D.position - rigidbody2D.velocity;
 		float angle = Mathf.DeltaAngle(rigidbody2D.rotation, Mathf.Atan2 (relpos.y, relpos.x)*Mathf.Rad2Deg-90);
 		
 		if (Mathf.Abs (angle) < 90) 
@@ -43,6 +62,8 @@ public class EnemyShip : Ship
 		
 		if (Mathf.Abs (angle) > 180) 
 			Dampen ();
+
+*/
 	}
 
 	void FindTarget() {

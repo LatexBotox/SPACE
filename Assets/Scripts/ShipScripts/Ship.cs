@@ -96,11 +96,19 @@ public abstract class Ship : Destructables {
 	}
 
 	protected void RotateLeft() {
-		rigidbody2D.AddTorque (wings.GetTurnForce()*Time.deltaTime, ForceMode2D.Impulse);
+		RotateLeft (1);//rigidbody2D.AddTorque (wings.GetTurnForce()*mod*Time.deltaTime, ForceMode2D.Impulse);
 	}
 
 	protected void RotateRight() {
-		rigidbody2D.AddTorque (-wings.GetTurnForce()*Time.deltaTime, ForceMode2D.Impulse);
+		RotateRight (1);//rigidbody2D.AddTorque (-wings.GetTurnForce()*mod*Time.deltaTime, ForceMode2D.Impulse);
+	}
+
+	protected void RotateLeft(float mod) {
+		rigidbody2D.AddTorque (wings.GetTurnForce()*mod*Time.deltaTime, ForceMode2D.Impulse);
+	}
+	
+	protected void RotateRight(float mod) {
+		rigidbody2D.AddTorque (-wings.GetTurnForce()*mod*Time.deltaTime, ForceMode2D.Impulse);
 	}
 
 	protected void RotateWeapons(Vector2 target) {

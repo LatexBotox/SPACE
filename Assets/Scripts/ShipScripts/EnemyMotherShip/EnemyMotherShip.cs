@@ -34,6 +34,9 @@ public class EnemyMotherShip : Destructables {
 
 		weapon1.parent = gameObject;
 		weapon2.parent = gameObject;
+
+		weapon1.AddIgnore (_shield.shcollider);
+		weapon2.AddIgnore (_shield.shcollider);
 	}
 
 	protected virtual void OnCollisionEnter2D(Collision2D col) {
@@ -45,7 +48,7 @@ public class EnemyMotherShip : Destructables {
 		base.Damage (_shield.Damage(d));
 	}
 	override public void Die() {
-		//Destroy (gameObject, 0f);
+		Destroy (gameObject, 0f);
 	}
 
 	void FixedUpdate() {
@@ -94,16 +97,18 @@ public class EnemyMotherShip : Destructables {
 		ArrayList obstacles = new ArrayList ();
 		Vector2 p1, p2;
 
-		p1 = (Vector2)transform.position - forward * 200f - left * 20;
-		p2 = (Vector2)transform.position + forward * 200f + left * 20;
+		p1 = (Vector2)transform.position - forward * 20f - left * 30f;
+		p2 = (Vector2)transform.position + forward * 200f + left * 30f;
 
+
+		Debug.DrawLine (p1, p2);
 
 		obstacles.AddRange (Physics2D.OverlapAreaAll (p1, p2, 1<<10));
-		Collider2D closest = obstacles [0] as Collider2D;
-
-		if (!closest)
+		if (obstacles.Count == 0)
 			return;
 
+		Collider2D closest = obstacles [0] as Collider2D;
+	
 		float highestdot = Vector2.Dot((closest.transform.position - transform.position).normalized, forward);
 		foreach (Collider2D c in obstacles) {
 			float dot = Vector2.Dot((c.transform.position - transform.position).normalized, forward);
@@ -144,6 +149,7 @@ public class EnemyMotherShip : Destructables {
 			Seek ();
 		} else if(primaryTarget) {
 			FireOnPos (primaryTarget.transform.position);
+			SpawnShip();
 		}
 
 
