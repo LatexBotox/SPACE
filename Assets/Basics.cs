@@ -2,12 +2,15 @@
 using System.Collections;
 
 public class Basics : MonoBehaviour {
+    static Basics instance;
 
 	void Start () {
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+        if (instance != null)
+        {
+            Destroy(gameObject, 0f);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+        instance = this;
 	}
 }

@@ -31,6 +31,23 @@ public class Asteroid : Destructables {
 		}
 	}
 
+    public static int MineralPrice(MineralType mineral)
+    {
+        switch (mineral)
+        {
+            case (MineralType.Iron):
+                return 1;
+            case (MineralType.Copperium):
+                return 2;
+            case (MineralType.Gallium):
+                return 4;
+            case (MineralType.Whatium):
+                return 8;
+            default:
+                return 1;
+        }
+    }
+
 	public override void Die ()
 	{
 		Destroy (gameObject, 0);
