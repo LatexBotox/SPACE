@@ -9,7 +9,7 @@ public class ShieldHolder : MonoBehaviour {
 		shield = Instantiate (shieldprefab, transform.position, transform.rotation) as Shield;
 		shield.transform.parent = transform;
 		shield.radius = radius;
-		shield.shcollider = (CircleCollider2D)collider2D;
+        shield.shcollider = transform.parent.gameObject.GetComponent<CircleCollider2D>();
 		shield.pcollider = pcol;
 
 		return shield;
