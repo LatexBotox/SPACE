@@ -40,17 +40,23 @@ public class ShipBuilder : MonoBehaviour {
 	public Hull 		selectedHull;
 	public Cockpit selectedCockpit;
 
-	public static ShipBuilder instance;
+	public static ShipBuilder instance = null;
 
 	public List<int> boughtParts;
 	public List<int> unlockedParts;
+
+    int currentSaveID;
 
 	void Start () {
 		if (instance!=null) {
 			Destroy (gameObject, 0f);
 			return;
 		}
+        
 		instance = this;
+        DontDestroyOnLoad(transform.gameObject);
+
+        print("Test");
 
 		int i=0;
 		foreach (Upgrade u in upgrades) {
@@ -82,39 +88,35 @@ public class ShipBuilder : MonoBehaviour {
 		}
 
 		boughtParts = new List<int>();
-
-		print (Application.persistentDataPath);
-
-		if (!Load ()) {
-			cockpitIndex 	= 0;
-			engineIndex 	= 0;
-			hullIndex 		= 0;
-			weaponIndex 	= 0;
-			wingIndex 		= 0;
-
-			UpdateSelected ();
-
-			boughtParts.Add (selectedCockpit.uniqueID);
-			boughtParts.Add (selectedEngine.uniqueID);
-			boughtParts.Add (selectedHull.uniqueID);
-			boughtParts.Add (selectedWeapon.uniqueID);
-			boughtParts.Add (selectedWing.uniqueID);
-
-			cockpitColor 	= Color.white;
-			engineColor 	= Color.white;
-			hullColor 		= Color.white;
-			weaponColor 	= Color.white;
-			wingColor 		= Color.white;
-			
-			foreach(Upgrade u in upgrades)
-				u.bought = false;
-		} else {
-			UpdateSelected ();
-		}
-		
-		if(!waitForInput)
-			SpawnShip();
 	}
+
+    public void NewGame()
+    {
+        currentSaveID = GetNumSaves();
+
+        cockpitIndex = 0;
+        engineIndex = 0;
+        hullIndex = 0;
+        weaponIndex = 0;
+        wingIndex = 0;
+
+        UpdateSelected();
+
+        boughtParts.Add(selectedCockpit.uniqueID);
+        boughtParts.Add(selectedEngine.uniqueID);
+        boughtParts.Add(selectedHull.uniqueID);
+        boughtParts.Add(selectedWeapon.uniqueID);
+        boughtParts.Add(selectedWing.uniqueID);
+
+        cockpitColor = Color.white;
+        engineColor = Color.white;
+        hullColor = Color.white;
+        weaponColor = Color.white;
+        wingColor = Color.white;
+
+        foreach (Upgrade u in upgrades)
+            u.bought = false;
+    }
 
 	void UpdateSelected() {
 		selectedWing 		= wings[wingIndex];
@@ -183,26 +185,28 @@ public class ShipBuilder : MonoBehaviour {
     public void Equip(int id)
     {
         int index = -1;
-        if ((index = Array.FindIndex<Cockpit>(cockpits, c => c.uniqueID == id))>-1)
-        {
+        if ((index = Array.FindIndex<Cockpit>(cockpits, c => c.uniqueID == id)) > -1)
             cockpitIndex = index;
-        }
         else if ((index = Array.FindIndex<Engine>(engines, e => e.uniqueID == id)) > -1)
-        {
             engineIndex = index;
-        }
         else if ((index = Array.FindIndex<Hull>(hulls, h => h.uniqueID == id)) > -1)
-        {
             hullIndex = index;
-        }
         else if ((index = Array.FindIndex<Weapon>(weapons, w => w.uniqueID == id)) > -1)
-        {
             weaponIndex = index;
-        }
         else if ((index = Array.FindIndex<Wings>(wings, w => w.uniqueID == id)) > -1)
-        {
             wingIndex = index;
-        }
+
+        //int index = 0;
+        //if (id < (index += cockpits.Length))
+        //    cockpitIndex = id - index + cockpits.Length;
+        //else if (id < (index += engines.Length))
+        //    engineIndex = id - index + engines.Length;
+        //else if (id < (index += hulls.Length))
+        //    hullIndex = id - index + hulls.Length;
+        //else if (id < (index += weapons.Length))
+        //    weaponIndex = id - index + weapons.Length;
+        //else if (id < (index += wings.Length))
+        //    wingIndex = id - index + wings.Length;
 
         UpdateSelected();
     }
@@ -212,11 +216,12 @@ public class ShipBuilder : MonoBehaviour {
 			PlayerShip.instance.SetWeapon (w).renderer.material.SetColor("_PaintColor",weaponColor);
 	}
 
-	public bool Load() {
-		if (File.Exists (Application.persistentDataPath + "/ship.ass")) {
+	public bool Load(int saveid) {
+        if (File.Exists(Application.persistentDataPath + "/ship" + saveid + ".ass"))
+        {
 			print ("Loading Ship...");
 			BinaryFormatter bf = new BinaryFormatter();
-			FileStream fs = File.Open (Application.persistentDataPath + "/ship.ass", FileMode.Open);
+            FileStream fs = File.Open(Application.persistentDataPath + "/ship" + saveid + ".ass", FileMode.Open);
 
 			SerialShip saveData = (SerialShip)bf.Deserialize (fs);
 			fs.Close();
@@ -239,14 +244,32 @@ public class ShipBuilder : MonoBehaviour {
 			weaponIndex 	= saveData.weaponIndex;
 			wingIndex 		= saveData.wingIndex;
 
+            currentSaveID = saveid;
+
+            UpdateSelected();
+
 			return true;
 		}
 
 		return false;
 	}
 
+    public int GetNumSaves()
+    {
+        int i = 0;
+
+        while (true)
+        {
+            if (File.Exists(Application.persistentDataPath + "/ship" + i + ".ass"))
+                i++;
+            else
+                break;
+        }
+        return i;
+    }
+
 	public void Save() {
-		SerialShip saveData 	= new SerialShip();
+		SerialShip saveData 	    = new SerialShip();
 		int[] partData 				= new int[boughtParts.Count];
 		SerialUpgrade[] upgradeData = new SerialUpgrade[upgrades.Length];
 
@@ -275,7 +298,7 @@ public class ShipBuilder : MonoBehaviour {
 
 		BinaryFormatter bf = new BinaryFormatter();
 		
-		FileStream fs = File.Create (Application.persistentDataPath + "/ship.ass");
+		FileStream fs = File.Create (Application.persistentDataPath + "/ship" + currentSaveID + ".ass");
 		
 		bf.Serialize (fs, saveData);
 		fs.Close ();

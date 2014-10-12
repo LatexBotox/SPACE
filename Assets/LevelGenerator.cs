@@ -23,15 +23,16 @@ public class LevelGenerator : MonoBehaviour {
 	public int levelSize = 256;
 	int chunkSize = 128;
 	public int levelSeed;
+	public int tier;
+	public bool boss;
+	public EnemyMotherShip bossprefab;
 
 	// Use this for initialization
 	void Start () {
 		asteroidGen = gameObject.GetComponentInChildren<AsteroidGenerator>();
 		enemyGen = gameObject.GetComponentInChildren<EnemyGenerator>();
 		//enabled = player = GameObject.FindGameObjectWithTag("Player");
-
-
-
+		
 		float t = 0 - Time.realtimeSinceStartup;
 
 		asteroidGen.levelSeed = levelSeed;
@@ -40,8 +41,16 @@ public class LevelGenerator : MonoBehaviour {
 		Load ();
 		t += Time.realtimeSinceStartup;
 
-		//print ("Loaded Chunks in: " + t);
+		if(boss) {
+			print ("omg spawn tha bass");
+			EnemyMotherShip eship = Instantiate(bossprefab, new Vector2(0, 200), Quaternion.identity) as EnemyMotherShip;
+			DontDestroyOnLoad(eship);
+			print (eship.name);
+		}
+
+			//print ("Loaded Chunks in: " + t);
 	}
+
 
 	void FixedUpdate () {
 

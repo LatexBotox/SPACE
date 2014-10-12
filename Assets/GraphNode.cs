@@ -10,6 +10,7 @@ public class GraphNode : MonoBehaviour {
 	public int tier;
 	public int seed;
 	public int steps;
+	public bool special;
 
 	public void SetActive(bool a) {
 		foreach(GraphEdge ge in edges) {
@@ -18,10 +19,16 @@ public class GraphNode : MonoBehaviour {
 	}
 
 	public string GetNodeInfo() {
-		return "tier: " + tier + "\nseed: " + seed;
+		string s = "tier: " + tier + "\nseed: " + seed;
+		return special ? s+"\nboss level!" : s;
 	}
 
 	void OnMouseDown() {
 		MapController.mc.NodeClicked(this);
+	}
+
+	void Update() {
+		if(special)
+			Debug.DrawLine(transform.position, new Vector3(0,0,0));
 	}
 }
