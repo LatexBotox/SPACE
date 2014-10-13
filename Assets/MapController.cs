@@ -8,7 +8,7 @@ public class MapController : MonoBehaviour {
 	public MapMothership mshipprefab;
 	public LevelGenerator lvlgprefab;
 
-	LevelGenerator ag;
+	//LevelGenerator ag;
 	GraphGenerator gg;
 	GraphNode currentNode;
 	MapMothership mship;
@@ -47,13 +47,20 @@ public class MapController : MonoBehaviour {
 		if(mship.IsOrbiting()) {
 			GUI.TextArea(new Rect(10, Screen.height - 90 , 400, 80), currentNode.GetNodeInfo());
 			if(GUI.Button(new Rect(410, Screen.height - 40, 50, 20), "Enter")) {
-				ag = Instantiate(lvlgprefab) as LevelGenerator;
-				DontDestroyOnLoad(ag);
-				ag.tier = currentNode.tier;
-				ag.boss = currentNode.special;
-				ag.levelSeed = currentNode.seed;
+                //ag = Instantiate(lvlgprefab) as LevelGenerator;
+                //DontDestroyOnLoad(ag);
+                //ag.tier = currentNode.tier;
+                //ag.boss = currentNode.special;
+                //ag.levelSeed = currentNode.seed;
+
+                LevelGenerator.tier = currentNode.tier;
+                LevelGenerator.boss = currentNode.special;
+                LevelGenerator.levelSeed = currentNode.seed;
+
+
 				Application.LoadLevel(2);
-				ag.enabled = true;
+                //ag.enabled = true;
+                //ShipBuilder.instance.Invoke("SpawnShip",0f);
 			}
 		}
 	}

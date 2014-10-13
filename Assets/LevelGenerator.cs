@@ -22,10 +22,12 @@ public class LevelGenerator : MonoBehaviour {
 	Chunk[,] initializedChunks;
 	public int levelSize = 256;
 	int chunkSize = 128;
-	public int levelSeed;
-	public int tier;
-	public bool boss;
+	public static int levelSeed;
+	public static int tier;
+	public static bool boss;
 	public EnemyMotherShip bossprefab;
+
+    public Renderer clouds;
 
 	// Use this for initialization
 	void Start () {
@@ -36,6 +38,7 @@ public class LevelGenerator : MonoBehaviour {
 		float t = 0 - Time.realtimeSinceStartup;
 
 		asteroidGen.levelSeed = levelSeed;
+       
 
 		initializedChunks = new Chunk[levelSize, levelSize];
 		Load ();
@@ -48,6 +51,21 @@ public class LevelGenerator : MonoBehaviour {
 			print (eship.name);
 		}
 
+        UnityEngine.Random.seed = levelSeed;
+        float r, g, b;
+        r = UnityEngine.Random.Range(0.2f, 0.3f);
+        g = UnityEngine.Random.Range(0.2f, 0.3f);
+        b = UnityEngine.Random.Range(0.2f, 0.3f);
+        asteroidGen.baseColor = new Color(r,g,b);
+
+        if (clouds)
+        {
+            clouds.material.SetColor("_MultColor", new Color(UnityEngine.Random.Range(0.7f, 1), 
+                UnityEngine.Random.Range(0.7f, 1), UnityEngine.Random.Range(0.7f, 1), 
+                UnityEngine.Random.Range(0.2f, 0.3f)));
+            clouds.material.SetColor("_AddColor", new Color(UnityEngine.Random.Range(0.4f, 1), UnityEngine.Random.Range(0.4f, 1), UnityEngine.Random.Range(0.4f, 1),0));
+        }
+
 			//print ("Loaded Chunks in: " + t);
 	}
 
@@ -55,8 +73,11 @@ public class LevelGenerator : MonoBehaviour {
 	void FixedUpdate () {
 
 
-		if(!PlayerShip.instance)
-			return;
+        if (!PlayerShip.instance)
+        {
+            ShipBuilder.instance.SpawnShip();
+            return;
+        }
 
 		player = PlayerShip.instance.gameObject;
 		
