@@ -174,7 +174,7 @@ public class GraphGenerator : MonoBehaviour {
 		}
 
 
-		print ("nr neighbours: " + ret.Count);
+		//print ("nr neighbours: " + ret.Count);
 		return ret;
 	}
 
@@ -203,7 +203,7 @@ public class GraphGenerator : MonoBehaviour {
 	
 		Collider2D col = Physics2D.OverlapCircle (p, minDist, 1 << 16);
 		if (col != null) {
-			print ("Failed to create node at: " + p + "(too close to others) " + col.name);
+			//print ("Failed to create node at: " + p + "(too close to others) " + col.name);
 			return false;
 		}
 

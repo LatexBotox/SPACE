@@ -26,7 +26,7 @@ public class CustomInput : MonoBehaviour {
 			return;
 		}
 		instance = this;
-        DontDestroyOnLoad(gameObject);
+    DontDestroyOnLoad(gameObject);
 
 		keyDownListeners = new List<KeyListener>();
 		keyUpListeners	 = new List<KeyListener>();

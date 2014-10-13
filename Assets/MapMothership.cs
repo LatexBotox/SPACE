@@ -11,8 +11,8 @@ public class MapMothership : MonoBehaviour {
 	float orbitTargetRotateSpeed = 0.2f;
 	float orbitRotateSpeed = 100.0f;
 	float orbitMoveSpeed = 500.0f;
-	float travelRotateSpeed = 100.0f;
-	float travelMoveSpeed = 2000.0f;
+	float travelRotateSpeed = 500.0f;
+	float travelMoveSpeed = 4000.0f;
 	float travelDist;
 
 	MshipState state;

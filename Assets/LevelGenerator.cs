@@ -45,7 +45,6 @@ public class LevelGenerator : MonoBehaviour {
 		t += Time.realtimeSinceStartup;
 
 		if(boss) {
-			print ("omg spawn tha bass");
 			EnemyMotherShip eship = Instantiate(bossprefab, new Vector2(0, 200), Quaternion.identity) as EnemyMotherShip;
 			DontDestroyOnLoad(eship);
 			print (eship.name);
