@@ -50,12 +50,18 @@ public class GraphGenerator : MonoBehaviour {
 
 		return DFRandomWalk ();
 	}
+
+	public GraphNode GetNode(int index) {
+		return allNodes [index] as GraphNode;
+	}
 	
 	GraphNode DFRandomWalk() {
 
 		//First create the origin node at the position of the generator object
+		int index = 0;
 		Random.seed = seed;
 		GraphNode origin = Instantiate (node, transform.position, Quaternion.identity) as GraphNode;
+		origin.index = index;
 		allNodes.Add (origin);
 		buildNodes.Push (origin);
 
@@ -79,8 +85,8 @@ public class GraphGenerator : MonoBehaviour {
 					gn.neighbours.Add(clone);
 				}
 
+				clone.index = ++index;
 				clone.neighbours.AddRange(nbrs);
-
 				buildNodes.Push(clone);
 				allNodes.Add(clone);
 			} catch(NoSpaceException e) {

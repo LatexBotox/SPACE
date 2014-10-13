@@ -3,32 +3,35 @@ using System.Collections;
 
 public class MapController : MonoBehaviour {
 
-    public static int mainSeed;
+  public static int mainSeed;
 	public static MapController mc;
 	public GraphGenerator generatorPrefab;
 	public MapMothership mshipprefab;
 	public LevelGenerator lvlgprefab;
 
-    static GraphNode storedNode;
+  static int storedNodeIndex = -1;
 
-	//LevelGenerator ag;
-	GraphGenerator gg;
+	static GraphGenerator gg;
 	GraphNode currentNode;
 	MapMothership mship;
 	int unlockedTier;
 
 	void Start() {
 		if (mc != null) {
+
 			DestroyImmediate (gameObject);
 			return;
 		}
-
+	
 		mc = this;
-		gg = Instantiate(generatorPrefab) as GraphGenerator;
-
-        currentNode = gg.Generate();
-
+		
+		gg = Instantiate (generatorPrefab) as GraphGenerator;
+		currentNode = gg.Generate ();
 		currentNode.SetActive (true);
+
+		if (storedNodeIndex != -1) {
+			currentNode = gg.GetNode(storedNodeIndex);
+		}
 
 		mship = Instantiate(mshipprefab, currentNode.transform.position, Quaternion.identity) as MapMothership;
 		mship.SetState(MshipState.ORBIT, currentNode);
@@ -58,19 +61,21 @@ public class MapController : MonoBehaviour {
 	}
 
 	public void SetCurrentNode(GraphNode gn) {
-		currentNode.SetActive(false);
+		if(currentNode != null)
+			currentNode.SetActive(false);
+
 		currentNode = gn;
 		currentNode.SetActive(true);
 	}
 
 	public void LoadWorld() {
 
+		currentNode.SetActive (false);
+		storedNodeIndex = currentNode.index;
 		LevelGenerator.tier = currentNode.tier;
 		LevelGenerator.boss = currentNode.special;
 		LevelGenerator.levelSeed = currentNode.seed;
-
-
-        storedNode = currentNode;
+		
 		Application.LoadLevel("world");
 
 	}

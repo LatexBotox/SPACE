@@ -9,9 +9,11 @@ public class WeaponSelector : MonoBehaviour
 
 	void Start() {
 
+
+
 	}
 
-	void FixedUpdate() {
+	void Update() {
 		try {
 			next = new KeyListener(CustomInput.instance.NextWeaponKey, this.NextWeapon, 0.2f);
 			prev = new KeyListener(CustomInput.instance.PrevWeaponKey, this.PrevWeapon, 0.2f);
@@ -19,11 +21,13 @@ public class WeaponSelector : MonoBehaviour
 			CustomInput.instance.RegDownListener(prev);
 			enabled = false;
 		} catch (UnityException e) {
-
+			Debug.LogException(e);
 		} 
+	
 	}
 
 	void NextWeapon() {
+		print ("lawl");
 		ShipBuilder.instance.weaponIndex = (ShipBuilder.instance.weaponIndex+1)%ShipBuilder.instance.weapons.Length;
 
 		ShipBuilder.instance.ChangeWeapon(ShipBuilder.instance.weapons[ShipBuilder.instance.weaponIndex]);

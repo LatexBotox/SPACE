@@ -11,8 +11,10 @@ public class GraphNode : MonoBehaviour {
 	public int seed;
 	public int steps;
 	public bool special;
+	public int index;
 
 	bool drawInfo;
+
 
 	public void SetActive(bool a) {
 		foreach(GraphEdge ge in edges) {

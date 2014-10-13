@@ -212,8 +212,11 @@ public class ShipBuilder : MonoBehaviour {
     }
 
 	public void ChangeWeapon(Weapon w) {
-		if (boughtParts.IndexOf(w.uniqueID)>-1) 
-			PlayerShip.instance.SetWeapon (w).renderer.material.SetColor("_PaintColor",weaponColor);
+		print ("change");
+		if (boughtParts.IndexOf (w.uniqueID) > -1 || IsUnlocked(w.uniqueID)) {
+			print ("lulz");
+			PlayerShip.instance.SetWeapon (w).renderer.material.SetColor ("_PaintColor", weaponColor);
+		}
 	}
 
 	public bool Load(int saveid) {
