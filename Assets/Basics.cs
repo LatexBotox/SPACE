@@ -13,4 +13,11 @@ public class Basics : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
         instance = this;
 	}
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.LoadLevel("mapgentest");
+        }
+    }
 }

@@ -35,6 +35,8 @@ public class TutorialController : MonoBehaviour
 	{ 
 		mothership.SetActive(false);
 
+        ShipBuilder.instance.SpawnShip();
+
 		qStates = new Queue(tStates);
 		NextState();
 	}
@@ -45,7 +47,7 @@ public class TutorialController : MonoBehaviour
 	}
 
 	public void TutorialDone() {
-		Application.LoadLevel(1);
+		Application.LoadLevel("mapgentest");
 	}
 
 	void Update ()

@@ -3,10 +3,13 @@ using System.Collections;
 
 public class MapController : MonoBehaviour {
 
+    public static int mainSeed;
 	public static MapController mc;
 	public GraphGenerator generatorPrefab;
 	public MapMothership mshipprefab;
 	public LevelGenerator lvlgprefab;
+
+    static GraphNode storedNode;
 
 	//LevelGenerator ag;
 	GraphGenerator gg;
@@ -22,7 +25,9 @@ public class MapController : MonoBehaviour {
 
 		mc = this;
 		gg = Instantiate(generatorPrefab) as GraphGenerator;
-		currentNode = gg.Generate ();
+
+        currentNode = gg.Generate();
+
 		currentNode.SetActive (true);
 
 		mship = Instantiate(mshipprefab, currentNode.transform.position, Quaternion.identity) as MapMothership;
@@ -64,7 +69,9 @@ public class MapController : MonoBehaviour {
 		LevelGenerator.boss = currentNode.special;
 		LevelGenerator.levelSeed = currentNode.seed;
 
-		Application.LoadLevel(2);
+
+        storedNode = currentNode;
+		Application.LoadLevel("world");
 
 	}
 

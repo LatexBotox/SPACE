@@ -66,6 +66,8 @@ public class LevelGenerator : MonoBehaviour {
         }
 
 			//print ("Loaded Chunks in: " + t);
+
+        ShipBuilder.instance.SpawnShip();
 	}
 
 
@@ -74,7 +76,7 @@ public class LevelGenerator : MonoBehaviour {
 
         if (!PlayerShip.instance)
         {
-            ShipBuilder.instance.SpawnShip();
+            
             return;
         }
 

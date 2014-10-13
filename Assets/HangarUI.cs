@@ -58,19 +58,22 @@ public class HangarUI : MonoBehaviour {
 		CreateNavButton ("Research",Research);
 		CreateNavButton ("Components",Components);
 
-		if (CreateButton ("Spawn Ship")) {
+        //Debug stuff
+
+		/*if (CreateButton ("Spawn Ship")) {
 			shipbuilder.SpawnShip();
 		}
 
 		if (CreateButton ("Destroy Ship")) {
 			shipbuilder.DespawnShip();
 		}
-
+        */
 		if (CreateButton ("Save")) 
 			shipbuilder.Save ();
+        /*
 
 		if (CreateButton ("Load"))
-			shipbuilder.Load (0);
+			shipbuilder.Load (0);*/
 	}
 
 	void Research(int active) {

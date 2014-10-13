@@ -13,20 +13,19 @@ public class MainMenuGUI : MonoBehaviour {
         GUI.skin = skin;
         if(GUI.Button(new Rect(Camera.main.pixelWidth/2-150,Camera.main.pixelHeight/2-100,300,50),"New Game",skin.FindStyle("TextButton"))) {
             ShipBuilder.instance.NewGame();
-            Application.LoadLevel("ResearchTests");
-            print("Start");
+            Application.LoadLevel("tutorial");
+            
         }
 
         if (GUI.Button(new Rect(Camera.main.pixelWidth / 2 - 150, Camera.main.pixelHeight / 2-40, 300, 50), "Load Game", skin.FindStyle("TextButton")))
         {
             ShipBuilder.instance.Load(0);
-            Application.LoadLevel("ResearchTests");
-            print("Start");
+            Application.LoadLevel("mapgentest");
         }
 
         if (GUI.Button(new Rect(Camera.main.pixelWidth / 2 - 150, Camera.main.pixelHeight / 2 + 20, 300, 50), "Options", skin.FindStyle("TextButton")))
         {
-            print("Start");
+
         }
 
         if (GUI.Button(new Rect(Camera.main.pixelWidth / 2 - 150, Camera.main.pixelHeight / 2 + 80, 300, 50), "Exit", skin.FindStyle("TextButton")))

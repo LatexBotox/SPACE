@@ -54,14 +54,19 @@ public class PlayerShip : Ship
 	}
 
 	public void Destroy() {
-		CustomInput.instance.RemHeldListener(thrust);
-		CustomInput.instance.RemHeldListener(rotatel);
-		CustomInput.instance.RemHeldListener(rotater);
-		CustomInput.instance.RemHeldListener(dampen);
-		CustomInput.instance.RemHeldListener(shoot);
-
-		instance = null;
-		Destroy (gameObject, 0);
+        Destroy(gameObject, 0);
 	}
+
+    void OnDestroy()
+    {
+        CustomInput.instance.RemHeldListener(thrust);
+        CustomInput.instance.RemHeldListener(rotatel);
+        CustomInput.instance.RemHeldListener(rotater);
+        CustomInput.instance.RemHeldListener(dampen);
+        CustomInput.instance.RemHeldListener(shoot);
+
+        instance = null;
+        Destroy(gameObject, 0);
+    }
 }
 
