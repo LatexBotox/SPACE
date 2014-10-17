@@ -5,12 +5,17 @@ public class CameraControl : MonoBehaviour {
 
 	public GameObject follow;
 
+	float minZoom = 30;
+	float maxZoom = 80;
+	float currentZoom = 45;
+
 	// Use this for initialization
 	void Start () {
-		if (!follow)
-			follow = GameObject.FindWithTag ("Player");
+
 
 	}
+
+
 	
 	// Update is called once per frame
 	void FixedUpdate () {
@@ -18,6 +23,8 @@ public class CameraControl : MonoBehaviour {
 			follow = (PlayerShip.instance?PlayerShip.instance.gameObject:null);
 			return;
 		}
+
+		camera.orthographicSize = Mathf.Lerp (currentZoom, currentZoom+20f, follow.rigidbody2D.velocity.magnitude/100);
 
 		Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		Vector3 shipPos = follow.transform.position;

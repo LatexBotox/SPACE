@@ -4,19 +4,13 @@ using System.Collections;
 public class TutorialController : MonoBehaviour
 {
 
-	public GameObject mothership;
+	public static TutorialController instance;
 
 	public TutorialGui tGui;
 	public TutorialState[] tStates;
 
 	private TutorialState curState;
 	private Queue qStates;
-
-	public void SpawnMothership(Vector2 pos, Quaternion rot) {
-		mothership.SetActive(true);
-		mothership.transform.position = pos;
-		mothership.transform.rotation = rot;
-	}
 
 	public void HideMessage() {
 		tGui.HideText();
@@ -26,16 +20,19 @@ public class TutorialController : MonoBehaviour
 		tGui.ShowText(msg, name, time, curState);
 	}
 
-	public void TriggerEnter(StateTrigger t, Collider2D col)
-	{
-		curState.TriggerEnter(t, col);
+	public void EnterCircle(StateTrigger t) {
+		curState.EnterCircle (t);
+	}
+
+	public void EnterBox(StateTrigger t) {
+		curState.EnterBox (t);
 	}
 
 	void Start ()
 	{ 
-		mothership.SetActive(false);
+		instance = this;
 
-        ShipBuilder.instance.SpawnShip();
+    ShipBuilder.instance.SpawnShip();
 
 		qStates = new Queue(tStates);
 		NextState();

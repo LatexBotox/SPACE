@@ -27,11 +27,14 @@ public class MapController : MonoBehaviour {
 		
 		gg = Instantiate (generatorPrefab) as GraphGenerator;
 		currentNode = gg.Generate ();
-		currentNode.SetActive (true);
+
 
 		if (storedNodeIndex != -1) {
 			currentNode = gg.GetNode(storedNodeIndex);
 		}
+
+		currentNode.SetActive (true);
+		Camera.main.transform.position = new Vector3 (currentNode.transform.position.x, currentNode.transform.position.y, -20);
 
 		mship = Instantiate(mshipprefab, currentNode.transform.position, Quaternion.identity) as MapMothership;
 		mship.SetState(MshipState.ORBIT, currentNode);

@@ -11,10 +11,15 @@ public class Tstate1 : TutorialState
 	private float eTime;
 	private bool msgPlayed = false;
 
+	Message m;
+
 	public override void Run ()
 	{
 		tPlayed = Time.time;
-		tControl.DisplayMessage("System recovery; \nRunning diagnostic.. \nCommence main engine test. (Default key: W)", "Rob", 10.0f);
+
+		m = new Message ("System recovery; \nRunning diagnostic.. \nCommence main engine test. (Default key: W)", "Rob");
+		Messenger.instance.AddMessage (m);
+		//tControl.DisplayMessage("System recovery; \nRunning diagnostic.. \nCommence main engine test. (Default key: W)", "Rob", 10.0f);
 	}
 
 	public override void sUpdate ()
@@ -30,9 +35,12 @@ public class Tstate1 : TutorialState
 
 		if(exit)
 			return;
-
+		print (!msgPlayed ? "true" : "false");
 		if(!msgPlayed && ship.rigidbody2D.velocity.magnitude > 10.0f) {
-			tControl.DisplayMessage("Success; Main engine test complete.", "Rob", 6.0f);
+			Messenger.instance.KillMessage(m);
+			m = new Message ("Success; Main engine test complete.", "Rob", callback: this.GuiCallback);
+			Messenger.instance.AddMessage (m);
+			//tControl.DisplayMessage("Success; Main engine test complete.", "Rob", 6.0f);
 			msgPlayed = true;
 			return;
 		}

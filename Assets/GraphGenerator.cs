@@ -192,16 +192,15 @@ public class GraphGenerator : MonoBehaviour {
 			Vector2 np = p+dir*mnitud;
 			if(IsValid(np)) 
 				return np;
-
+			//
 			dir = new Vector2(dir.y, -dir.x);
 		}
-
+		
 		throw new NoSpaceException ();
 	}
 
 	bool IsValid(Vector2 p) {
 	
-
 		if ((p - (Vector2)transform.position).sqrMagnitude > radius * radius) {
 			return false;
 		}
@@ -212,13 +211,6 @@ public class GraphGenerator : MonoBehaviour {
 			//print ("Failed to create node at: " + p + "(too close to others) " + col.name);
 			return false;
 		}
-
-		/*foreach (GraphNode gn in allNodes) {
-			float dist = (p - (Vector2)gn.transform.position).sqrMagnitude;
-			if(dist < minDist*minDist) {
-				return false;
-			}
-		}*/
 
 		return true;
 	}

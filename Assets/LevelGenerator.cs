@@ -27,7 +27,7 @@ public class LevelGenerator : MonoBehaviour {
 	public static bool boss;
 	public EnemyMotherShip bossprefab;
 
-    public Renderer clouds;
+  public Renderer clouds;
 
 	// Use this for initialization
 	void Start () {
@@ -46,8 +46,8 @@ public class LevelGenerator : MonoBehaviour {
 
 		if(boss) {
 			EnemyMotherShip eship = Instantiate(bossprefab, new Vector2(0, 200), Quaternion.identity) as EnemyMotherShip;
-			DontDestroyOnLoad(eship);
-			print (eship.name);
+			//DontDestroyOnLoad(eship);
+			//print (eship.name);
 		}
 
         UnityEngine.Random.seed = levelSeed;

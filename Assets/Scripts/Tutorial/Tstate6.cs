@@ -4,15 +4,16 @@ using System.Collections;
 public class Tstate6 : TutorialState
 {
 	public EnemyShip enemy;
-	public Transform spawnpos;
 
 	EnemyShip clone;
 
 	public override void Run ()
 	{
-		clone = Instantiate(enemy, spawnpos.position, spawnpos.transform.rotation) as EnemyShip;
+		Vector2 spawnpos = (Vector2)PlayerShip.instance.transform.position + (Vector2)Random.insideUnitCircle * 300f;
+		clone = Instantiate(enemy, spawnpos, Quaternion.identity) as EnemyShip;
 		clone.target = PlayerShip.instance;
-		tControl.DisplayMessage("Ship detected! Closing in fast! Their signature reads.. Oh no.. SPACEPIRATES! Save me mommy!" ,"Captain Stenis", 10.0f);
+		Message m = new Message ("Ship detected! Closing in fast!\n Their signature reads.. Oh no.. \nSPACEPIRATES! Save me mommy!", "Captn S");
+		Messenger.instance.AddMessage (m);
 	}
 	
 	public override void sUpdate ()

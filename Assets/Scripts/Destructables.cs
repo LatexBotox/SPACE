@@ -56,6 +56,9 @@ public abstract class Destructables : MonoBehaviour
 		get {
 			return maxHealth;
 		}
+		set {
+			maxHealth = value;
+		}
 	}
 
 	public float Fraction() {

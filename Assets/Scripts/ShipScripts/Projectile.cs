@@ -14,8 +14,7 @@ public class Projectile : MonoBehaviour {
 	void Start() {
 		Destroy (gameObject, 10f);
 		rigidbody2D.velocity = transform.up*speed;
-
-
+		
 		AudioSource clone;
 		
 		if (launchedLayer == 8) {

@@ -6,7 +6,7 @@ public class SandboxSpawner : MonoBehaviour {
 	public EnemyShip[] enemies;
 
 	int e_index;
-	float spawnt = 0f;
+	//float spawnt = 0f;
 	KeyListener next, prev, spawn;
 
 

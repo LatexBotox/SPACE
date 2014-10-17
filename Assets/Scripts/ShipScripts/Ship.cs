@@ -73,6 +73,7 @@ public abstract class Ship : Destructables {
 			Destroy(weapon.gameObject, 0.0f);
 
 		weapon = Instantiate(weap) as Weapon;
+		weapon.parent = gameObject;
 		weapon.transform.parent = weapPos;
 		weapon.transform.localPosition = Vector3.zero;
 		weapon.transform.rotation = weapPos.rotation;

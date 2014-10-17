@@ -6,14 +6,14 @@ public class ProjectileWeapon : Weapon {
 	public float setCooldown;
 
 	protected override void Start() {
-		
 		cooldown = setCooldown;
 		base.Start ();
 	}
 
 	public override void Fire() {
 		//print ("Time: " + Time.time + ", Last Fired: " + t_fired + ", Cooldown: " + cooldown);
-
+	
+		cooldown = setCooldown; // sick and tired of this always fucking up
 		if(Time.time > t_fired + cooldown) {
 			t_fired = Time.time;
 			//print (cooldown);

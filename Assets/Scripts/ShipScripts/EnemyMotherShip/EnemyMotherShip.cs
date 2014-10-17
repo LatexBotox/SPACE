@@ -39,7 +39,7 @@ public class EnemyMotherShip : Destructables {
 		weapon2.AddIgnore (_shield.shcollider);
 	}
 
-	protected virtual void OnCollisionEnter2D(Collision2D col) {
+	protected override void OnCollisionEnter2D(Collision2D col) {
 		base.OnCollisionEnter2D (col);
 	}
 
@@ -71,8 +71,8 @@ public class EnemyMotherShip : Destructables {
 		Vector2 forward = -transform.up.normalized;
 		Vector2 left = transform.right.normalized;
 		Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
-		
-		float dist = (targetPos - (Vector2)transform.position).magnitude;
+
+		//float dist = (targetPos - (Vector2)transform.position).magnitude;
 		float maxTurnForce = 1000000f; //<-- lol wtf?
 		float fdot = Vector2.Dot (forward, dir);
 		float ldot = Vector2.Dot (left, dir);

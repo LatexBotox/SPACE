@@ -8,13 +8,6 @@ public class TutorialMiningLaserMenu : Menu
 
 	private void ButtonPressed(int id) {
 		ShipBuilder.instance.ChangeWeapon(ShipBuilder.instance.weapons[0]);
-//		GameObject laser = MonoBehaviour.Instantiate( Resources.Load("LaserCannon"),
-//		                               								new Vector2(0,0), 
-//		                              								Quaternion.identity) as GameObject;
-//
-//		Weapon weap = laser.GetComponent(typeof(Weapon)) as Weapon;
-//		weap.gameObject.SetActive(false);
-//		Stuff.inventory.AddWeapon(weap);
 	}
 
 	public TutorialMiningLaserMenu(Rect area)

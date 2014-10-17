@@ -75,6 +75,7 @@ public class Shield : MonoBehaviour
 	public void Impact(Vector2 impactDir) {
 		Vector3 pos = transform.position + (Vector3)impactDir.normalized * radius*0.92f + new Vector3 (0, 0, -2);
 		ShieldImpact clone = Instantiate (impact, pos, Quaternion.LookRotation(transform.forward, impactDir)) as ShieldImpact;
+		Destroy (clone, 5f);
 		Debug.DrawLine (transform.position, pos);
 	}
 }

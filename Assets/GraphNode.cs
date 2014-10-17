@@ -14,7 +14,7 @@ public class GraphNode : MonoBehaviour {
 	public int index;
 
 	bool drawInfo;
-
+	Vector3 oldScale;
 
 	public void SetActive(bool a) {
 		foreach(GraphEdge ge in edges) {
@@ -29,10 +29,15 @@ public class GraphNode : MonoBehaviour {
 
 	void OnMouseEnter() {
 		drawInfo = true;
+
+		oldScale = transform.localScale;
+		Vector3 newScale = new Vector3 (oldScale.x * 2f, oldScale.y * 2f, oldScale.z);
+		transform.localScale = newScale;
 	}
 
 	void OnMouseExit() {
 		drawInfo = false;
+		transform.localScale = oldScale;
 	}
 
 	void OnMouseDown() {

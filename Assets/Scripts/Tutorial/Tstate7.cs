@@ -5,10 +5,11 @@ public class Tstate7 : TutorialState
 {
 	public override void Run ()
 	{
-		tControl.DisplayMessage("Yay you saved the day! Now get back here so we can start working on getting home!", "Captain Stenis", 5.0f);
+		Messenger.instance.AddMessage(new Message("Yay you saved the day!\nNow get back here so we can start working on getting home!", "Captn S"));
+
 	}
 
-	public override void TriggerEnter(StateTrigger t, Collider2D c)
+	public override void EnterBox(StateTrigger t)
 	{
 		tControl.TutorialDone();
 	}
